@@ -8,7 +8,6 @@ import Table from "../../UI/Table";
 import { useNavigate } from "react-router";
 import DownloadIcon from "@mui/icons-material/Download";
 import { useLocation } from "react-router";
-import Navbar from "../../components/Navbar/Navbar";
 
 const Correction = () => {
   const [currIndex, setCurrIndex] = useState(0);

@@ -2,13 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
-*{
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
-body{
-  background-image: url('assets/images/bg-image.jpg');
+body {
+  background-image: url("assets/images/bg-image.jpg");
   background-repeat: no-repeat;
   background-size: cover;
+}
+
+.bgImage {
+  background-image: url(./assets/images/homepage.png);
+  background-position: 50% 0;
+  background-size: cover;
+  height: auto;
+}
+a{
+  text-decoration: none !important;
 }

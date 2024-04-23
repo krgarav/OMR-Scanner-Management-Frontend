@@ -18,7 +18,7 @@ export function AllUser() {
     const fetchUsers = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/users/getallusers"
+          "http://192.168.0.189:4000/users/getallusers"
         );
         console.log(response.data);
         const { users } = response.data;
@@ -35,7 +35,7 @@ export function AllUser() {
     // console.log(user)
     try {
       const response = await axios.get(
-        `http://localhost:5000/users/getuser/${user.id}`
+        `http://192.168.0.189:4000/users/getuser/${user.id}`
       );
       console.log(response.data);
       setSelectedUser(response.data.user);
@@ -60,7 +60,7 @@ export function AllUser() {
     e.preventDefault();
     try {
       const response = await axios.put(
-        `http://localhost:5000/users/updateuser/${selectedUser.id}`,
+        `http://192.168.0.189:4000/users/updateuser/${selectedUser.id}`,
         selectedUser
       );
       setOpen(false);
@@ -76,7 +76,7 @@ export function AllUser() {
     console.log(userId);
     try {
       const response = await axios.delete(
-        `http://localhost:5000/users/deleteuser/${userId}`
+        `http://192.168.0.189:4000/users/deleteuser/${userId}`
       );
       setUsers(users.filter((user) => user.id !== userId));
       toast.success("User Deleted Successfully");

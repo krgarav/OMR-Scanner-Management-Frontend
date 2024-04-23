@@ -9,7 +9,7 @@ import dataContext from "../../Store/DataContext";
 const menuItems = [
   {
     name: "Create Template",
-    href: "#",
+    href: "/imageuploader",
   },
   {
     name: "User Editor",
@@ -34,9 +34,11 @@ export default function Navbar(props) {
   const [isUserMenuOpen, setIsUserMenuOpen] = React.useState(false);
 
   const userData = JSON.parse(localStorage.getItem("userData"));
+
   const { state } = props;
 
   const datactx = useContext(dataContext)
+
 
   const userMenuItems = [
     {
@@ -84,31 +86,31 @@ export default function Navbar(props) {
           <img className="h-14 w-auto" src={logo} alt="Your Company" />
         </div>
         <div className="hidden lg:block">
-          <ul className="inline-flex space-x-8">
+          <ul className="flex justify-center items-center space-x-2">
             {userData?.role === "Admin"
               ? menuItems?.map((item) => (
-                  <p key={item.name}>
+                  <li key={item.name}>
                     <Link
                       to={item.href}
-                      className="text-lg px-2 rounded-md py-1 font-semibold text-gray-700 hover:text-black hover:bg-gray-300 "
+                      className="text-lg px-2 rounded-md py-1 font-semibold text-gray-700 no-underline hover:text-black hover:bg-gray-300 "
                     >
                       {item.name}
                     </Link>
-                  </p>
+                  </li>
                 ))
               : filteredMenuItems?.map((item) => (
-                  <p key={item.name}>
+                  <li key={item.name}>
                     <Link
                       to={item.href}
                       className="text-lg px-2 rounded-md py-1 font-semibold text-gray-700 hover:text-black hover:bg-gray-300 "
                     >
                       {item.name}
                     </Link>
-                  </p>
+                  </li>
                 ))}
           </ul>
         </div>
-        <div className=" relative">
+        <div className="relative">
           <button
             type="button"
             className="rounded-full"
@@ -177,7 +179,7 @@ export default function Navbar(props) {
                               <p key={item.name}>
                                 <a
                                   href={item.href}
-                                  className="text-sm px-2 rounded-md py-1 font-semibold text-gray-700 hover:text-black hover:bg-gray-300 "
+                                  className="text-sm px-2 no-underline rounded-md py-1 font-semibold text-gray-700 hover:text-black hover:bg-gray-300 "
                                 >
                                   {item.name}
                                 </a>

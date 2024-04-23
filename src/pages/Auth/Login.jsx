@@ -25,7 +25,7 @@ export default function Login() {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:5000/users/login",
+        "http://192.168.0.189:4000/users/login",
         values
       );
 
@@ -41,7 +41,6 @@ export default function Login() {
     } catch (error) {
       console.error("Login request failed:", error.message);
       toast.error("email and password Didn't match");
-
     }
   };
 

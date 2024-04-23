@@ -8,13 +8,27 @@ import { PageNotFound } from "./pages/PageNotFound";
 import { useContext, useEffect, useState } from "react";
 import CsvHomepage from "./pages/CSV Comparer/CsvHomepage";
 import Correction from "./pages/CSV Comparer/Correction";
+import ImageUploader from "./pages/ImageUploader/ImageUploader";
+import ImageScanner from "./pages/ImageScanner/ImageScanner";
 import dataContext from "./Store/DataContext";
+
 
 function App() {
   const datactx = useContext(dataContext);
 
   return (
     <BrowserRouter>
+
+      <HomePage />
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/create-user" element={<CreateUser />} />
+        <Route path="/all-user" element={<AllUser />} />
+        <Route path="/comparecsv" element={<CsvHomepage />} />
+        <Route path="/correct_compare_csv" element={<Correction />} />
+        <Route path="/imageuploader" element={<ImageUploader />} />
+        <Route path="/scanner" element={<ImageScanner />} />
+        <Route path="*" element={<div>Page not found</div>} />
       {datactx.isLogin && <HomePage />}
       <Routes>
         {datactx.isLogin && (
@@ -47,6 +61,7 @@ function App() {
             />
           </>
         )}
+
       </Routes>
     </BrowserRouter>
   );
