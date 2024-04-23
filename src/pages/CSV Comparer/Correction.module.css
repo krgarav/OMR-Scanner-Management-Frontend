@@ -1,0 +1,46 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+ .correction{
+  margin: 0;
+  padding: 0;
+  width: 100dvw;
+  height: 100dvh;
+  background-image: url("../../assets/images/csvcompare.jpg");
+  /* object-fit: contain; */
+  background-size: cover; /* This will make the background image cover the entire container */
+  background-position: center;
+}
+
+.imgHead{
+  width: 50%;
+  padding: 5px;
+  border : 1px solid white;
+  background-color: aliceblue;
+  border-radius: 10px ;
+  height: 100%;
+}
+.imgdiv{
+  width: 100%;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+ margin-top:10px;
+}
+.imgContainer{
+  height: 92dvh;
+}
+@keyframes slideLeftToRight {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+/* Apply the animation to the element */
+.animate-slide-left-to-right {
+  animation: slideLeftToRight 0.5s ease-out;
+}
