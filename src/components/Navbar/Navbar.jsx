@@ -18,7 +18,7 @@ const menuItems = [
   {
     name: "CSV Compare",
     permission: "csvCompare",
-    href: "#",
+    href: "/comparecsv",
   },
   {
     name: "Result Generator",
@@ -27,13 +27,13 @@ const menuItems = [
   },
 ];
 
-export default function Navbar() {
+export default function Navbar(props) {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const naviagte = useNavigate();
   const [isUserMenuOpen, setIsUserMenuOpen] = React.useState(false);
 
   const userData = JSON.parse(localStorage.getItem("userData"));
-
+const {state} = props;
   const userMenuItems = [
     {
       name: "Create User",
@@ -83,22 +83,22 @@ export default function Navbar() {
             {userData?.role === "Admin"
               ? menuItems?.map((item) => (
                   <p key={item.name}>
-                    <a
-                      href={item.href}
+                    <Link
+                      to={item.href}
                       className="text-lg px-2 rounded-md py-1 font-semibold text-gray-700 hover:text-black hover:bg-gray-300 "
                     >
                       {item.name}
-                    </a>
+                    </Link>
                   </p>
                 ))
               : filteredMenuItems?.map((item) => (
                   <p key={item.name}>
-                    <a
-                      href={item.href}
+                    <Link
+                      to={item.href}
                       className="text-lg px-2 rounded-md py-1 font-semibold text-gray-700 hover:text-black hover:bg-gray-300 "
                     >
                       {item.name}
-                    </a>
+                    </Link>
                   </p>
                 ))}
           </ul>
