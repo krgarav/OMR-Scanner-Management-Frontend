@@ -38,14 +38,14 @@ export default function Navbar() {
     {
       name: "Create User",
       onClick: () => {
-        naviagte("create-user");
+        naviagte("/create-user");
         setIsUserMenuOpen(false);
       },
     },
     {
       name: "All Users",
       onClick: () => {
-        naviagte("all-user");
+        naviagte("/all-user");
         setIsUserMenuOpen(false);
       },
     },
