@@ -1,6 +1,7 @@
 import React from "react";
 const dataContext = React.createContext({
   csvHeader: [],
+  isLogin: false,
   primaryKey: "",
   imageColName: "",
   skippingKey: [],
@@ -13,6 +14,7 @@ const dataContext = React.createContext({
   imageMappedData: [],
   csvFile: [],
   csvDataWithImage: [],
+  modifyIslogin: () => {},
   addToCsvHeader: () => {},
   addToPrimaryKey: () => {},
   addToSkippingKey: () => {},
