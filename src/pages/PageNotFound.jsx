@@ -17,7 +17,7 @@ export function PageNotFound(props) {
   };
 
   return (
-    <div className="mt-40">
+    <div className="pt-40">
       <div className="text-center pt-40">
         <p className="text-3xl  font-bold text-black">{errorCode}</p>
         <h1 className="mt-2 text-3xl font-bold  text-black sm:text-5xl">

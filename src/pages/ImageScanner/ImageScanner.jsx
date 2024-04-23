@@ -1,11 +1,12 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, Fragment } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import ImageNotFound from "../../components/ImageNotFound/ImageNotFound";
 import { MdDelete } from "react-icons/md";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
 import axios from "axios";
+import { Dialog, Transition } from "@headlessui/react";
+import { RxCross1 } from "react-icons/rx";
 
 const ImageScanner = () => {
   const [selection, setSelection] = useState(null);
@@ -14,6 +15,8 @@ const ImageScanner = () => {
   const [image, setImage] = useState(null);
   const [inputField, setInputField] = useState("");
   const [fieldType, setFieldType] = useState("");
+  const [open, setOpen] = useState(false);
+  const cancelButtonRef = useRef(null);
   const [templateData, setTemplateData] = useState({
     name: "",
     other: "",
@@ -40,6 +43,7 @@ const ImageScanner = () => {
   const handleMouseUp = () => {
     if (dragStart) {
       setDragStart(null);
+      setOpen(true);
       // Remove event listener for mousemove when dragging ends
     }
   };
@@ -63,6 +67,7 @@ const ImageScanner = () => {
   const onResetHandler = () => {
     setDragStart(null);
     setSelection(null);
+    setOpen(false);
   };
 
   // Function to submit drag selection and name of options like -> Roll Number , or Subject
@@ -87,6 +92,7 @@ const ImageScanner = () => {
     setSelectedCoordinates((prev) => [...prev, newObj]);
     setInputField("");
     setFieldType("");
+    setOpen(false)
     toast.success("Coordinate successfully added.");
   };
 
@@ -118,7 +124,7 @@ const ImageScanner = () => {
       );
       // console.log(response);
       toast.success("Template created successfully!");
-      navigate("/");
+      navigate("/home");
     } catch (error) {
       console.log(error);
       toast.error(error.message);
@@ -126,78 +132,10 @@ const ImageScanner = () => {
   };
 
   return (
-    <div className="flex">
+    <div className="flex pt-16">
       {/* LEFT SECTION  */}
 
       <div className="flex">
-        <div className="flex  w-16 flex-col justify-between border-e">
-          <div>
-            <div className="inline-flex size-16 items-center justify-center">
-              <span className="grid size-10 place-content-center rounded-lg bg-gray-100 text-xs text-gray-600 font-bold">
-                SCAN
-              </span>
-            </div>
-
-            <div className="border-t border-gray-100">
-              <div className="px-2">
-                <div className="py-4">
-                  <button className="t group relative flex justify-center rounded bg-blue-50 px-2 py-1.5 text-blue-700">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="size-5 opacity-75"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-                      />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                      />
-                    </svg>
-                    <span className="invisible absolute start-full top-1/2 ms-4 -translate-y-1/2 rounded bg-gray-900 px-2 py-1.5 text-xs font-medium text-white group-hover:visible">
-                      General
-                    </span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="sticky inset-x-0 bottom-0 border-t border-gray-100 bg-purple-100 p-2">
-            <form>
-              <button
-                type="button"
-                className="group relative flex w-full justify-center rounded-lg px-2 py-1.5 text-sm text-gray-500 hover:bg-gray-50 hover:text-gray-700"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="size-5 opacity-75"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                  />
-                </svg>
-
-                <span className="invisible absolute start-full top-1/2 ms-4 -translate-y-1/2 rounded bg-gray-900 px-2 py-1.5 text-xs font-medium text-white group-hover:visible">
-                  Logout
-                </span>
-              </button>
-            </form>
-          </div>
-        </div>
         <div className="flex flex-1 flex-col justify-between border-e bg-teal-50">
           <div className="px-4 py-6">
             <ul className="mt-14 space-y-1 ">
@@ -206,13 +144,11 @@ const ImageScanner = () => {
                 className="block w-full rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium  mb-5"
               >
                 <div className="overflow-x-auto">
-                  <table className="mt-3 table border-collapse border border-slate-400 min-w-full divide-y-2 divide-gray-200 bg-white text-sm rounded-lg">
-                    <thead className="ltr:text-left rtl:text-right">
+                  <table class="my-3 table-auto border-collapse border border-gray-400 min-w-full divide-y-2 divide-gray-200 bg-white text-sm rounded-lg">
+                    <thead class="ltr:text-left rtl:text-right text-gray-600">
                       <tr>
-                        <th className="text-center whitespace-nowrap  ">
-                          Name
-                        </th>
-                        <th className="text-center whitespace-nowrap  ">
+                        <th class="text-center whitespace-nowrap py-2">Name</th>
+                        <th class="text-center whitespace-nowrap py-2">
                           Remove
                         </th>
                       </tr>
@@ -339,7 +275,6 @@ const ImageScanner = () => {
                           }}
                         ></div>
                       ))}
-
                       {selection && (
                         <div
                           className="border-blue-500"
@@ -353,7 +288,135 @@ const ImageScanner = () => {
                           }}
                         ></div>
                       )}
-                      <div
+                      <Transition.Root show={open} as={Fragment}>
+                        <Dialog
+                          as="div"
+                          className="relative z-10"
+                          initialFocus={cancelButtonRef}
+                          onClose={setOpen}
+                        >
+                          <Transition.Child
+                            as={Fragment}
+                            enter="ease-out duration-300"
+                            enterFrom="opacity-0"
+                            enterTo="opacity-100"
+                            leave="ease-in duration-200"
+                            leaveFrom="opacity-100"
+                            leaveTo="opacity-0"
+                          >
+                            <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+                          </Transition.Child>
+
+                          <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
+                            <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+                              <Transition.Child
+                                as={Fragment}
+                                enter="ease-out duration-300"
+                                enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                                enterTo="opacity-100 translate-y-0 sm:scale-100"
+                                leave="ease-in duration-200"
+                                leaveFrom="opacity-100 translate-y-0 sm:scale-100"
+                                leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                              >
+                                <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                                  <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                                    <div className="sm:flex sm:items-start">
+                                      <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left flex w-full justify-between items-center">
+                                        <div>
+                                          <Dialog.Title
+                                            as="h1"
+                                            className="text-xl font-semibold leading-6 text-gray-900"
+                                          >
+                                            Add Field Entity..{" "}
+                                          </Dialog.Title>
+                                        </div>
+
+                                        <div className="mt-2">
+                                          <button
+                                            type="button"
+                                            className=" text-red-600"
+                                            onClick={onResetHandler}
+                                          >
+                                            <RxCross1 />
+                                          </button>
+                                        </div>
+                                      </div>
+                                      <div></div>
+                                    </div>
+                                    <div className="flex gap-5 p-3 mt-3">
+                                      <label
+                                        htmlFor="formField"
+                                        className="flex items-center font-semibold"
+                                      >
+                                        <input
+                                          type="radio"
+                                          id="formField"
+                                          name="fieldType"
+                                          value="formField"
+                                          className="form-radio text-blue-500"
+                                          required
+                                          checked={fieldType === "formField"}
+                                          onChange={(e) =>
+                                            setFieldType(e.target.value)
+                                          }
+                                        />
+                                        <span className="ml-2 text-lg text-gray-700">
+                                          Form Field
+                                        </span>
+                                      </label>
+                                      <label
+                                        htmlFor="questionsField"
+                                        className="flex items-center font-semibold"
+                                      >
+                                        <input
+                                          type="radio"
+                                          id="questionsField"
+                                          name="fieldType"
+                                          value="questionsField"
+                                          className="form-radio text-blue-500"
+                                          required
+                                          checked={
+                                            fieldType === "questionsField"
+                                          }
+                                          onChange={(e) =>
+                                            setFieldType(e.target.value)
+                                          }
+                                        />
+                                        <span className="ml-2 text-lg text-gray-700">
+                                          Questions Field
+                                        </span>
+                                      </label>
+                                    </div>
+                                  </div>
+                                  <div className=" px-4 pb-8 sm:flex sm:px-6 justify-between">
+                                  <input
+                                  required
+                                  className="input w-[72%] font-semibold bg-white text-lg focus:border-1 rounded-xl px-3 py-2 shadow-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+                                  type="text"
+                                  name="field"
+                                  placeholder="Field.."
+                                  value={inputField}
+                                  onChange={(e) =>
+                                    setInputField(e.target.value)
+                                  }
+                                />
+                                <button
+                                  type="button"
+                                  data-bs-dismiss="modal"
+                                  className="bg-teal-600 hover:bg-teal-500 text-white rounded-xl text-md px-3"
+                                  onClick={onSelectedHandler}
+                                >
+                                  Save Field
+                                </button>
+                                  </div>
+                                </Dialog.Panel>
+                              </Transition.Child>
+                            </div>
+                          </div>
+                        </Dialog>
+                      </Transition.Root>
+                      
+                      {/* <div
                         className="modal fade"
                         id="exampleModal"
                         tabIndex="-1"
@@ -421,30 +484,12 @@ const ImageScanner = () => {
                                 </label>
                               </div>
                               <div className="flex justify-between my-2">
-                                <input
-                                  required
-                                  className="input w-[72%] font-semibold bg-white text-lg focus:border-1 rounded-xl px-3 py-2 shadow-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
-                                  type="text"
-                                  name="field"
-                                  placeholder="Field.."
-                                  value={inputField}
-                                  onChange={(e) =>
-                                    setInputField(e.target.value)
-                                  }
-                                />
-                                <button
-                                  type="button"
-                                  data-bs-dismiss="modal"
-                                  className="bg-teal-600 hover:bg-teal-500 text-white rounded-xl text-md px-3"
-                                  onClick={onSelectedHandler}
-                                >
-                                  Save Field
-                                </button>
+                                
                               </div>
                             </div>
                           </div>
                         </div>
-                      </div>
+                      </div> */}
                     </>
                   </div>
                 )}

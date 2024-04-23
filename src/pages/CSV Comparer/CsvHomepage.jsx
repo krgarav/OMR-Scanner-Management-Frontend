@@ -126,10 +126,10 @@ const CsvHomepage = () => {
   return (
     <>
       <main
-        className={`flex flex-col  p-4 gap-5 bg-white rounded-md ${classes.homepage}`}
+        className={`flex flex-col  gap-5 bg-white rounded-md ${classes.homepage}`}
       >
         <div
-          className={`border-dashed p-6 border-4 rounded-md  ${classes.innerBox}`}
+          className={`border-dashed pt-28 px-5 rounded-md  ${classes.innerBox}`}
         >
           <h1 className="text-center mt-2 mb-6 text-black-300 text-3xl font-bold">
             MATCH AND COMPARE DATA
@@ -152,7 +152,7 @@ const CsvHomepage = () => {
             </div>
           </div>
 
-          <div className="flex justify-between pb-28 pt-2">
+          <div className="flex justify-between ">
             <div className="bg-opacity-60 border pl-2 pb-2  bg-slate-100 rounded lg:w-1/3  ">
               <div className="flex flex-row pt-2 pb-2 justify-between self-center ">
                 <p className="text-sm font-semibold align-bottom self-center ">
