@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import { TiThMenu } from "react-icons/ti";
 import { RxCross2 } from "react-icons/rx";
 import logo from "../../assets/images/image.png";
 import { FaCircleUser } from "react-icons/fa6";
 import { Link, useNavigate } from "react-router-dom";
+import dataContext from "../../Store/DataContext";
 
 const menuItems = [
   {
@@ -33,7 +34,10 @@ export default function Navbar(props) {
   const [isUserMenuOpen, setIsUserMenuOpen] = React.useState(false);
 
   const userData = JSON.parse(localStorage.getItem("userData"));
-const {state} = props;
+  const { state } = props;
+
+  const datactx = useContext(dataContext)
+
   const userMenuItems = [
     {
       name: "Create User",
@@ -53,7 +57,9 @@ const {state} = props;
       name: "Logout",
       onClick: () => {
         localStorage.clear();
+        datactx.modifyIslogin(false)
         naviagte("/");
+
         setIsUserMenuOpen(false);
       },
     },
@@ -70,7 +76,6 @@ const {state} = props;
   const filteredMenuItems = menuItems?.filter(
     (item) => userData?.permissions[item.permission]
   );
-
 
   return (
     <div className="relative w-full bg-white">

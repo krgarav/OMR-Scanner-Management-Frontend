@@ -125,7 +125,6 @@ const CsvHomepage = () => {
   };
   return (
     <>
-   {/* <Navbar state="csvComparer"/> */}
       <main
         className={`flex flex-col  p-4 gap-5 bg-white rounded-md ${classes.homepage}`}
       >
@@ -153,7 +152,7 @@ const CsvHomepage = () => {
             </div>
           </div>
 
-          <div className="flex justify-between">
+          <div className="flex justify-between pb-28 pt-2">
             <div className="bg-opacity-60 border pl-2 pb-2  bg-slate-100 rounded lg:w-1/3  ">
               <div className="flex flex-row pt-2 pb-2 justify-between self-center ">
                 <p className="text-sm font-semibold align-bottom self-center ">

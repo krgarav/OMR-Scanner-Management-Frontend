@@ -100,7 +100,7 @@ export function AllUser() {
           <div>
             <button
               type="button"
-              onClick={() => navigate("/home/create-user")}
+              onClick={() => navigate("/create-user")}
               className="rounded-md  bg-indigo-700 hover:bg-indigo-600 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 px-3 py-2 text-sm  text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
             >
               Add New User

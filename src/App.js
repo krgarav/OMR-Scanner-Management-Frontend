@@ -5,33 +5,48 @@ import Login from "./pages/Auth/Login";
 import CreateUser from "./pages/Admin/CreateUser";
 import { AllUser } from "./pages/Admin/AllUser";
 import { PageNotFound } from "./pages/PageNotFound";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import CsvHomepage from "./pages/CSV Comparer/CsvHomepage";
 import Correction from "./pages/CSV Comparer/Correction";
+import dataContext from "./Store/DataContext";
 
 function App() {
-  const [isLogin, setIsLogin] = useState(false);
-  useEffect(() => {
-    const storedData = localStorage.getItem("userData");
-    setIsLogin(!!storedData);
-  }, [isLogin]);
-  console.log(isLogin)
+  const datactx = useContext(dataContext);
+
   return (
     <BrowserRouter>
-    <HomePage />
+      {datactx.isLogin && <HomePage />}
       <Routes>
-        <Route path="/" element={<Login />} />
+        {datactx.isLogin && (
+          <>
+            <Route path="/home" element={""} />
+            <Route path="/create-user" element={<CreateUser />} />
+            <Route path="/all-user" element={<AllUser />} />
+            <Route path="/comparecsv" element={<CsvHomepage />} />
+            <Route path="/correct_compare_csv" element={<Correction />} />
+            <Route
+              path="*"
+              element={
+                <PageNotFound errorMessage="Page Not Found" errorCode="404" />
+              }
+            />
+          </>
+        )}
 
-        <Route
-          path="/home"
-          element={isLogin ? <PageNotFound  /> : <HomePage />}
-        />
-        <Route path="/create-user" element={<CreateUser />} />
-        <Route path="/all-user" element={<AllUser />} />
-        <Route path="/page-not-found" element={<PageNotFound />} />
-        <Route path= "*" element={<PageNotFound />} />
-        <Route path="/comparecsv" element={<CsvHomepage />} />
-        <Route path="/correct_compare_csv" element={<Correction />} />
+        {!datactx.isLogin && (
+          <>
+            <Route path="/" element={<Login />} />
+            <Route
+              path="*"
+              element={
+                <PageNotFound
+                  errorMessage="User Not Authorised"
+                  errorCode="401"
+                />
+              }
+            />
+          </>
+        )}
       </Routes>
     </BrowserRouter>
   );

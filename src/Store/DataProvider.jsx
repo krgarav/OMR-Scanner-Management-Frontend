@@ -3,6 +3,7 @@ import DataContext from "./DataContext";
 
 const initialData = {
   csvHeader: [],
+  isLogin: localStorage.getItem("userData") ? true : false,
   primaryKey: "",
   skippingKey: [],
   firstInputFileName: "",
@@ -124,7 +125,16 @@ const DataProvider = (props) => {
       };
     });
   };
+  const modifyIsloginHandler = (state) => {
+    setDataState((item) => {
+      return {
+        ...item,
+        isLogin: state,
+      };
+    });
+  };
   const dataContext = {
+    isLogin: dataState.isLogin,
     csvHeader: dataState.csvHeader,
     primaryKey: dataState.primaryKey,
     skippingKey: dataState.skippingKey,
@@ -139,6 +149,7 @@ const DataProvider = (props) => {
     csvFile: dataState.csvFile,
     csvDataWithImage: dataState.csvDataWithImage,
 
+    modifyIslogin: modifyIsloginHandler,
     addToCsvHeader: addToCsvHeaderHandler,
     addToPrimaryKey: addToPrimaryKeyHandler,
     addToSkippingKey: addToSkippingKeyHandler,
