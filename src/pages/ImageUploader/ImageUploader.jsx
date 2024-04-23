@@ -54,7 +54,7 @@ const ImageUploader = () => {
               OMR India Outsources{" "}
             </h1>
           </div>
-          <div className="mx-auto max-w-xxl border-2 border-dashed  border-white h-[35%] w-[90%] rounded-lg p-8 text-center ">
+          <div className="mx-auto max-w-xxl border-4 backdrop-blur-xl border-dashed  border-white h-[40%] w-full rounded-lg p-8 text-center ">
             <svg
               className="mx-auto h-20 w-20 text-gray-300"
               fill="none"

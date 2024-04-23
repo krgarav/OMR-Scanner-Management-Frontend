@@ -12,7 +12,11 @@ const menuItems = [
     href: "/imageuploader",
   },
   {
-    name: "User Editor",
+    name: "Csv Uploader",
+    href: "#",
+  },
+  {
+    name: "Data Entry",
     permission: "userEditor",
     href: "#",
   },
@@ -37,8 +41,7 @@ export default function Navbar(props) {
 
   const { state } = props;
 
-  const datactx = useContext(dataContext)
-
+  const datactx = useContext(dataContext);
 
   const userMenuItems = [
     {
@@ -59,7 +62,7 @@ export default function Navbar(props) {
       name: "Logout",
       onClick: () => {
         localStorage.clear();
-        datactx.modifyIslogin(false)
+        datactx.modifyIslogin(false);
         naviagte("/");
 
         setIsUserMenuOpen(false);

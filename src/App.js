@@ -5,7 +5,7 @@ import Login from "./pages/Auth/Login";
 import CreateUser from "./pages/Admin/CreateUser";
 import { AllUser } from "./pages/Admin/AllUser";
 import { PageNotFound } from "./pages/PageNotFound";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import CsvHomepage from "./pages/CSV Comparer/CsvHomepage";
 import Correction from "./pages/CSV Comparer/Correction";
 import ImageUploader from "./pages/ImageUploader/ImageUploader";
@@ -17,7 +17,6 @@ function App() {
 
   return (
     <BrowserRouter>
-    
       {datactx.isLogin && <HomePage />}
       <Routes>
         {datactx.isLogin && (
