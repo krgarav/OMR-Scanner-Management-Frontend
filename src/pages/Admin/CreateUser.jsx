@@ -62,7 +62,7 @@ const CreateUser = () => {
     }
     try {
       const response = await axios.post(
-        "http://localhost:5000/users/createuser",
+        "http://192.168.0.189:4000/users/createuser",
         formData
       );
       console.log(response.data);

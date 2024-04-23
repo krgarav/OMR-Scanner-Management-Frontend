@@ -63,7 +63,7 @@ const CsvHomepage = () => {
 
         // Make the POST request with Axios
         const response = await axios.post(
-          "http://localhost:5000/compareData",
+          "http://localhost:4000/compareData",
           formData,
           {
             headers: {
