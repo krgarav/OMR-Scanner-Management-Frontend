@@ -34,7 +34,6 @@ const menuItems = [
 const urls = [{}]
 export default function Navbar(props) {
   const url = useLocation();
-  console.log(url.pathname);
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const naviagte = useNavigate();
   const [isUserMenuOpen, setIsUserMenuOpen] = React.useState(false);
