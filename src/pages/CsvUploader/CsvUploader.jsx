@@ -1,4 +1,4 @@
-import React, { Fragment, useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import UploadFile from "../../assets/images/CsvUploaderImg copy.png";
 import { toast } from "react-toastify";
@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import Loader from "../../components/Loader/Loader";
 import dataContext from "../../Store/DataContext";
 import { onGetTemplateHandler } from "../../services/common";
+import { REACT_APP_IP } from "../../services/common";
 
 const CsvUploader = () => {
   const [csvFile, setCsvFile] = useState(null);
@@ -99,7 +100,7 @@ const CsvUploader = () => {
     if (selectedId) {
       try {
         const response = await axios.post(
-          `http://192.168.0.116:4000/upload/${selectedId}?imageColName=${imageName}`,
+          `http://${REACT_APP_IP}:4000/upload/${selectedId}?imageColName=${imageName}`,
           formData,
           {
             headers: {
@@ -110,21 +111,21 @@ const CsvUploader = () => {
         const fileId = response.data;
         toast.success("Files uploaded successfully!");
         dataCtx.modifyIsLoading(false);
-
-        navigate(`templatemap/${selectedId}`, { state: fileId });
+        console.log("template users");
+        navigate(`/templatemap/${selectedId}`, { state: fileId });
       } catch (error) {
         console.error("Error uploading files: ", error);
         toast.error(error.message);
       }
     }
   };
-  // style={{ backgroundColor: "#180C2E" }} 
+
   return (
-    <Fragment>
+    <div className="csvuploader h-[100vh]">
       {dataCtx.isLoading ? (
         <Loader />
       ) : (
-        <div className="csvuploader h-[100vh]">
+        <div className="csvuploader">
           <div className="xl:flex justify-center items-center  gap-5 mb-5 pt-60 pb-20 mx-5">
             <div
               className="mx-auto max-w-xl  h-[50%] bg-white px-8 py-4 mt-5 text-center shadow-lg"
@@ -196,7 +197,7 @@ const CsvUploader = () => {
               </div>
             </div>
             <div
-              className="mx-auto max-w-xl border-2 border-dashed px-28 mt-5 text-center shadow-md shadow-teal-400 pb-5"
+              className="mx-auto max-w-xl border-4 border-dashed px-28 mt-5 text-center shadow-md shadow-teal-400 pb-5"
               style={{ borderColor: "skyblue", borderRadius: "60px" }}
             >
               <img
@@ -230,7 +231,7 @@ const CsvUploader = () => {
             </div>
             {/* 2nd section */}
             <div
-              className="mx-auto max-w-xl border-2 border-dashed px-28 mt-5 text-center shadow-md shadow-teal-400 pb-5"
+              className="mx-auto max-w-xl border-4 border-dashed px-28 mt-5 text-center shadow-md pb-5"
               style={{ borderColor: "skyblue", borderRadius: "60px" }}
             >
               <img
@@ -248,7 +249,7 @@ const CsvUploader = () => {
                   className="flex items-center font-medium text-white bg-gradient-to-r from-purple-600 to-indigo-700 rounded-3xl shadow-md cursor-pointer select-none text-lg px-6 py-2 hover:shadow-xl active:shadow-md"
                   htmlFor="image-folder-upload"
                 >
-                  <span>Upload Zip file </span>
+                  <span>Upload Zip file</span>
 
                   <input
                     id="image-folder-upload"
@@ -277,7 +278,7 @@ const CsvUploader = () => {
           </div>
         </div>
       )}
-    </Fragment>
+    </div>
   );
 };
 
