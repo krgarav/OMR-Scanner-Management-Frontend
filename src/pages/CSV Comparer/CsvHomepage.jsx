@@ -4,7 +4,7 @@ import Fab from "@mui/material/Fab";
 import CompareArrowsIcon from "@mui/icons-material/CompareArrows";
 import OptimisedList from "../../UI/OptimisedList";
 import Button from "@mui/material/Button";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import dataContext from "../../Store/DataContext";
 import axios from "axios";
 import { useNavigate } from "react-router";
@@ -14,6 +14,32 @@ import Navbar from "../../components/Navbar/Navbar";
 const CsvHomepage = () => {
   const navigate = useNavigate();
   const dataCtx = useContext(dataContext);
+  const navbarRef = useRef(null);
+  const [mainContentHeight, setMainContentHeight] = useState('90vh'); // Default height
+
+  useEffect(() => {
+    // Function to update main content height dynamically based on Navbar height
+    function updateMainContentHeight() {
+      if (navbarRef.current) {
+        const navbarHeight = navbarRef.current.clientHeight;
+        const viewportHeight = window.innerHeight;
+        const mainContentHeight = `calc(${viewportHeight}px - ${navbarHeight}px)`;
+        setMainContentHeight(mainContentHeight);
+      }
+    }
+
+    // Call the function once to set the initial height
+    updateMainContentHeight();
+
+    // Recalculate height when the window is resized
+    window.addEventListener('resize', updateMainContentHeight);
+
+    // Clean up event listener on component unmount
+    return () => {
+      window.removeEventListener('resize', updateMainContentHeight);
+    };
+  }, []);
+
 
   useEffect(() => {
     document.body.style.userSelect = "none";
@@ -125,9 +151,9 @@ const CsvHomepage = () => {
   };
   return (
     <>
-   {/* <Navbar state="csvComparer"/> */}
+   <Navbar  state="csvComparer" ref={navbarRef}/>
       <main
-        className={`flex flex-col  p-4 gap-5 bg-white rounded-md ${classes.homepage}`}
+        className={`flex flex-col h-auto lg:h-${mainContentHeight} p-4 gap-5 bg-white rounded-md ${classes.homepage}`}
       >
         <div
           className={`border-dashed p-6 border-4 rounded-md  ${classes.innerBox}`}

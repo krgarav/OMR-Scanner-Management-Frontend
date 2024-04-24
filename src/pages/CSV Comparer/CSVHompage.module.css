@@ -7,7 +7,7 @@
   margin: 0;
   padding: 0;
   width: 100dvw;
-  height: 100dvh;
+  /* height: calc(100vh -9vh); */
   background-image: url("../../assets/images/csvcompare.jpg");
   background-size: cover;
   background-position: center;
