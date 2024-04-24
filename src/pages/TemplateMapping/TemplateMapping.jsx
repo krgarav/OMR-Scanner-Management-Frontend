@@ -87,10 +87,7 @@ const TemplateMapping = () => {
     };
 
     try {
-      const response = await axios.post(
-        `http://192.168.0.116:4000/data`,
-        newObj
-      );
+      await axios.post(`http://192.168.0.116:4000/data`, newObj);
       // console.log(response);
       toast.success("Mapping successfully done.");
       // navigate(`/datamatching/${fileId}`, { state: id });
@@ -102,8 +99,8 @@ const TemplateMapping = () => {
 
   return (
     <div
-      className="py-12 min-h-[100vh] overflow-y overflow-x-auto flex justify-center"
-      style={{ backgroundColor: "#180C2E" }}
+      className="py-12 min-h-[100vh] overflow-y overflow-x-auto flex justify-center templatemapping"
+      // style={{ backgroundColor: "#180C2E" }}
     >
       <div className="w-[700px]">
         <h1 className="text-white text-4xl text-center mb-5">Mapping</h1>

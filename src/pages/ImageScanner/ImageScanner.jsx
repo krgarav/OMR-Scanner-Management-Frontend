@@ -336,7 +336,7 @@ const ImageScanner = () => {
                                             className=" text-red-600 w-[30px] h-[30px]  text-xl"
                                             onClick={onResetHandler}
                                           >
-                                            <RxCross1 className="font-extrabold"/>
+                                            <RxCross1 className="font-extrabold" />
                                           </button>
                                         </div>
                                       </div>
