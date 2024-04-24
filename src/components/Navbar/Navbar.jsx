@@ -85,7 +85,7 @@ export default function Navbar(props) {
   );
 
   return (
-    <div className="sticky w-full z-10 bg-white ">
+    <div className="fixed w-full z-10 bg-white ">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2 sm:px-6 lg:px-8">
         <div className="inline-flex items-center space-x-2">
           <img className="h-14 w-auto" src={logo} alt="Your Company" />

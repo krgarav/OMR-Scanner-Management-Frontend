@@ -125,7 +125,7 @@ const CsvUploader = () => {
         <Loader />
       ) : (
         <div className="csvuploader h-[100vh]">
-          <div className="xl:flex justify-center items-center  gap-5 mb-5 pt-5 mx-5 mt-10">
+          <div className="xl:flex justify-center items-center  gap-5 mb-5 pt-60 pb-20 mx-5">
             <div
               className="mx-auto max-w-xl  h-[50%] bg-white px-8 py-4 mt-5 text-center shadow-lg"
               style={{ borderRadius: "20px" }}
@@ -266,11 +266,11 @@ const CsvUploader = () => {
               </p>
             </div>
           </div>
-          <div className="flex justify-center py-5">
+          <div className="flex justify-center pb-32">
             <button
               type="submit"
               onClick={onSaveFilesHandler}
-              className="btn btn-lg btn-success text-gray px-4 py-2 text-xl font-medium rounded-3xl"
+              className="bg-teal-600 text-gray px-5 text-white py-3 text-xl font-medium rounded-xl"
             >
               Save Files{" "}
             </button>
