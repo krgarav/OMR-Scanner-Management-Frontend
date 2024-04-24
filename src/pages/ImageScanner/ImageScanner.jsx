@@ -119,11 +119,7 @@ const ImageScanner = () => {
     };
 
     try {
-      const response = await axios.post(
-        `http://${REACT_APP_IP}:4000/add/templete`,
-        data
-      );
-      // console.log(response);
+      await axios.post(`http://${REACT_APP_IP}:4000/add/templete`, data);
       toast.success("Template created successfully!");
       navigate("/imageuploader");
     } catch (error) {
@@ -207,8 +203,8 @@ const ImageScanner = () => {
                       }
                       placeholder="enter other.."
                     />
-                    <button className="ms-auto group  mt-4 flex items-center  rounded-lg border border-indigo-600 bg-teal-600  py-2 px-2 transition-colors hover:bg-teal-700 focus:outline-none focus:ring">
-                      <span className="font-medium  flex text-white transition-colors group-hover:text-indigo-600 group-active:text-indigo-500 mx-auto">
+                    <button className="ms-auto group  mt-4 flex items-center  rounded-lg bg-teal-600 hover:shadow-lg hover:shadow-blue-200  py-2 px-2 transition-colors hover:bg-teal-700 focus:outline-none focus:ring">
+                      <span className="font-medium  flex text-white transition-colors group-hover:text-white  group-active:text-white mx-auto">
                         Save Template
                       </span>
                     </button>
@@ -337,14 +333,13 @@ const ImageScanner = () => {
                                         <div className="mt-2">
                                           <button
                                             type="button"
-                                            className=" text-red-600"
+                                            className=" text-red-600 w-[30px] h-[30px]  text-xl"
                                             onClick={onResetHandler}
                                           >
-                                            <RxCross1 />
+                                            <RxCross1 className="font-extrabold"/>
                                           </button>
                                         </div>
                                       </div>
-                                      <div></div>
                                     </div>
                                     <div className="flex gap-5 p-3 mt-3">
                                       <label
@@ -406,7 +401,7 @@ const ImageScanner = () => {
                                     <button
                                       type="button"
                                       data-bs-dismiss="modal"
-                                      className="bg-teal-600 hover:bg-teal-500 text-white rounded-xl text-md px-3"
+                                      className="bg-teal-600 hover:bg-indigo-500 text-white rounded-lg hover:shadow-lg hover:shadow-blue-200  text-md font-medium px-3"
                                       onClick={onSelectedHandler}
                                     >
                                       Save Field
@@ -418,81 +413,6 @@ const ImageScanner = () => {
                           </div>
                         </Dialog>
                       </Transition.Root>
-
-                      {/* <div
-                        className="modal fade"
-                        id="exampleModal"
-                        tabIndex="-1"
-                        aria-labelledby="exampleModalLabel"
-                        aria-hidden="true"
-                      >
-                        <div className="modal-dialog modal-dialog-centered">
-                          <div className="modal-content px-3 py-2">
-                            <div className="modal-header">
-                              <h1
-                                className="modal-title fs-5 fw-semibold text-gray-600"
-                                id="exampleModalLabel"
-                              >
-                                Add Field Entity..
-                              </h1>
-                              <button
-                                type="button"
-                                className="btn-close"
-                                data-bs-dismiss="modal"
-                                aria-label="Close"
-                                onClick={onResetHandler}
-                              ></button>
-                            </div>
-                            <div className="modal-body justify-between my-1">
-                              <div className="flex gap-5 p-3">
-                                <label
-                                  htmlFor="formField"
-                                  className="flex items-center font-semibold"
-                                >
-                                  <input
-                                    type="radio"
-                                    id="formField"
-                                    name="fieldType"
-                                    value="formField"
-                                    className="form-radio text-blue-500"
-                                    required
-                                    checked={fieldType === "formField"}
-                                    onChange={(e) =>
-                                      setFieldType(e.target.value)
-                                    }
-                                  />
-                                  <span className="ml-2 text-lg text-gray-700">
-                                    Form Field
-                                  </span>
-                                </label>
-                                <label
-                                  htmlFor="questionsField"
-                                  className="flex items-center font-semibold"
-                                >
-                                  <input
-                                    type="radio"
-                                    id="questionsField"
-                                    name="fieldType"
-                                    value="questionsField"
-                                    className="form-radio text-blue-500"
-                                    required
-                                    checked={fieldType === "questionsField"}
-                                    onChange={(e) =>
-                                      setFieldType(e.target.value)
-                                    }
-                                  />
-                                  <span className="ml-2 text-lg text-gray-700">
-                                    Questions Field
-                                  </span>
-                                </label>
-                              </div>
-                              <div className="flex justify-between my-2">
-                                
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div> */}
                     </>
                   </div>
                 )}

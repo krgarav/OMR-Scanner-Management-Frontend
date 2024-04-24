@@ -12,6 +12,7 @@ import ImageUploader from "./pages/ImageUploader/ImageUploader";
 import ImageScanner from "./pages/ImageScanner/ImageScanner";
 import dataContext from "./Store/DataContext";
 import CsvUploader from "./pages/CsvUploader/CsvUploader";
+import TemplateMapping from "./pages/TemplateMapping/TemplateMapping";
 
 function App() {
   const datactx = useContext(dataContext);
@@ -30,6 +31,8 @@ function App() {
             <Route path="/imageuploader" element={<ImageUploader />} />
             <Route path="/scanner" element={<ImageScanner />} />
             <Route path="/csvuploader" element={<CsvUploader />} />
+            <Route path="/templatemap/:id" element={<TemplateMapping />} />
+
             <Route
               path="*"
               element={

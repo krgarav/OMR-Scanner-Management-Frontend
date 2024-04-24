@@ -1,4 +1,4 @@
-import React, { Fragment, useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import UploadFile from "../../assets/images/CsvUploaderImg copy.png";
 import { toast } from "react-toastify";
@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import Loader from "../../components/Loader/Loader";
 import dataContext from "../../Store/DataContext";
 import { onGetTemplateHandler } from "../../services/common";
+import { REACT_APP_IP } from "../../services/common";
 
 const CsvUploader = () => {
   const [csvFile, setCsvFile] = useState(null);
@@ -99,7 +100,7 @@ const CsvUploader = () => {
     if (selectedId) {
       try {
         const response = await axios.post(
-          `http://192.168.0.116:4000/upload/${selectedId}?imageColName=${imageName}`,
+          `http://${REACT_APP_IP}:4000/upload/${selectedId}?imageColName=${imageName}`,
           formData,
           {
             headers: {
@@ -110,8 +111,8 @@ const CsvUploader = () => {
         const fileId = response.data;
         toast.success("Files uploaded successfully!");
         dataCtx.modifyIsLoading(false);
-
-        navigate(`templatemap/${selectedId}`, { state: fileId });
+        console.log("template users");
+        navigate(`/templatemap/${selectedId}`, { state: fileId });
       } catch (error) {
         console.error("Error uploading files: ", error);
         toast.error(error.message);
@@ -120,12 +121,12 @@ const CsvUploader = () => {
   };
 
   return (
-    <div  className="csvuploader h-[100vh]">
+    <div className="csvuploader h-[100vh]">
       {dataCtx.isLoading ? (
         <Loader />
       ) : (
-        <div>
-          <div className="xl:flex justify-center items-center  gap-5 mb-5 pt-5 mx-5 mt-10">
+        <div className="csvuploader">
+          <div className="xl:flex justify-center items-center  gap-5 mb-5 pt-60 pb-20 mx-5">
             <div
               className="mx-auto max-w-xl  h-[50%] bg-white px-8 py-4 mt-5 text-center shadow-lg"
               style={{ borderRadius: "20px" }}
@@ -266,11 +267,11 @@ const CsvUploader = () => {
               </p>
             </div>
           </div>
-          <div className="flex justify-center py-5">
+          <div className="flex justify-center pb-32">
             <button
               type="submit"
               onClick={onSaveFilesHandler}
-              className="btn btn-lg btn-success text-gray px-4 py-2 text-xl font-medium rounded-3xl"
+              className="bg-teal-600 text-gray px-5 text-white py-3 text-xl font-medium rounded-xl"
             >
               Save Files{" "}
             </button>

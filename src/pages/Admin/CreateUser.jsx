@@ -12,9 +12,10 @@ const CreateUser = () => {
     password: "",
     role: "",
     permissions: {
-      userEditor: false,
+      dataEntry: false,
       csvCompare: false,
       resultGenerator: false,
+      csvUploader: false,
     },
   });
 
@@ -80,9 +81,10 @@ const CreateUser = () => {
         password: "",
         role: "",
         permissions: {
-          userEditor: false,
+          dataEntry: false,
           csvCompare: false,
           resultGenerator: false,
+          csvUploader: false,
         },
       });
       toast.success("User Created successfully");
@@ -93,14 +95,14 @@ const CreateUser = () => {
   };
 
   return (
-    <div className="mt-20">
-      <div className="max-w-xl mx-auto mt-8 shadow-lg rounded-xl py-10 px-20 bg-green-50">
+    <div className="pt-28">
+      <div className="max-w-2xl mx-auto mt-8 shadow-lg rounded-xl py-10 px-16 bg-green-50">
         <div className="mb-10">
           <h2 className="text-center text-3xl font-bold leading-tight text-black">
             Create a New User
           </h2>
         </div>
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div className="flex justify-between">
             <div>
               <label htmlFor="userName" className="block text-lg font-medium ">
@@ -117,7 +119,7 @@ const CreateUser = () => {
                 className="mt-1  focus:ring-indigo-500 focus:border-indigo-500 block w-full px-4 py-2 shadow-md shadow-blue-100 sm:text-sm border-gray-300 rounded-md"
               />
             </div>
-            <div>
+            <div className="mr-20">
               <label htmlFor="mobile" className="block text-lg font-medium ">
                 Mobile No.
               </label>
@@ -185,21 +187,21 @@ const CreateUser = () => {
 
           <div>
             <label className="block text-lg   font-medium">Permissions</label>
-            <div className="flex gap-4 mt-2 ">
+            <div className="flex gap-4 w-screen mt-2 ">
               <div className="flex items-center">
                 <input
-                  id="userEditor"
-                  name="userEditor"
+                  id="dataEntry"
+                  name="dataEntry"
                   type="checkbox"
                   className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
-                  checked={formData?.permissions?.userEditor}
+                  checked={formData?.permissions?.dataEntry}
                   onChange={handleChange}
                 />
                 <label
-                  htmlFor="userEditor"
+                  htmlFor="dataEntry"
                   className="ml-2 block text-md text-gray-900 font-semibold"
                 >
-                  User Editor
+                  Data Entry
                 </label>
               </div>
               <div className="flex items-center">
@@ -216,6 +218,22 @@ const CreateUser = () => {
                   className="ml-2 block text-md text-gray-900 font-semibold"
                 >
                   CSV Compare
+                </label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  id="csvUploader"
+                  name="csvUploader"
+                  type="checkbox"
+                  className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                  checked={formData?.permissions?.csvUploader}
+                  onChange={handleChange}
+                />
+                <label
+                  htmlFor="csvUploader"
+                  className="ml-2 block text-md text-gray-900 font-semibold"
+                >
+                  CSV Uploader
                 </label>
               </div>
               <div className="flex items-center">
