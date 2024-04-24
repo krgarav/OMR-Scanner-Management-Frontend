@@ -129,7 +129,7 @@ const ImageScanner = () => {
   };
 
   return (
-    <div className="flex scannerbg">
+    <div className="flex scannerbg pt-16 pb-3 border-1">
       {/* LEFT SECTION  */}
 
       <div className="flex">
