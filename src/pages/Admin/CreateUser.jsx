@@ -93,7 +93,7 @@ const CreateUser = () => {
   };
 
   return (
-    <div className="mt-20">
+    <div className="pt-28">
       <div className="max-w-xl mx-auto mt-8 shadow-lg rounded-xl py-10 px-20 bg-green-50">
         <div className="mb-10">
           <h2 className="text-center text-3xl font-bold leading-tight text-black">

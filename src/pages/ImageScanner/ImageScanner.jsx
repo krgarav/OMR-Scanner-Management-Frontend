@@ -205,8 +205,8 @@ const ImageScanner = () => {
                       }
                       placeholder="enter other.."
                     />
-                    <button className="ms-auto group  mt-4 flex items-center  rounded-lg border border-indigo-600 bg-teal-600  py-2 px-2 transition-colors hover:bg-teal-700 focus:outline-none focus:ring">
-                      <span className="font-medium  flex text-white transition-colors group-hover:text-indigo-600 group-active:text-indigo-500 mx-auto">
+                    <button className="ms-auto group  mt-4 flex items-center  rounded-lg bg-teal-600 hover:shadow-lg hover:shadow-blue-200  py-2 px-2 transition-colors hover:bg-teal-700 focus:outline-none focus:ring">
+                      <span className="font-medium  flex text-white transition-colors group-hover:text-white  group-active:text-white mx-auto">
                         Save Template
                       </span>
                     </button>
@@ -342,7 +342,7 @@ const ImageScanner = () => {
                                           </button>
                                         </div>
                                       </div>
-                                      <div></div>
+
                                     </div>
                                     <div className="flex gap-5 p-3 mt-3">
                                       <label
@@ -404,7 +404,7 @@ const ImageScanner = () => {
                                     <button
                                       type="button"
                                       data-bs-dismiss="modal"
-                                      className="bg-teal-600 hover:bg-teal-500 text-white rounded-xl text-md px-3"
+                                      className="bg-teal-600 hover:bg-indigo-500 text-white rounded-lg hover:shadow-lg hover:shadow-blue-200  text-md font-medium px-3"
                                       onClick={onSelectedHandler}
                                     >
                                       Save Field

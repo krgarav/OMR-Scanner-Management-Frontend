@@ -3,7 +3,7 @@ import { TiThMenu } from "react-icons/ti";
 import { RxCross2 } from "react-icons/rx";
 import logo from "../../assets/images/image.png";
 import { FaCircleUser } from "react-icons/fa6";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import dataContext from "../../Store/DataContext";
 
 const menuItems = [
@@ -31,8 +31,10 @@ const menuItems = [
     href: "#",
   },
 ];
-
+const urls = [{}]
 export default function Navbar(props) {
+  const url = useLocation();
+  console.log(url.pathname);
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const naviagte = useNavigate();
   const [isUserMenuOpen, setIsUserMenuOpen] = React.useState(false);
