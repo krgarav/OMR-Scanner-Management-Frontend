@@ -14,6 +14,9 @@ const dataContext = React.createContext({
   imageMappedData: [],
   csvFile: [],
   csvDataWithImage: [],
+  isLoading: false,
+
+  modifyIsLoading: () => {},
   modifyIslogin: () => {},
   addToCsvHeader: () => {},
   addToPrimaryKey: () => {},

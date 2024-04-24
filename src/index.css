@@ -19,13 +19,19 @@ body {
   background-size: cover;
   height: auto;
 }
-a{
+a {
   text-decoration: none !important;
 }
 
-
 .scannerbg {
   background-image: url(./assets/images/scannerbg.jpg);
+  background-position: 50% 0;
+  background-size: cover;
+  height: auto;
+}
+
+.csvuploader {
+  background-image: url(./assets/images/csvuploaderbg.jpg);
   background-position: 50% 0;
   background-size: cover;
   height: auto;

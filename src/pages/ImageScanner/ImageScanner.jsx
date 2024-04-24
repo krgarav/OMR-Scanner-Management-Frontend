@@ -125,7 +125,7 @@ const ImageScanner = () => {
       );
       // console.log(response);
       toast.success("Template created successfully!");
-      navigate("/home");
+      navigate("/imageuploader");
     } catch (error) {
       console.log(error);
       toast.error(error.message);
@@ -133,13 +133,13 @@ const ImageScanner = () => {
   };
 
   return (
-    <div className="flex pt-16 scannerbg">
+    <div className="flex scannerbg">
       {/* LEFT SECTION  */}
 
       <div className="flex">
         <div className="flex flex-1 flex-col justify-between border-e bg-teal-50">
           <div className="px-4 py-6">
-            <ul className="mt-14 space-y-1 ">
+            <ul className="space-y-1 ">
               <li
                 style={{ marginTop: "40px" }}
                 className="block w-full rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium  mb-5"
@@ -148,7 +148,9 @@ const ImageScanner = () => {
                   <table className="my-3 table-auto border-collapse border border-gray-400 min-w-full divide-y-2 divide-gray-200 bg-white text-sm rounded-lg">
                     <thead className="ltr:text-left rtl:text-right text-gray-600">
                       <tr>
-                        <th className="text-center whitespace-nowrap py-2">Name</th>
+                        <th className="text-center whitespace-nowrap py-2">
+                          Name
+                        </th>
                         <th className="text-center whitespace-nowrap py-2">
                           Remove
                         </th>

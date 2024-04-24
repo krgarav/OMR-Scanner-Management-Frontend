@@ -133,6 +133,16 @@ const DataProvider = (props) => {
       };
     });
   };
+
+  const modifyIsLoadingHandler = (state) => {
+    setDataState((item) => {
+      return {
+        ...item,
+        isLoading: state,
+      };
+    });
+  };
+
   const dataContext = {
     isLogin: dataState.isLogin,
     csvHeader: dataState.csvHeader,
@@ -148,7 +158,9 @@ const DataProvider = (props) => {
     imageMappedData: dataState.imageMappedData,
     csvFile: dataState.csvFile,
     csvDataWithImage: dataState.csvDataWithImage,
+    isLoading: dataState.isLoading,
 
+    modifyIsLoading: modifyIsLoadingHandler,
     modifyIslogin: modifyIsloginHandler,
     addToCsvHeader: addToCsvHeaderHandler,
     addToPrimaryKey: addToPrimaryKeyHandler,
