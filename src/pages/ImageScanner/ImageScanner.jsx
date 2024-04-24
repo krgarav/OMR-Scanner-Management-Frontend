@@ -7,6 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import { Dialog, Transition } from "@headlessui/react";
 import { RxCross1 } from "react-icons/rx";
+import { REACT_APP_IP } from "../../services/common";
 
 const ImageScanner = () => {
   const [selection, setSelection] = useState(null);
@@ -92,7 +93,7 @@ const ImageScanner = () => {
     setSelectedCoordinates((prev) => [...prev, newObj]);
     setInputField("");
     setFieldType("");
-    setOpen(false)
+    setOpen(false);
     toast.success("Coordinate successfully added.");
   };
 
@@ -119,7 +120,7 @@ const ImageScanner = () => {
 
     try {
       const response = await axios.post(
-        "http://192.168.0.116:4000/add/templete",
+        `http://${REACT_APP_IP}:4000/add/templete`,
         data
       );
       // console.log(response);
@@ -132,7 +133,7 @@ const ImageScanner = () => {
   };
 
   return (
-    <div className="flex pt-16">
+    <div className="flex pt-16 scannerbg">
       {/* LEFT SECTION  */}
 
       <div className="flex">
@@ -144,11 +145,11 @@ const ImageScanner = () => {
                 className="block w-full rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium  mb-5"
               >
                 <div className="overflow-x-auto">
-                  <table class="my-3 table-auto border-collapse border border-gray-400 min-w-full divide-y-2 divide-gray-200 bg-white text-sm rounded-lg">
-                    <thead class="ltr:text-left rtl:text-right text-gray-600">
+                  <table className="my-3 table-auto border-collapse border border-gray-400 min-w-full divide-y-2 divide-gray-200 bg-white text-sm rounded-lg">
+                    <thead className="ltr:text-left rtl:text-right text-gray-600">
                       <tr>
-                        <th class="text-center whitespace-nowrap py-2">Name</th>
-                        <th class="text-center whitespace-nowrap py-2">
+                        <th className="text-center whitespace-nowrap py-2">Name</th>
+                        <th className="text-center whitespace-nowrap py-2">
                           Remove
                         </th>
                       </tr>
@@ -389,25 +390,25 @@ const ImageScanner = () => {
                                     </div>
                                   </div>
                                   <div className=" px-4 pb-8 sm:flex sm:px-6 justify-between">
-                                  <input
-                                  required
-                                  className="input w-[72%] font-semibold bg-white text-lg focus:border-1 rounded-xl px-3 py-2 shadow-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
-                                  type="text"
-                                  name="field"
-                                  placeholder="Field.."
-                                  value={inputField}
-                                  onChange={(e) =>
-                                    setInputField(e.target.value)
-                                  }
-                                />
-                                <button
-                                  type="button"
-                                  data-bs-dismiss="modal"
-                                  className="bg-teal-600 hover:bg-teal-500 text-white rounded-xl text-md px-3"
-                                  onClick={onSelectedHandler}
-                                >
-                                  Save Field
-                                </button>
+                                    <input
+                                      required
+                                      className="input w-[72%] font-semibold bg-white text-lg focus:border-1 rounded-xl px-3 py-2 shadow-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+                                      type="text"
+                                      name="field"
+                                      placeholder="Field.."
+                                      value={inputField}
+                                      onChange={(e) =>
+                                        setInputField(e.target.value)
+                                      }
+                                    />
+                                    <button
+                                      type="button"
+                                      data-bs-dismiss="modal"
+                                      className="bg-teal-600 hover:bg-teal-500 text-white rounded-xl text-md px-3"
+                                      onClick={onSelectedHandler}
+                                    >
+                                      Save Field
+                                    </button>
                                   </div>
                                 </Dialog.Panel>
                               </Transition.Child>
@@ -415,7 +416,7 @@ const ImageScanner = () => {
                           </div>
                         </Dialog>
                       </Transition.Root>
-                      
+
                       {/* <div
                         className="modal fade"
                         id="exampleModal"

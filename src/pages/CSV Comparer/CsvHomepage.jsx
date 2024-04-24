@@ -9,7 +9,7 @@ import dataContext from "../../Store/DataContext";
 import axios from "axios";
 import { useNavigate } from "react-router";
 import classes from "./CSVHompage.module.css";
-import Navbar from "../../components/Navbar/Navbar";
+import { REACT_APP_IP } from "../../services/common";
 
 const CsvHomepage = () => {
   const navigate = useNavigate();
@@ -63,7 +63,7 @@ const CsvHomepage = () => {
 
         // Make the POST request with Axios
         const response = await axios.post(
-          "http://localhost:4000/compareData",
+          `http://${REACT_APP_IP}:4000/compareData`,
           formData,
           {
             headers: {

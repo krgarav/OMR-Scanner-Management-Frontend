@@ -6,6 +6,7 @@ import { BiEdit } from "react-icons/bi";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { REACT_APP_IP } from "../../services/common";
 
 export function AllUser() {
   const [users, setUsers] = useState([]);
@@ -18,7 +19,7 @@ export function AllUser() {
     const fetchUsers = async () => {
       try {
         const response = await axios.get(
-          "http://192.168.0.189:4000/users/getallusers"
+          `http://${REACT_APP_IP}:4000/users/getallusers`
         );
         console.log(response.data);
         const { users } = response.data;
@@ -35,7 +36,7 @@ export function AllUser() {
     // console.log(user)
     try {
       const response = await axios.get(
-        `http://192.168.0.189:4000/users/getuser/${user.id}`
+        `http://${REACT_APP_IP}:4000/users/getuser/${user.id}`
       );
       console.log(response.data);
       setSelectedUser(response.data.user);
@@ -60,7 +61,7 @@ export function AllUser() {
     e.preventDefault();
     try {
       const response = await axios.put(
-        `http://192.168.0.189:4000/users/updateuser/${selectedUser.id}`,
+        `http://${REACT_APP_IP}:4000/users/updateuser/${selectedUser.id}`,
         selectedUser
       );
       setOpen(false);
@@ -76,7 +77,7 @@ export function AllUser() {
     console.log(userId);
     try {
       const response = await axios.delete(
-        `http://192.168.0.189:4000/users/deleteuser/${userId}`
+        `http://${REACT_APP_IP}:4000/users/deleteuser/${userId}`
       );
       setUsers(users.filter((user) => user.id !== userId));
       toast.success("User Deleted Successfully");
@@ -124,7 +125,7 @@ export function AllUser() {
                         scope="col"
                         className="px-12 py-3.5 text-left  text-md font-semibold text-gray-700"
                       >
-                        Mobile 
+                        Mobile
                       </th>
 
                       <th
@@ -208,7 +209,6 @@ export function AllUser() {
             </div>
           </div>
         </div>
-     
 
         <Transition.Root show={open} as={Fragment}>
           <Dialog

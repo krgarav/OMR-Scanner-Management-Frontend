@@ -22,3 +22,11 @@ body {
 a{
   text-decoration: none !important;
 }
+
+
+.scannerbg {
+  background-image: url(./assets/images/scannerbg.jpg);
+  background-position: 50% 0;
+  background-size: cover;
+  height: auto;
+}
