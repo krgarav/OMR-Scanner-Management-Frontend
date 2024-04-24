@@ -118,13 +118,13 @@ const CsvUploader = () => {
       }
     }
   };
-  // style={{ backgroundColor: "#180C2E" }} 
+
   return (
-    <Fragment>
+    <div  className="csvuploader h-[100vh]">
       {dataCtx.isLoading ? (
         <Loader />
       ) : (
-        <div className="csvuploader h-[100vh]">
+        <div>
           <div className="xl:flex justify-center items-center  gap-5 mb-5 pt-5 mx-5 mt-10">
             <div
               className="mx-auto max-w-xl  h-[50%] bg-white px-8 py-4 mt-5 text-center shadow-lg"
@@ -196,7 +196,7 @@ const CsvUploader = () => {
               </div>
             </div>
             <div
-              className="mx-auto max-w-xl border-2 border-dashed px-28 mt-5 text-center shadow-md shadow-teal-400 pb-5"
+              className="mx-auto max-w-xl border-4 border-dashed px-28 mt-5 text-center shadow-md shadow-teal-400 pb-5"
               style={{ borderColor: "skyblue", borderRadius: "60px" }}
             >
               <img
@@ -230,7 +230,7 @@ const CsvUploader = () => {
             </div>
             {/* 2nd section */}
             <div
-              className="mx-auto max-w-xl border-2 border-dashed px-28 mt-5 text-center shadow-md shadow-teal-400 pb-5"
+              className="mx-auto max-w-xl border-4 border-dashed px-28 mt-5 text-center shadow-md pb-5"
               style={{ borderColor: "skyblue", borderRadius: "60px" }}
             >
               <img
@@ -248,7 +248,7 @@ const CsvUploader = () => {
                   className="flex items-center font-medium text-white bg-gradient-to-r from-purple-600 to-indigo-700 rounded-3xl shadow-md cursor-pointer select-none text-lg px-6 py-2 hover:shadow-xl active:shadow-md"
                   htmlFor="image-folder-upload"
                 >
-                  <span>Upload Zip file </span>
+                  <span>Upload Zip file</span>
 
                   <input
                     id="image-folder-upload"
@@ -277,7 +277,7 @@ const CsvUploader = () => {
           </div>
         </div>
       )}
-    </Fragment>
+    </div>
   );
 };
 
