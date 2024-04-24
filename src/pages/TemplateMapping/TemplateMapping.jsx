@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { onGetTemplateHandler } from "../../services/common";
+import { REACT_APP_IP } from "../../services/common";
 
 const TemplateMapping = () => {
   const [csvHeaders, setCsvHeaders] = useState([]);
@@ -33,7 +34,7 @@ const TemplateMapping = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `http://192.168.0.116:4000/get/headerdata/${fileId}`
+          `http://${REACT_APP_IP}:4000/get/headerdata/${fileId}`
         );
         setCsvHeaders(response.data);
       } catch (error) {
@@ -81,27 +82,25 @@ const TemplateMapping = () => {
       toast.error("Please select all the field properly.");
       return;
     }
-
     const newObj = {
       ...selectedAssociations,
       fileId: fileId,
     };
 
     try {
-      await axios.post(`http://192.168.0.116:4000/data`, newObj);
-      // console.log(response);
+      await axios.post(`http://${REACT_APP_IP}:4000/data`, newObj);
       toast.success("Mapping successfully done.");
-      // navigate(`/datamatching/${fileId}`, { state: id });
       navigate(`/datamatching/${fileId}`, { state: id });
     } catch (error) {
       toast.error(error.message);
     }
   };
 
+  console.log(csvHeaders + "csv Header ");
+
   return (
     <div
       className="py-12 min-h-[100vh] overflow-y overflow-x-auto flex justify-center templatemapping"
-      // style={{ backgroundColor: "#180C2E" }}
     >
       <div className="w-[700px]">
         <h1 className="text-white text-4xl text-center mb-10">Mapping</h1>
