@@ -101,7 +101,15 @@ const SubjectWiseMarkApply = () => {
                         select here
                       </div>
                     ) : (
-                      keyHEaders[0][SubjectStartKey.current]
+                      <p
+                        onClick={() => {
+                          setSubjectStartDropDownOpen(
+                            !subjectStartDropDownOpen
+                          );
+                        }}
+                      >
+                        {keyHEaders[0][SubjectStartKey.current]}
+                      </p>
                     )}
                     {subjectStartDropDownOpen && (
                       <div className="bg-blue-500  overflow-x-hidden overflow-y-scroll  h-[60px] ">
@@ -135,15 +143,25 @@ const SubjectWiseMarkApply = () => {
                   End que :
                   <div className="w-[120px]   min-[816px]:mx-4 my-2  overflow-x-hidden font-medium border-white border-2">
                     {SubjectEndKey.current < 0 || !SubjectEndKey.current ? (
-                      <div className="text-white text-md text-center" onClick={() => {
-                        setSubjectEndDropdownOpen(
-                          !subjectStartDropDownOpen
-                        );
-                      }}>
+                      <div
+                        className="text-white text-md text-center"
+                        onClick={() => {
+                          setSubjectEndDropdownOpen(!subjectStartDropDownOpen);
+                        }}
+                      >
                         select here
                       </div>
                     ) : (
-                      keyHEaders[0][SubjectEndKey.current]
+                      <p
+                      onClick={() => {
+                        setSubjectEndDropdownOpen(
+                          !subjectEndDropDownOpen
+                        );
+                      }}
+                    >
+                      {keyHEaders[0][SubjectEndKey.current]}
+                    </p>
+                     
                     )}
                     {subjectEndDropDownOpen && (
                       <div className="bg-blue-500  overflow-x-hidden overflow-y-scroll  h-[60px] ">

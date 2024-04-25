@@ -45,7 +45,7 @@ const GenerateResultCsv = (props) => {
       toast.error("wrong marks value should be positive number ");
       return;
     }
-    toast("csv file mapping started.....wait");
+    // toast("csv file mapping started.....wait");
     for (let i = 1; i < dataHeaders.length; i++) {
       //we will go to each student attempted question in data file
 
@@ -178,6 +178,7 @@ const GenerateResultCsv = (props) => {
     }
 
     const data = finalAnswers;
+    headers = [...props.headers, ...headers];
     console.log(finalAnswers);
     //  return;
     const csvData = convertArrayOfObjectsToCSV(

@@ -59,10 +59,10 @@ const OutPutHeaders = () => {
                   );
                 })}
             </div>{" "}
-          </div>
-          <GenerateResultCsv headers={headers}></GenerateResultCsv>
+          </div>  <GenerateResultCsv headers={headers}></GenerateResultCsv>
         </div>
       </div>
+    
     </>
   );
 };
