@@ -96,12 +96,8 @@ const TemplateMapping = () => {
     }
   };
 
-  console.log(csvHeaders + "csv Header ");
-
   return (
-    <div
-      className="py-12 min-h-[100vh] overflow-y overflow-x-auto flex justify-center templatemapping"
-    >
+    <div className="py-12 min-h-[100vh] overflow-y overflow-x-auto flex justify-center templatemapping">
       <div className="w-[700px]">
         <h1 className="text-white text-4xl text-center mb-10">Mapping</h1>
         {csvHeaders &&

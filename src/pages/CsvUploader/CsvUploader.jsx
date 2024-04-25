@@ -18,8 +18,6 @@ const CsvUploader = () => {
   const dataCtx = useContext(dataContext);
   const navigate = useNavigate();
 
-  console.log("_-----------------");
-
   useEffect(() => {
     const fetchTemplate = async () => {
       try {
@@ -32,45 +30,53 @@ const CsvUploader = () => {
     fetchTemplate();
   }, []);
 
-  // useEffect(() => {
-  //   const timeout = setTimeout(() => {
-  //     dataCtx.modifyIsLoading(false);
-  //   }, 1000);
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      dataCtx.modifyIsLoading(false);
+    }, 1000);
 
-  //   return () => clearTimeout(timeout);
-  // }, [dataCtx]);
+    return () => clearTimeout(timeout);
+  }, []);
+
+  console.log("fndjklnj");
 
   const filteredTemplates = allTemplates?.filter((template) =>
     template.name.toLowerCase().includes(templateName.toLowerCase())
   );
 
   const onCsvFileHandler = (event) => {
-    if (event.target.files[0]) {
-      const file = event.target.files[0];
-      const allowedExtensions = ["csv", "xlsx"];
-      const extension = file?.name.split(".").pop().toLowerCase();
-
-      if (!allowedExtensions.includes(extension)) {
-        toast.error("Please upload a CSV or Excel file.");
-        return;
-      }
-
-      setCsvFile(file);
-    }
+    const fileInput = event.target.files[0];
+    handleFileUpload(
+      fileInput,
+      ["csv", "xlsx"],
+      "Please upload a CSV or Excel file.",
+      setCsvFile
+    );
   };
 
   const onImageFolderHandler = (event) => {
-    if (event.target.files[0]) {
-      const file = event.target.files[0];
-      const allowedExtensions = ["zip", "folder"];
-      const extension = file?.name.split(".").pop().toLowerCase();
+    const fileInput = event.target.files[0];
+    handleFileUpload(
+      fileInput,
+      ["zip", "folder"],
+      "Please upload a ZIP file or a folder.",
+      setImageFolder
+    );
+  };
 
+  const handleFileUpload = (
+    file,
+    allowedExtensions,
+    errorMessage,
+    setFileState
+  ) => {
+    if (file) {
+      const extension = file.name.split(".").pop().toLowerCase();
       if (!allowedExtensions.includes(extension)) {
-        toast.error("Please upload a ZIP file or a folder.");
+        toast.error(errorMessage);
         return;
       }
-
-      setImageFolder(file);
+      setFileState(file);
     }
   };
 
@@ -94,7 +100,7 @@ const CsvUploader = () => {
       toast.error("Please upload the image folder.");
       return;
     }
-    dataCtx.modifyIsLoading(false);
+    dataCtx.modifyIsLoading(true);
     const formData = new FormData();
     formData.append("csvFile", csvFile);
     formData.append("zipFile", imageFolder);
@@ -113,8 +119,7 @@ const CsvUploader = () => {
         const fileId = response.data;
         toast.success("Files uploaded successfully!");
         dataCtx.modifyIsLoading(false);
-        console.log("template users");
-        navigate(`/templatemap/${selectedId}`, { state: fileId });
+        navigate(`/csvuploader/templatemap/${selectedId}`, { state: fileId });
       } catch (error) {
         console.error("Error uploading files: ", error);
         toast.error(error.message);
@@ -123,7 +128,7 @@ const CsvUploader = () => {
   };
 
   return (
-    <div className="csvuploader h-[100vh]">
+    <div className="h-[100vh]">
       {dataCtx.isLoading ? (
         <Loader />
       ) : (

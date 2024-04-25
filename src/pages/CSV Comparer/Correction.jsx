@@ -13,11 +13,11 @@ const Correction = () => {
   const [currIndex, setCurrIndex] = useState(0);
   const dataCtx = useContext(dataContext);
   const state = dataCtx.imageMappedData;
-  const obj = useLocation();
-  const lengthOfResult = obj.state.length;
+  const location = useLocation();
+  const lengthOfResult = location.state?.length;
 
   const navigate = useNavigate();
-  console.log(obj.pathname);
+  console.log(location.pathname);
   useEffect(() => {
     if (dataCtx.imageMappedData.length === 0) {
       navigate("/comparecsv", { replace: true });
@@ -118,7 +118,6 @@ const Correction = () => {
 
   return (
     <>
-  
       <div
         className={`flex lg:flex-row md:flex-col justify-between animate-slide-left-to-right ${classes.correction} `}
       >
