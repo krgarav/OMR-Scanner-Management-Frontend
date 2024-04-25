@@ -129,13 +129,12 @@ const ImageScanner = () => {
   };
 
   return (
-    <div className="flex scannerbg pt-16 pb-3 border-1">
+    <div className="flex scannerbg pb-3 border-1">
       {/* LEFT SECTION  */}
-
       <div className="flex">
         <div className="flex flex-1 flex-col justify-between border-e bg-teal-50">
           <div className="px-4 py-6">
-            <ul className="space-y-1 ">
+            <ul className="space-y-1">
               <li
                 style={{ marginTop: "40px" }}
                 className="block w-full rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium  mb-5"
@@ -336,7 +335,7 @@ const ImageScanner = () => {
                                             className=" text-red-600 w-[30px] h-[30px]  text-xl"
                                             onClick={onResetHandler}
                                           >
-                                            <RxCross1 className="font-extrabold"/>
+                                            <RxCross1 className="font-extrabold" />
                                           </button>
                                         </div>
                                       </div>

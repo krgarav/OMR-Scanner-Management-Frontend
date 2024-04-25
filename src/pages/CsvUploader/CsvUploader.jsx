@@ -18,6 +18,8 @@ const CsvUploader = () => {
   const dataCtx = useContext(dataContext);
   const navigate = useNavigate();
 
+  console.log("_-----------------");
+
   useEffect(() => {
     const fetchTemplate = async () => {
       try {
@@ -29,14 +31,14 @@ const CsvUploader = () => {
     };
     fetchTemplate();
   }, []);
-console.log("===================")
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      dataCtx.modifyIsLoading(false);
-    }, 1000);
 
-    return () => clearTimeout(timeout);
-  }, [dataCtx]);
+  // useEffect(() => {
+  //   const timeout = setTimeout(() => {
+  //     dataCtx.modifyIsLoading(false);
+  //   }, 1000);
+
+  //   return () => clearTimeout(timeout);
+  // }, [dataCtx]);
 
   const filteredTemplates = allTemplates?.filter((template) =>
     template.name.toLowerCase().includes(templateName.toLowerCase())
@@ -135,7 +137,7 @@ console.log("===================")
                 Template Name
               </h1>
               <div className="form relative pb-3">
-                <button className="absolute ps-3" style={{ top: "10px" }}>
+                <button className="absolute" style={{ top: "10px" }}>
                   <svg
                     className="w-5 h-5 text-gray-700"
                     aria-labelledby="search"

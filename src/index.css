@@ -37,6 +37,10 @@ a {
   background-size: cover;
   height: auto;
 }
-.activeBg {
-  background: rgb(70, 69, 69) !important;
+
+.templatemapping {
+  background-image: url(./assets/images/templatemappingbg.jpg);
+  background-position: 50% 0;
+  background-size: cover;
+  height: auto;
 }
