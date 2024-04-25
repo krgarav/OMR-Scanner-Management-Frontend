@@ -33,12 +33,10 @@ const CsvUploader = () => {
   useEffect(() => {
     const timeout = setTimeout(() => {
       dataCtx.modifyIsLoading(false);
-    }, 1000);
+    }, 500);
 
     return () => clearTimeout(timeout);
   }, []);
-
-  console.log("fndjklnj");
 
   const filteredTemplates = allTemplates?.filter((template) =>
     template.name.toLowerCase().includes(templateName.toLowerCase())

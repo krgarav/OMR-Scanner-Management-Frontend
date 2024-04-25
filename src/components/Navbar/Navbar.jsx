@@ -18,7 +18,7 @@ const menuItems = [
   {
     name: "Data Entry",
     permission: "userEditor",
-    href: [""],
+    href: "",
   },
   {
     name: "CSV Compare",
@@ -28,7 +28,7 @@ const menuItems = [
   {
     name: ["Result Generator"],
     permission: "resultGenerator",
-    href: [""],
+    href: "resultGeneration",
   },
 ];
 export default function Navbar() {
