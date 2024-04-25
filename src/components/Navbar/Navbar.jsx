@@ -9,7 +9,7 @@ import dataContext from "../../Store/DataContext";
 const menuItems = [
   {
     name: "Create Template",
-    href: ["imageuploader", "/scanner"],
+    href: ["/imageuploader", "/scanner"],
   },
   {
     name: "Csv Uploader",
