@@ -129,7 +129,7 @@ const ImageScanner = () => {
   };
 
   return (
-    <div className="flex scannerbg pb-3 border-1">
+    <div className="flex scannerbg border-1 pt-16 ">
       {/* LEFT SECTION  */}
       <div className="flex">
         <div className="flex flex-1 flex-col justify-between border-e bg-teal-50">

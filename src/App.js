@@ -27,11 +27,17 @@ function App() {
             <Route path="/create-user" element={<CreateUser />} />
             <Route path="/all-user" element={<AllUser />} />
             <Route path="/comparecsv" element={<CsvHomepage />} />
-            <Route path="/correct_compare_csv" element={<Correction />} />
+            <Route
+              path="/comparecsv/correct_compare_csv"
+              element={<Correction />}
+            />
             <Route path="/imageuploader" element={<ImageUploader />} />
-            <Route path="/scanner" element={<ImageScanner />} />
+            <Route path="/imageuploader/scanner" element={<ImageScanner />} />
             <Route path="/csvuploader" element={<CsvUploader />} />
-            <Route path="/templatemap/:id" element={<TemplateMapping />} />
+            <Route
+              path="/csvuploader/templatemap/:id"
+              element={<TemplateMapping />}
+            />
 
             <Route
               path="*"
