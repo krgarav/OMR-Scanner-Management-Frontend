@@ -26,7 +26,7 @@ const menuItems = [
     href: "comparecsv",
   },
   {
-    name: ["Result Generator"],
+    name: "Result Generator",
     permission: "resultGenerator",
     href: "resultGeneration",
   },
