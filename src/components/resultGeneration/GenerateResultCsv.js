@@ -209,24 +209,24 @@ const GenerateResultCsv = (props) => {
     return [headerLine, ...csv].join("\n");
   };
   return (
-    <div className="text-center mt-2 flex flex-row min-[1020px]:flex-col  justify-center">
-      <div className="text-center mt-2 ">
+    <div className="text-center mt-2 flex flex-row min-[1103px]:flex-col  justify-center">
+      <div className="text-center mt-4 ">
         <a
-          class="animate__animated animate__bounceInLeft animate__delay-4s group inline-block rounded-full bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 p-[2px] hover:text-white focus:outline-none focus:ring active:text-opacity-75 mx-4"
+          className="animate__animated animate__bounceInLeft animate__delay-4s group inline-block rounded-full bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 p-[2px] hover:text-white focus:outline-none focus:ring active:text-opacity-75 mx-4 shadow-md shadow-blue-300"
           href="#"
           onClick={resultGenerator}
         >
-          <span class="block rounded-full bg-white px-8 py-3 text-sm font-bold group-hover:bg-transparent hover:text-white text-black">
+          <span className="block rounded-full bg-white px-8 py-3 text-sm font-bold group-hover:bg-transparent hover:text-white text-black">
             Generate Result
           </span>
         </a>
       </div>
-      <div className="text-center mt-2 ">
+      <div className="text-center mt-4 ">
         <a
-          class="animate__animated animate__bounceInLeft animate__delay-5s group inline-block rounded-full bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 p-[2px] hover:text-white focus:outline-none focus:ring active:text-opacity-75 mx-4"
+          className="animate__animated animate__bounceInLeft animate__delay-5s group inline-block rounded-full bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 p-[2px] hover:text-white focus:outline-none focus:ring active:text-opacity-75 mx-4 shadow-md shadow-blue-300"
           href="#"
         >
-          <span class="block rounded-full bg-white px-8 py-3 text-sm font-bold group-hover:bg-transparent hover:text-white text-black">
+          <span className="block rounded-full bg-white px-8 py-3 text-sm font-bold group-hover:bg-transparent hover:text-white text-black">
             cancel
           </span>
         </a>

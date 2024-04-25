@@ -72,14 +72,14 @@ const SubjectWiseMarkApply = () => {
   return (
     <div className="m-2 mt-10 w-[100%]  pe-4">
       <div className="flex justify-center">
-        <div className="animate__animated animate__zoomInUp animate__delay-2s w-[100%] max-w-[600px] h-fit bg-gradient-to-r from-red-600 to-yellow-500 pb-8 rounded-lg">
+        <div className="animate__animated animate__zoomInUp animate__delay-2s w-[100%] max-w-[600px] h-fit bg-gradient-to-r from-red-600 to-yellow-500 pb-8 rounded-lg shadow-md shadow-gray-500">
           <div className="flex justify-center">
             <p className="font-bold pt-8 pb-2 text-2xl border-b-2 border-grey-500 text-white">
               Subject Wise Marking
             </p>
           </div>
-          <div className="flex mt-2 max-[816px]:flex-col-reverse  items-center">
-            <div className="min-[816px]:w-[60%]">
+          <div className="flex  max-[816px]:flex-col-reverse  items-center">
+            <div className="min-[816px]:w-[60%] mt-4">
               <div className="flex justify-between mt-2 mx-4 min-[816px]:text-center">
                 <div
                   className="font-bold text-[1.1rem] "
@@ -153,15 +153,12 @@ const SubjectWiseMarkApply = () => {
                       </div>
                     ) : (
                       <p
-                      onClick={() => {
-                        setSubjectEndDropdownOpen(
-                          !subjectEndDropDownOpen
-                        );
-                      }}
-                    >
-                      {keyHEaders[0][SubjectEndKey.current]}
-                    </p>
-                     
+                        onClick={() => {
+                          setSubjectEndDropdownOpen(!subjectEndDropDownOpen);
+                        }}
+                      >
+                        {keyHEaders[0][SubjectEndKey.current]}
+                      </p>
                     )}
                     {subjectEndDropDownOpen && (
                       <div className="bg-blue-500  overflow-x-hidden overflow-y-scroll  h-[60px] ">
@@ -213,17 +210,20 @@ const SubjectWiseMarkApply = () => {
                 </div>
               </div>
             </div>
-            <div className=" mt-4 h-[120px] w-[60%] min-[816px]:w-[40%] mx-2 flex flex-col items-center">
-              <div className="bg-blue-400 w-[100%] text-center font-bold">
+            <div className=" mt-4 h-[150px] w-[60%] min-[816px]:w-[40%] mx-2 flex flex-col items-center bg-white shadow-md shadow-blue-400 ">
+              <div className="bg-blue-400 w-[100%] text-center font-semibold text-xl py-2">
                 selected subject
               </div>
-              <div className="overflow-y-scroll h-[100px] w-[100%] text-center border-s border-2">
+              <div className="overflow-y-scroll h-[100px] w-[100%] text-center  ">
+                {subjectWiseMarking.length <= 0 && (
+                  <div className="flex items-center w-full h-full justify-center">no subject present</div>
+                )}
                 {subjectWiseMarking.map((current) => (
-                  <div className="font-bold bg-white items-center border-b border-blue-600 hover:bg-white hover:border-b-0 flex justify-between ">
-                    <p className="ms-2">{current.subject}</p>
+                  <div className="font-bold bg-white items-center border-b border-blue-600 flex justify-between py-2">
+                    <p className="ms-2 text-gray-400">{current.subject}</p>
                     <p className="mx-2">
                       <RiDeleteBin6Line
-                        className="w-[25px] h-[25px] hover:text-red-500"
+                        className="text-2xl text-red-500 hover:text-red-600 hover:text-3xl"
                         onClick={() => {
                           ctx.deleteSubjectHandler(current.subject);
                           // deleteSubjectHandler(current.subject);
@@ -235,7 +235,7 @@ const SubjectWiseMarkApply = () => {
               </div>
             </div>
           </div>
-          <div className="flex justify-between mt-2 mx-4 text-center w-[100%]">
+          <div className="flex justify-between mt-6 mx-4 text-center w-[100%]">
             <div className="flex text-[1.1rem] font-bold justify-center  mx-8">
               Subject :{" "}
               <input

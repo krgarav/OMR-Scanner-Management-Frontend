@@ -27,9 +27,11 @@ const PaperkeyMap = () => {
                 // setSelectedKeyOpen(!selectedKeyOpen);
               }}
             >
-              <div className="text-[1.2rem] font-bold">Select Key value</div>
+              <div className="text-[1.2rem] font-bold  text-yellow-400 mb-3">
+                Select Mapped Key
+              </div>
               <div
-                className="border w-[80%] ms-2 flex flex-col items-center"
+                className="border w-[90%] md:w-[80%] md:ms-2 flex flex-col items-center  py-1 text-white"
                 onClick={() => setSelectedKeyOpen(!selectedKeyOpen)}
               >
                 {!mappedKey ? (
@@ -41,17 +43,17 @@ const PaperkeyMap = () => {
                   </div>
                 ) : (
                   <div
-                    className="font-semibold"
+                    className={`font-semibold w-[100%] text-center ${selectedKeyOpen&&'border-b border-1 py-1'}`}
                     onClick={() => setSelectedKeyOpen(!selectedKeyOpen)}
                   >
                     {mappedKey}
                   </div>
                 )}
                 {selectedKeyOpen && (
-                  <div className="w-[200px] h-[100px] overflow-y-scroll">
+                  <div className="md:w-[200px] h-[100px] overflow-y-scroll my-2 ">
                     {keyHEaders[0].map((currentKey) => (
                       <div
-                        className="h-[50px]"
+                        className="h-[30px] hover:bg-yellow-500 ps-3 hover:text-white flex flex-col justify-center"
                         key={currentKey}
                         onClick={(event) => {
                           // event.stopPropagation();

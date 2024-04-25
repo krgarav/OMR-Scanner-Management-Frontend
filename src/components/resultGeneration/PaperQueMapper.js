@@ -3,12 +3,12 @@ import ResultGenerationContext from "../../Store/ResultGenerationContext";
 
 const PaperQueMapper = () => {
   const [selectedQueOpen, setSelectedQueOpen] = useState(false);
-  const [mappedQue, setMappedQue] = useState(null);
+  const [mappedQue, setMappedQue] = useState(-1);
   const totalQue = useRef();
   const ctx = useContext(ResultGenerationContext);
   const keyHEaders = ctx.keyHeaders;
   const dataHeaders = ctx.dataHeaders;
-
+console.log(mappedQue)
   return (
     <>
       {" "}
@@ -22,17 +22,17 @@ const PaperQueMapper = () => {
               }}
             >
               <div className="bg-gradient-to-r from-cyan-500 to-blue-500 w-[100%] rounded-lg flex flex-col items-center py-4">
-                <div className="text-[1.2rem] font-bold">start Question :</div>
+                <div className="text-[1.2rem] font-bold text-yellow-400 mb-3">Start Question :</div>
                 <div
-                  className="border w-[80%] ms-2 flex flex-col items-center"
+                  className={`border w-[90%] md:w-[80%] md:ms-2 flex flex-col items-center  py-1 text-white`}
                   onClick={(event) => {
                     event.stopPropagation();
                     setSelectedQueOpen(!selectedQueOpen); // open the dropdown after selecting the Question key
                   }}
                 >
-                  {!mappedQue ? (
+                  {mappedQue<0 ? (
                     <div
-                      className="font-semibold py-1"
+                      className="font-semibold "
                       onClick={(event) => {
                         event.stopPropagation();
                         setSelectedQueOpen(true); // open the dropdown after selecting the Question key
@@ -42,20 +42,20 @@ const PaperQueMapper = () => {
                     </div>
                   ) : (
                     <div
-                      className="font-semibold "
+                      className={`font-semibold w-full text-center   ${selectedQueOpen&& 'border-b border-1 py-1'}`}
                       onClick={(event) => {
                         event.stopPropagation();
-                        setSelectedQueOpen(true); // open the dropdown after selecting the Question key
+                        setSelectedQueOpen(!selectedQueOpen); // open the dropdown after selecting the Question key
                       }}
                     >
                       {dataHeaders[0][mappedQue]}
                     </div>
                   )}
                   {selectedQueOpen && (
-                    <div className="w-[200px] h-[100px] overflow-y-scroll">
+                    <div className="md:w-[200px] h-[100px] overflow-y-scroll my-2">
                       {keyHEaders[0].map((currentKey, index) => (
                         <div
-                          className="h-[50px]"
+                          className="h-[30px] hover:bg-yellow-500 ps-3 hover:text-white font-semibold flex flex-col justify-center"
                           key={currentKey}
                           onClick={(event) => {
                             event.stopPropagation();
@@ -63,12 +63,7 @@ const PaperQueMapper = () => {
                             // mappedQuesHandler(index);
                             setSelectedQueOpen(false); // Close the dropdown after selecting the key
                             ctx.paperMarkHandler({ start: index });
-                            console.log(
-                              "selected key:",
-                              keyHEaders[0][index],
-                              keyHEaders[0][100 + index - 1],
-                              index
-                            );
+                           
                           }}
                         >
                           {currentKey}
@@ -83,10 +78,11 @@ const PaperQueMapper = () => {
           <div className=" m-2 mt-5  animate__animated animate__backInDown animate__slower ">
             <div className=" w-[100%]   " onClick={() => {}}>
               <div className="bg-gradient-to-r from-cyan-500 to-blue-500 w-[100%] rounded-lg flex flex-col items-center py-4">
-                <div className="text-[1.2rem] font-bold">
-                  total question in paper :
+                <div className="text-[1.2rem] font-bold  text-yellow-400 mb-3">
+                  Total question :
                 </div>
                 <input
+                className="text-center font-bold w-[80%]"
                   ref={totalQue}
                   defaultValue={+100}
                   type="number"
