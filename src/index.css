@@ -37,3 +37,6 @@ a {
   background-size: cover;
   height: auto;
 }
+.activeBg {
+  background: rgb(70, 69, 69) !important;
+}
