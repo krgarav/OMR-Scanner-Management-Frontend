@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { TiThMenu } from "react-icons/ti";
 import { RxCross2 } from "react-icons/rx";
 import logo from "../../assets/images/image.png";
@@ -9,32 +9,30 @@ import dataContext from "../../Store/DataContext";
 const menuItems = [
   {
     name: "Create Template",
-    href: ["imageuploader", "/scanner"],
+    href: "imageuploader",
   },
   {
     name: "Csv Uploader",
-    href: ["/csvuploader"],
+    href: "csvuploader",
   },
   {
     name: "Data Entry",
     permission: "userEditor",
-    href: ["#"],
+    href: [""],
   },
   {
     name: "CSV Compare",
     permission: "csvCompare",
-    href: ["/comparecsv"],
+    href: "comparecsv",
   },
   {
     name: ["Result Generator"],
     permission: "resultGenerator",
-    href: ["#"],
+    href: [""],
   },
 ];
-const urls = [{}];
 export default function Navbar() {
-  const url = useLocation();
-  const [isActive, setIsActive] = useState(false);
+  const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const naviagte = useNavigate();
   const [isUserMenuOpen, setIsUserMenuOpen] = React.useState(false);
@@ -81,8 +79,8 @@ export default function Navbar() {
   const filteredMenuItems = menuItems?.filter(
     (item) => userData?.permissions[item.permission]
   );
+
   return (
-    
     <div className="fixed w-full z-10 bg-white">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2 sm:px-6 lg:px-8">
         <div className="inline-flex items-center space-x-2">
@@ -92,13 +90,12 @@ export default function Navbar() {
           <ul className="flex justify-center items-center space-x-2">
             {userData?.role === "Admin"
               ? menuItems?.map((item) => {
-                  const active = item.href.includes(url.pathname)
-                    ? "bg-gray-300 "
-                    : "";
+                  const mainUrl = location.pathname?.slice(1)?.split("/");
+                  const active = mainUrl[0] === item.href ? "bg-gray-300 " : "";
                   return (
                     <li key={item.name}>
                       <Link
-                        to={item.href[0]}
+                        to={item.href}
                         onClick={() => {
                           setIsUserMenuOpen(false);
                         }}

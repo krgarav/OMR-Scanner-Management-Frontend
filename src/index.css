@@ -39,7 +39,7 @@ a {
 }
 
 .templatemapping {
-  background-image: url(./assets/images/templatemappingbg.jpg);
+  background-image: url(./assets/images/templatemappingbg.jpg) ;
   background-position: 50% 0;
   background-size: cover;
   height: auto;

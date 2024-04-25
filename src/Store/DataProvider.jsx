@@ -15,6 +15,7 @@ const initialData = {
   imageColName: "",
   imageMappedData: [],
   csvFile: [],
+  isLoading: true,
   csvDataWithImage: [],
 };
 
@@ -176,6 +177,7 @@ const DataProvider = (props) => {
     setCsvFile: setCsvFileHandler,
     setCsvDataWithImage: setCsvDataWithImageHandler,
   };
+
   return (
     <DataContext.Provider value={dataContext}>
       {props.children}
