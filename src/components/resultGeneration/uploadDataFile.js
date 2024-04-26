@@ -61,22 +61,25 @@ const UploadDataFile = () => {
       );
   };
   return (
-    <div className="h-[100vh] w-[100%] flex  pt-28 overflow-y-hidden lg:mx-4 xl:mx-20">
+    <div className="h-[100vh] w-[100%] flex  pt-20 overflow-y-hidden lg:mx-4 xl:mx-20">
       {uploadFiles.length > 0 && (
-        <div className="h-auto flex flex-col min-w-[200px]  md:min-w-[300px] w-[20vw]  overflow-y-scroll justify-evenly">
+        <div
+          className="h-auto flex flex-col min-w-[200px]  md:min-w-[300px] w-[20vw]  overflow-y-scroll border-e-2 border-gray-400"
+          style={{ scrollbarWidth: "none" }}
+        >
           <UploadStatus />
           <PaperkeyMap></PaperkeyMap>
           <PaperQueMapper></PaperQueMapper>
         </div>
       )}
 
-      <div className=" w-[100%] flex max-[1103px]:flex-col overflow-y-scroll">
+      <div className=" w-[100%] flex max-[1103px]:flex-col overflow-y-scroll " style={{scrollbarWidth:"thin"}}>
         <div className="h-auto  flex w-[100%] ">
           {!keyHEaders && (
-            <div className=" flex flex-col items-center justify-center h-auto w-[100%]">
+            <div className="h-[100vh] flex flex-col items-center justify-center  w-[100%]">
               {!dataHeaders && (
                 <div
-                  className="animate__animated animate__bounceInLeft bg-gradient-to-r from-green-400 to-blue-300 hover:from-pink-400 hover:to-yellow-600 w-[500px] rounded-lg py-4 font-semibold hover:font-bold shadow-2xl shadow-black"
+                  className="animate__animated animate__bounceInLeft bg-gradient-to-r from-green-400 to-blue-300 hover:from-pink-400 hover:to-yellow-600 w-[350px] md:w-[500px] rounded-lg py-4 font-semibold hover:font-bold shadow-2xl shadow-black"
                   onChange={csvfileUploader}
                 >
                   <label
@@ -84,7 +87,7 @@ const UploadDataFile = () => {
                     className="block cursor-pointer mx-4 p-16 border-dashed border-white-500 border-4 hover:border-8"
                   >
                     <input type="file" id="dataFile1" className="hidden" />
-                    <div className="flex flex-col justify-center items-center text-3xl">
+                    <div className="flex flex-col justify-center items-center text-2xl md:text-3xl w-[120%] md:w-[100%]">
                       <ImFolderUpload className="w-[80px] h-[80px] text-white" />{" "}
                       <p className="flex items-center mx-2  text-white ">
                         upload data file
@@ -95,7 +98,7 @@ const UploadDataFile = () => {
               )}
               {dataHeaders && !keyHEaders && (
                 <div
-                  className="animate__animated animate__bounceInRight animate__slow bg-gradient-to-r from-green-400 to-blue-300 hover:from-pink-400 hover:to-yellow-600 w-[500px] rounded-lg py-4 font-semibold hover:font-bold shadow-2xl shadow-black"
+                  className="animate__animated animate__bounceInRight animate__slow bg-gradient-to-r from-green-400 to-blue-300 hover:from-pink-400 hover:to-yellow-600 w-[350px] md:w-[500px] rounded-lg py-4 font-semibold hover:font-bold shadow-2xl shadow-black"
                   onChange={keyfileUploader}
                 >
                   <label
@@ -103,7 +106,7 @@ const UploadDataFile = () => {
                     className="block cursor-pointer mx-4 p-16 border-dashed border-white-500 border-4 hover:border-8"
                   >
                     <input type="file" id="dataFile2" className="hidden" />
-                    <div className="flex flex-col justify-center items-center text-3xl text-white">
+                    <div className="flex flex-col items-center justify-center text-2xl md:text-3xl w-[120%] md:w-[100%] text-white">
                       <ImFolderUpload className="w-[80px] h-[80px]" />{" "}
                       <p className="flex items-center mx-2 ">upload key file</p>{" "}
                     </div>

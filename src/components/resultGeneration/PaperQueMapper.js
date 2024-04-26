@@ -8,7 +8,7 @@ const PaperQueMapper = () => {
   const ctx = useContext(ResultGenerationContext);
   const keyHEaders = ctx.keyHeaders;
   const dataHeaders = ctx.dataHeaders;
-console.log(mappedQue)
+  console.log(mappedQue);
   return (
     <>
       {" "}
@@ -22,15 +22,17 @@ console.log(mappedQue)
               }}
             >
               <div className="bg-gradient-to-r from-cyan-500 to-blue-500 w-[100%] rounded-lg flex flex-col items-center py-4">
-                <div className="text-[1.2rem] font-bold text-yellow-400 mb-3">Start Question :</div>
+                <div className="text-[1.2rem] font-bold text-yellow-400 mb-3">
+                  Start Question :
+                </div>
                 <div
-                  className={`border w-[90%] md:w-[80%] md:ms-2 flex flex-col items-center  py-1 text-white`}
+                  className={`border w-[90%] md:w-[80%] md:ms-2 flex flex-col items-center  py-1 text-white  cursor-pointer`}
                   onClick={(event) => {
                     event.stopPropagation();
                     setSelectedQueOpen(!selectedQueOpen); // open the dropdown after selecting the Question key
                   }}
                 >
-                  {mappedQue<0 ? (
+                  {mappedQue < 0 ? (
                     <div
                       className="font-semibold "
                       onClick={(event) => {
@@ -42,7 +44,9 @@ console.log(mappedQue)
                     </div>
                   ) : (
                     <div
-                      className={`font-semibold w-full text-center   ${selectedQueOpen&& 'border-b border-1 py-1'}`}
+                      className={`font-semibold w-full text-center   ${
+                        selectedQueOpen && "border-b border-1 py-1"
+                      }`}
                       onClick={(event) => {
                         event.stopPropagation();
                         setSelectedQueOpen(!selectedQueOpen); // open the dropdown after selecting the Question key
@@ -63,7 +67,6 @@ console.log(mappedQue)
                             // mappedQuesHandler(index);
                             setSelectedQueOpen(false); // Close the dropdown after selecting the key
                             ctx.paperMarkHandler({ start: index });
-                           
                           }}
                         >
                           {currentKey}
@@ -77,12 +80,12 @@ console.log(mappedQue)
           </div>{" "}
           <div className=" m-2 mt-5  animate__animated animate__backInDown animate__slower ">
             <div className=" w-[100%]   " onClick={() => {}}>
-              <div className="bg-gradient-to-r from-cyan-500 to-blue-500 w-[100%] rounded-lg flex flex-col items-center py-4">
+              <div className="bg-gradient-to-r from-cyan-500 to-blue-500 w-[100%] rounded-lg flex flex-col items-center py-4 ">
                 <div className="text-[1.2rem] font-bold  text-yellow-400 mb-3">
                   Total question :
                 </div>
                 <input
-                className="text-center font-bold w-[80%]"
+                  className="text-center font-bold w-[80%]  cursor-pointer"
                   ref={totalQue}
                   defaultValue={+100}
                   type="number"

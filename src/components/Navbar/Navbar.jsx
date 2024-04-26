@@ -63,6 +63,8 @@ export default function Navbar() {
       onClick: () => {
         naviagte("/create-user");
         setIsUserMenuOpen(false);
+        setIsMenuOpen(!isMenuOpen);
+
       },
     },
     {
@@ -70,6 +72,8 @@ export default function Navbar() {
       onClick: () => {
         naviagte("/all-user");
         setIsUserMenuOpen(false);
+        setIsMenuOpen(!isMenuOpen);
+
       },
     },
     {
@@ -78,7 +82,7 @@ export default function Navbar() {
         localStorage.clear();
         datactx.modifyIslogin(false);
         naviagte("/");
-
+        setIsMenuOpen(!isMenuOpen);
         setIsUserMenuOpen(false);
       },
     },
@@ -101,141 +105,169 @@ export default function Navbar() {
     });
 
   return (
-    <div className="fixed w-full z-10 bg-white">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2 sm:px-6 lg:px-8">
-        <div className="inline-flex items-center space-x-2">
-          <img className="h-14 w-auto" src={logo} alt="Your Company" />
-        </div>
-        <div className="hidden lg:block">
-          <ul className="flex justify-center items-center space-x-2">
+    <>
+      <div className={`fixed w-full z-10 bg-white   `}>
+        <div
+          className={`mx-auto flex max-w-7xl items-center justify-between px-4 py-2 sm:px-6 lg:px-8 ${
+            isMenuOpen ? "hidden " : ""
+          }`}
+        >
+          <div className="inline-flex items-center space-x-2">
+            <img className="h-14 w-auto" src={logo} alt="Your Company" />
+          </div>
+          <div className="hidden lg:block">
+            <ul className="flex justify-center items-center space-x-2">
+              {userData?.role === "Admin"
+                ? menuItems?.map((item) => {
+                    const active =
+                      mainUrl[0] === item.href
+                        ? "bg-gray-200 duration-1000 transition-colors ease-in-out text-teal-500"
+                        : "";
+                    return (
+                      <li key={item.name}>
+                        <Link
+                          to={item.href}
+                          onClick={() => {
+                            setIsUserMenuOpen(false);
+                          }}
+                          className={`text-lg px-2 rounded-md py-1 font-semibold text-gray-700 no-underline hover:text-teal-500 ${active}`}
+                        >
+                          {item.name}
+                        </Link>
+                      </li>
+                    );
+                  })
+                : filteredMenuItems?.map((item) => {
+                    const active =
+                      mainUrl[0] === item.href
+                        ? "bg-gray-300 duration-1000 transition-colors ease-in-out text-teal-500"
+                        : "";
+                    return (
+                      <li key={item.name}>
+                        <NavLink
+                          to={item.href}
+                          className={`text-lg px-2 rounded-md py-1 font-semibold text-gray-700 no-underline  hover:text-teal-500 ${active}`}
+                          onClick={() => {
+                            setIsUserMenuOpen(false);
+                          }}
+                        >
+                          {item.name}
+                        </NavLink>
+                      </li>
+                    );
+                  })}
+            </ul>
+          </div>
+          <div className="relative">
+            <button
+              type="button"
+              className="rounded-full"
+              onClick={toggleUserMenu}
+            >
+              <FaCircleUser className="w-7 h-7 text- mt-1 text-indigo-700" />
+            </button>
             {userData?.role === "Admin"
-              ? menuItems?.map((item) => {
-                  const active = mainUrl[0] === item.href ? "bg-gray-300 " : "";
-                  return (
-                    <li key={item.name}>
-                      <Link
-                        to={item.href}
-                        onClick={() => {
-                          setIsUserMenuOpen(false);
-                        }}
-                        className={`text-lg px-2 rounded-md py-1 font-semibold text-gray-700 no-underline hover:text-black hover:bg-gray-300 ${active}`}
-                      >
-                        {item.name}
-                      </Link>
-                    </li>
-                  );
-                })
-              : filteredMenuItems?.map((item) => {
-                  const active = mainUrl[0] === item.href ? "bg-gray-300 " : "";
-                  return (
-                    <li key={item.name}>
-                      <NavLink
-                        to={item.href}
-                        className={`text-lg px-2 rounded-md py-1 font-semibold text-gray-700 no-underline hover:text-black hover:bg-gray-300 ${active}`}
-                        onClick={() => {
-                          setIsUserMenuOpen(false);
-                        }}
-                      >
-                        {item.name}
-                      </NavLink>
-                    </li>
-                  );
-                })}
-          </ul>
-        </div>
-        <div className="relative">
-          <button
-            type="button"
-            className="rounded-full"
-            onClick={toggleUserMenu}
-          >
-            <FaCircleUser className="w-7 h-7 text- mt-1 text-indigo-700" />
-          </button>
-          {userData?.role === "Admin"
-            ? isUserMenuOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
-                  <div className="py-1">
-                    {userMenuItems?.map((item) => (
-                      <button
-                        key={item.name}
-                        onClick={item.onClick}
-                        className="block px-4 py-2 text-md font-medium text-gray-600 hover:bg-gray-300 w-full text-left"
-                      >
-                        {item.name}
-                      </button>
-                    ))}
+              ? isUserMenuOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
+                    <div className="py-1">
+                      {userMenuItems?.map((item) => (
+                        <button
+                          key={item.name}
+                          onClick={item.onClick}
+                          className="block px-4 py-2 text-md font-medium text-gray-600 hover:bg-gray-300 w-full text-left"
+                        >
+                          {item.name}
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )
-            : isUserMenuOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
-                  <div className="py-1">
-                    {userMenuItems?.map(
-                      (item) =>
-                        item.name === "Logout" && (
-                          <button
-                            key={item.name}
-                            onClick={item.onClick}
-                            className="block px-4 py-2 text-md font-medium text-gray-600 hover:bg-gray-300 w-full text-left"
-                          >
-                            {item.name}
-                          </button>
-                        )
-                    )}
+                )
+              : isUserMenuOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
+                    <div className="py-1">
+                      {userMenuItems?.map(
+                        (item) =>
+                          item.name === "Logout" && (
+                            <button
+                              key={item.name}
+                              onClick={item.onClick}
+                              className="block px-4 py-2 text-md font-medium text-gray-600 hover:bg-gray-300 w-full text-left"
+                            >
+                              {item.name}
+                            </button>
+                          )
+                      )}
+                    </div>
                   </div>
-                </div>
-              )}
-        </div>
-        <div className="lg:hidden order-first">
-          <TiThMenu
-            onClick={toggleMenu}
-            className="h-6 w-6 cursor-pointer text-blue-700"
-          />
+                )}
+          </div>
+          <div className="lg:hidden order-first">
+            <TiThMenu
+              onClick={toggleMenu}
+              className="h-6 w-6 cursor-pointer text-blue-700"
+            />
+          </div>
         </div>
         {isMenuOpen && (
-          <div className="absolute inset-x-0 top-0 z-50  origin-top-right transform p-2 transition lg:hidden">
-            <div className="divide-y-2 divide-gray-50 rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+          <div className="absolute inset-x-0 top-0 z-50 origin-top-right transform transition lg:hidden">
+            <div className="divide-y-2 divide-gray-50 w-[40vw] h-[100vh]  bg-white shadow-lg ring-1 ring-black ring-opacity-5">
               <div className="px-5 pb-6 pt-5">
                 <div className="flex items-center justify-between">
-                  <div className="inline-flex items-center space-x-2">
+                  <div className="">
                     <img
-                      className="h-14 w-auto"
+                      className="h-10 w-auto"
                       src={logo}
                       alt="Your Company"
                     />
                   </div>
-                  <div className="">
-                    <nav className="grid gap-y-4">
-                      <ul className="inline-flex space-x-8">
-                        {userData?.role === "Admin"
-                          ? menuItems?.map((item) => (
-                              <p key={item.name}>
-                                <a
-                                  href={item.href}
-                                  className="text-sm px-2 no-underline rounded-md py-1 font-semibold text-gray-700 hover:text-black hover:bg-gray-300 "
+                  <div className="relative">
+                    <button
+                      type="button"
+                      className="rounded-full"
+                      onClick={toggleUserMenu}
+                    >
+                      <FaCircleUser className="w-7 h-7 text- mt-1 text-indigo-700" />
+                    </button>
+                    {userData?.role === "Admin"
+                      ? isUserMenuOpen && (
+                          <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
+                            <div className="py-1">
+                              {userMenuItems?.map((item) => (
+                                <button
+                                  key={item.name}
+                                  onClick={item.onClick}
+                                  className="block px-4 py-2 text-md font-medium text-gray-600 hover:bg-gray-300 w-full text-left"
                                 >
                                   {item.name}
-                                </a>
-                              </p>
-                            ))
-                          : filteredMenuItems?.map((item) => (
-                              <p key={item.name}>
-                                <a
-                                  href={item.href}
-                                  className="text-sm px-2 rounded-md py-1 font-semibold text-gray-700 hover:text-black hover:bg-gray-300 "
-                                >
-                                  {item.name}
-                                </a>
-                              </p>
-                            ))}
-                      </ul>
-                    </nav>
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        )
+                      : isUserMenuOpen && (
+                          <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
+                            <div className="py-1">
+                              {userMenuItems?.map(
+                                (item) =>
+                                  item.name === "Logout" && (
+                                    <button
+                                      key={item.name}
+                                      onClick={item.onClick}
+                                      className="block px-4 py-2 text-md font-medium text-gray-600 hover:bg-gray-300 w-full text-left"
+                                    >
+                                      {item.name}
+                                    </button>
+                                  )
+                              )}
+                            </div>
+                          </div>
+                        )}
                   </div>
-                  <div className="-mr-2">
+                  <div className="order-first">
                     <button
                       type="button"
                       onClick={toggleMenu}
-                      className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+                      className="inline-flex items-center justify-center rounded-md  text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
                     >
                       <span className="sr-only">Close menu</span>
                       <RxCross2
@@ -245,11 +277,58 @@ export default function Navbar() {
                     </button>
                   </div>
                 </div>
+                <div className="mt-10 flex ">
+                  <nav className="grid gap-y-4">
+                    <ul className="mx-2">
+                      {userData?.role === "Admin"
+                        ? menuItems?.map((item) => {
+                            const active =
+                              mainUrl[0] === item.href
+                                ? "bg-gray-200 text-teal-500 duration-1000 transition-colors ease-in-out"
+                                : "";
+                            return (
+                              <li key={item.name} className="my-3">
+                                <Link
+                                  to={item.href}
+                                  onClick={() => {
+                                    setIsUserMenuOpen(false);
+                                    setIsMenuOpen(!isMenuOpen);
+                                  }}
+                                  className={`text-lg px-2 rounded-md py-1 font-semibold text-gray-700 no-underline hover:text-teal-500  ${active}`}
+                                >
+                                  {item.name}
+                                </Link>
+                              </li>
+                            );
+                          })
+                        : filteredMenuItems?.map((item) => {
+                            const active =
+                              mainUrl[0] === item.href
+                                ? "bg-gray-200 text-teal-500 duration-1000 transition-colors ease-in-out"
+                                : "";
+                            return (
+                              <li key={item.name} className="my-3">
+                                <NavLink
+                                  to={item.href}
+                                  className={`text-lg px-2 rounded-md py-1 font-semibold text-gray-700 no-underline hover:text-teal-500 ${active}`}
+                                  onClick={() => {
+                                    setIsUserMenuOpen(false);
+                                    setIsMenuOpen(!isMenuOpen);
+                                  }}
+                                >
+                                  {item.name}
+                                </NavLink>
+                              </li>
+                            );
+                          })}
+                    </ul>
+                  </nav>
+                </div>
               </div>
             </div>
           </div>
         )}
       </div>
-    </div>
+    </>
   );
 }
