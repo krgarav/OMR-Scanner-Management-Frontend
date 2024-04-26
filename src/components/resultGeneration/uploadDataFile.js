@@ -61,17 +61,17 @@ const UploadDataFile = () => {
       );
   };
   return (
-    <div className="h-[100vh] w-[100%] flex  pt-[70px] overflow-y-hidden">
+    <div className="h-[100vh] w-[100%] flex  pt-28 overflow-y-hidden lg:mx-4 xl:mx-20">
       {uploadFiles.length > 0 && (
-        <div className="h-[100%] border-2 flex flex-col min-w-[300px] w-[20vw] max-w-[900px]:min-w-[280px] overflow-y-scroll">
+        <div className="h-auto flex flex-col min-w-[200px]  md:min-w-[300px] w-[20vw]  overflow-y-scroll justify-evenly">
           <UploadStatus />
           <PaperkeyMap></PaperkeyMap>
           <PaperQueMapper></PaperQueMapper>
         </div>
       )}
 
-      <div className=" w-[100%] flex max-[1020px]:flex-col overflow-y-scroll">
-        <div className="h-[100%]  flex w-[100%] ">
+      <div className=" w-[100%] flex max-[1103px]:flex-col overflow-y-scroll">
+        <div className="h-auto  flex w-[100%] ">
           {!keyHEaders && (
             <div className=" flex flex-col items-center justify-center h-auto w-[100%]">
               {!dataHeaders && (

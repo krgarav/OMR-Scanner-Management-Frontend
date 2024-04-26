@@ -8,6 +8,7 @@ import Table from "../../UI/Table";
 import { useNavigate } from "react-router";
 import DownloadIcon from "@mui/icons-material/Download";
 import { useLocation } from "react-router";
+import { toast } from "react-toastify";
 
 const Correction = () => {
   const [currIndex, setCurrIndex] = useState(0);
@@ -15,9 +16,8 @@ const Correction = () => {
   const state = dataCtx.imageMappedData;
   const location = useLocation();
   const lengthOfResult = location.state?.length;
-
   const navigate = useNavigate();
-  console.log(location.pathname);
+
   useEffect(() => {
     if (dataCtx.imageMappedData.length === 0) {
       navigate("/comparecsv", { replace: true });
@@ -48,7 +48,6 @@ const Correction = () => {
   }, []); // Empty dependency array to run effect only once on mount
   useEffect(() => {
     const handleBackButton = (event) => {
-      console.log("trig");
       const confirmationMessage =
         "Are you sure you want to leave this page? Please download corrected CSV before closing this page.";
       event.returnValue = confirmationMessage; // For Chrome
@@ -112,8 +111,19 @@ const Correction = () => {
     // Create a download link
     const link = document.createElement("a");
     link.href = window.URL.createObjectURL(blob);
-    link.download = "data.csv";
+    const date = new Date().toJSON();
+    link.download = `data_${date}.csv`;
     link.click();
+    toast.success("Downloaded the corrected csv file", {
+      position: "bottom-left",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+    });
   };
 
   return (
@@ -122,10 +132,10 @@ const Correction = () => {
         className={`flex lg:flex-row md:flex-col justify-between animate-slide-left-to-right ${classes.correction} `}
       >
         {state.length !== 0 && (
-          <div className="w-full">
-            <div className={`text-center text-3xl font-bold ${classes.imgdiv}`}>
+          <div className="w-full pt-20">
+            <div className={` ${classes.imgdiv}`}>
               <h1
-                className={`text-center text-3xl font-bold ${classes.imgHead}`}
+                className={`text-center font-bold lg:text-3xl md:text-2xl sm:text-xl ${classes.imgHead}`}
               >
                 Image Name : {state[currIndex].img.imgName}
               </h1>
@@ -139,7 +149,7 @@ const Correction = () => {
           </div>
         )}
         {state.length !== 0 && (
-          <div className="w-full">
+          <div className="w-full pt-20 pr-5">
             <h1 className="text-center text-3xl font-bold m-5">
               {currIndex + 1} of {state.length}
             </h1>

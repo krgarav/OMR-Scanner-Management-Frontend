@@ -4,7 +4,7 @@ import Fab from "@mui/material/Fab";
 import CompareArrowsIcon from "@mui/icons-material/CompareArrows";
 import OptimisedList from "../../UI/OptimisedList";
 import Button from "@mui/material/Button";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import dataContext from "../../Store/DataContext";
 import axios from "axios";
 import { useNavigate } from "react-router";
@@ -14,7 +14,9 @@ import { REACT_APP_IP } from "../../services/common";
 const CsvHomepage = () => {
   const navigate = useNavigate();
   const dataCtx = useContext(dataContext);
-
+useEffect(()=>{
+  dataCtx.addToCsvHeader([])
+},[])
   useEffect(() => {
     document.body.style.userSelect = "none";
     return () => {
@@ -39,11 +41,13 @@ const CsvHomepage = () => {
     } else if (secondInputCsvFiles.length === 0) {
       alert("Choose second CSV file");
       return;
+    } else if (zipImageFile.length === 0) {
+      alert("Please select image zip file");
     } else if (primaryKey === "") {
       alert("Please select primary key");
       return;
-    } else if (zipImageFile.length === 0) {
-      alert("Please select image zip file");
+    } else if (imageColName === "") {
+      alert("Please select image column name");
     }
 
     const sendRequest = async () => {
