@@ -41,9 +41,11 @@ const OutPutHeaders = () => {
             <div className=" w-[100%] bg-gradient-to-r from-red-600 to-yellow-500 shadow-lg flex justify-center text-2xl font-bold border-4  border-white my-4  shadow-gray-500">
               <p className="bg-grey py-4 text-white "> OutPut Headers</p>
             </div>
-            <div> <div className=" flex justify-end bg-gradient-to-r from-cyan-500 to-blue-500 ">
+            <div>
+              {" "}
+              <div className=" flex justify-end bg-gradient-to-r from-cyan-500 to-blue-500 ">
                 {!selectAll ? (
-                  <div className="flex mx-2 border-2 border-white font-bold p-1  bg-yellow-500">
+                  <div className="flex border-2 border-white font-bold p-1  bg-yellow-500">
                     <input
                       className="w-[20px] h-[20px] mx-2 border-2 border-blue-500"
                       type="checkbox"
@@ -54,9 +56,9 @@ const OutPutHeaders = () => {
                     <p className="text-white">select all</p>
                   </div>
                 ) : (
-                  <div className="flex mx-2 border-2 border-gray-500 font-bold p-1  bg-yellow-500 text-white">
+                  <div className="flex  border-2 border-gray-500 font-bold p-1  bg-yellow-500 text-white">
                     <input
-                      className="w-[20px] h-[20px] mx-2 border-2 border-blue-500"
+                      className="w-[20px] h-[20px] mx-2 border-2 text-red-400"
                       type="checkbox"
                       checked
                       onClick={() => {

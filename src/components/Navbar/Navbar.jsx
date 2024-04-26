@@ -15,11 +15,12 @@ const menuItems = [
   {
     name: "Csv Uploader",
     href: "csvuploader",
+    permission: "dataEntry",
   },
   {
     name: "Data Entry",
-    permission: "userEditor",
-    href: "",
+    permission: "dataEntry",
+    href: "datamatching",
   },
   {
     name: "CSV Compare",

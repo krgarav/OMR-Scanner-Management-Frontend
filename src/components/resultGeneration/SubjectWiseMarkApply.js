@@ -87,7 +87,7 @@ const SubjectWiseMarkApply = () => {
                     // setSubjectStartDropDownOpen(!subjectStartDropDownOpen);
                   }}
                 >
-                  Start que :
+                  Start Que :
                   <div className="w-[120px]   min-[816px]:mx-4 my-2  overflow-x-hidden font-medium border-white border-2  cursor-pointer">
                     {SubjectStartKey.current < 0 ? (
                       <div
@@ -141,13 +141,13 @@ const SubjectWiseMarkApply = () => {
                     // setSubjectEndDropdownOpen(!subjectEndDropDownOpen);
                   }}
                 >
-                  End que :
+                  End Que :
                   <div className="w-[120px]   min-[816px]:mx-4 my-2  overflow-x-hidden font-medium border-white border-2  cursor-pointer">
                     {SubjectEndKey.current == -1 ? (
                       <div
                         className="text-white text-md text-center"
                         onClick={() => {
-                          setSubjectEndDropdownOpen(!subjectStartDropDownOpen);
+                          setSubjectEndDropdownOpen(!subjectEndDropDownOpen);
                         }}
                       >
                         select here
