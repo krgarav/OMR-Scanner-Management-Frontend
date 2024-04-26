@@ -25,14 +25,14 @@ const OutPutHeaders = () => {
     //  {/* outputheaders */}
     <>
       {" "}
-      <div className="h-auto border-2 flex w-[20vw] min-w-[300px] max-[1020px]:w-[100%] mb-[70px]">
-        <div className="mx-2 w-[100%]">
+      <div className="h-auto  flex   mb-[70px] justify-center">
+        <div className="mx-2  min-w-[250px] w-[20vw] max-[1103px]:w-[600px]">
           <div className="animate__animated animate__bounceInDown animate__delay-3s">
             {" "}
-            <div className=" w-[100%] bg-gradient-to-r from-red-600 to-yellow-500 shadow-2xl flex justify-center text-2xl font-bold border-4 border-2 border-white my-4">
+            <div className=" w-[100%] bg-gradient-to-r from-red-600 to-yellow-500 shadow-lg flex justify-center text-2xl font-bold border-4  border-white my-4  shadow-gray-500">
               <p className="bg-grey py-4 text-white "> OutPut Headers</p>
             </div>
-            <div className="min-[816px]:max-h-[50vh] min-[816px]:min-h-[30vh] bg-gradient-to-r from-cyan-500 to-blue-500 border-2 overflow-y-scroll pb-[70px]">
+            <div className="h-[400px] bg-gradient-to-r from-cyan-500 to-blue-500 border-2 overflow-y-scroll pb-[70px] shadow-lg shadow-gray-500">
               {dataHeaders &&
                 dataHeaders[0].map((current, index) => {
                   return (
@@ -59,10 +59,10 @@ const OutPutHeaders = () => {
                   );
                 })}
             </div>{" "}
-          </div>  <GenerateResultCsv headers={headers}></GenerateResultCsv>
+          </div>{" "}
+          <GenerateResultCsv headers={headers}></GenerateResultCsv>
         </div>
       </div>
-    
     </>
   );
 };
