@@ -14,6 +14,9 @@ const DataMatching = () => {
   const [image, setImage] = useState();
   const [templateHeaders, setTemplateHeaders] = useState();
   const [csvCurrentData, setCsvCurrentData] = useState([]);
+  const [allTasks, setAllTasks] = useState([]);
+  const [allTemplateData, setAllTemplateData] = useState([]);
+  const [templateId, setTemplateId] = useState("");
   const [imageName, setImageName] = useState("");
   const [selectedCoordintes, setSelectedCoordinates] = useState(false);
   const [userId, setUserId] = useState("");
@@ -23,32 +26,22 @@ const DataMatching = () => {
   const imageRef = useRef(null);
   const { id } = useParams();
   const location = useLocation();
-  const templateId = location.state;
+  // const templateId = location.state;
 
   useEffect(() => {
-    const getAllUsers = async () => {
+    const fetchCurrentUser = async () => {
       try {
-        const response = await onGetVerifiedUserHandler();
-        setUserId(response.user.id);
-        console.log(response);
+        const verifiedUser = await onGetVerifiedUserHandler();
+        const tasks = await onGetTaskHandler(verifiedUser.user.id);
+        const templateData = await onGetTemplateHandler();
+        console.log(tasks);
+        setAllTasks(tasks);
       } catch (error) {
         console.log(error);
       }
     };
-    getAllUsers();
+    fetchCurrentUser();
   }, []);
-
-  useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        const response = await onGetTaskHandler(userId);
-        console.log(response);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchTasks();
-  }, [userId]);
 
   useEffect(() => {
     const fetchTemplate = async () => {
@@ -84,7 +77,7 @@ const DataMatching = () => {
         const keyForImage = getKeyByValue(headers, "Image");
         setImageName(keyForImage);
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     };
     fetchData();
@@ -204,24 +197,86 @@ const DataMatching = () => {
   return (
     <>
       {popUp && (
-        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-1/3 p-8 matchingMain  bg-white rounded-3xl shadow-2xl">
-          <p className="text-center text-xl text-red-500 mb-6">
-            Welcome to Your Application
-          </p>
-          <div className="text-center">
-            <h2 className="text-3xl font-bold">
-              Welcome to the OMR Data Entry Application
-            </h2>
-            <p className="mt-4 text-lg text-gray-700">
-              This application allows you to efficiently process OMR data from
-              image files containing CSV data of students.
-            </p>
-            <button
-              className="mt-8 inline-block rounded-full bg-pink-600 py-3 px-6 text-2xl font-bold text-white shadow-xl"
-              onClick={() => onImageHandler("initial")}
-            >
-              Begin Processing
-            </button>
+        <div className=" min-h-[100vh] flex justify-center templatemapping">
+          <div className=" mt-40">
+            {/* MAIN SECTION  */}
+            <section className="mx-auto w-full max-w-7xl  px-12 py-10 bg-white rounded-xl">
+              <div className="flex flex-col space-y-4  md:flex-row md:items-center md:justify-between md:space-y-0">
+                <div>
+                  <h2 className="text-3xl font-semibold">Assigned Tasks</h2>
+                </div>
+              </div>
+              <div className="mt-6 flex flex-col">
+                <div className="-mx-4 -my-2  sm:-mx-6 lg:-mx-8">
+                  <div className="inline-block  py-2 align-middle md:px-6 lg:px-8">
+                    <div className=" border border-gray-200 md:rounded-lg">
+                      <div className="divide-y divide-gray-200 ">
+                        <div className="bg-gray-50">
+                          <tr>
+                            <th
+                              scope="col"
+                              className="px-8 py-3.5 text-left text-xl font-semibold text-gray-700"
+                            >
+                              <span>Templates</span>
+                            </th>
+
+                            <th
+                              scope="col"
+                              className="px-12 py-3.5 text-left  text-xl font-semibold text-gray-700"
+                            >
+                              Min
+                            </th>
+
+                            <th
+                              scope="col"
+                              className="px-12 py-3.5 text-left text-xl font-semibold text-gray-700"
+                            >
+                              Max
+                            </th>
+                          </tr>
+                        </div>
+                        <div className="divide-y divide-gray-200 bg-white overflow-y-auto max-h-[300px]">
+                          <tr>
+                            <td className="whitespace-nowrap px-4 py-4 ">
+                              <div className="flex items-center">
+                                <div className="ml-4 w-full font-semibold">
+                                  <div className=" px-2">Template</div>
+                                </div>
+                              </div>
+                            </td>
+
+                            <td className="whitespace-nowrap px-12 py-4">
+                              <div className="text-2xl text-gray-900 ">
+                                <div className="h-10 w-16 rounded border-gray-400 border-2 p-0 text-center text-gray-600 [-moz-appearance:_textfield] focus:outline-none [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none">
+                                  1
+                                </div>
+                              </div>
+                            </td>
+                            <td className="whitespace-nowrap px-12 py-4">
+                              <div className="text-2xl text-gray-900">
+                                <div className="text-2xl text-gray-900">
+                                  <div className="h-10 w-16 rounded border-gray-400 border-2 p-0 text-center text-gray-600 [-moz-appearance:_textfield] focus:outline-none [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none">
+                                    100
+                                  </div>
+                                </div>
+                              </div>
+                            </td>
+                            <td className="whitespace-nowrap px-4 py-4 text-right">
+                              <button
+                                // onClick={onTaskAssignedHandler}
+                                className="rounded border border-indigo-500 bg-indigo-500 px-10 py-1 font-semibold text-white"
+                              >
+                                Start
+                              </button>
+                            </td>
+                          </tr>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
           </div>
         </div>
       )}

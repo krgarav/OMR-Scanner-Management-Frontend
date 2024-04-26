@@ -51,7 +51,7 @@ const TemplateMapping = () => {
   }, [selectedUser]);
 
   if (!fileId) {
-    navigate("/comparecsv");
+    navigate("/csvuploader");
   }
 
   const onTaskAssignedHandler = () => {
