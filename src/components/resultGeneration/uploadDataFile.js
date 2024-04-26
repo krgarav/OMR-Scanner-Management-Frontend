@@ -63,7 +63,7 @@ const UploadDataFile = () => {
   return (
     <div className="h-[100vh] w-[100%] flex  pt-28 overflow-y-hidden lg:mx-4 xl:mx-20">
       {uploadFiles.length > 0 && (
-        <div className="h-auto flex flex-col min-w-[200px]  md:min-w-[300px] w-[20vw]  overflow-y-scroll justify-evenly">
+        <div className="h-auto flex flex-col min-w-[200px]  md:min-w-[300px] w-[20vw]  overflow-y-scroll border-e-2 border-gray-400" style={{scrollbarWidth:"none"}}>
           <UploadStatus />
           <PaperkeyMap></PaperkeyMap>
           <PaperQueMapper></PaperQueMapper>
