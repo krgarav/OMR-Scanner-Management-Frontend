@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import dataContext from "../../Store/DataContext";
 import classes from "./Correction.module.css";
-import { Button } from "@mui/material";
+import { Button, Tooltip } from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import Table from "../../UI/Table";
@@ -9,14 +9,45 @@ import { useNavigate } from "react-router";
 import DownloadIcon from "@mui/icons-material/Download";
 import { useLocation } from "react-router";
 import { toast } from "react-toastify";
-
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
+import InfoRoundedIcon from "@mui/icons-material/InfoRounded";
 const Correction = () => {
   const [currIndex, setCurrIndex] = useState(0);
   const dataCtx = useContext(dataContext);
   const state = dataCtx.imageMappedData;
   const location = useLocation();
   const lengthOfResult = location.state?.length;
+  // const { instance, zoomIn, zoomOut, ...rest } = useControls();
   const navigate = useNavigate();
+
+  // const toggleZoom = (e) => {
+  //   console.log(e.currentTarget.style.cursor);
+  //   if (e.ctrlKey) {
+  //     setZoomLevel(1); // Zoom out
+  //   } else {
+  //     setZoomLevel(2); // Zoom in
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   const handleKeyDown = (e) => {
+  //     if (e.key === "Control") {
+  //       document.querySelector(".zoomable-image").style.cursor = "zoom-out";
+  //     }
+  //   };
+
+  //   const handleKeyUp = () => {
+  //     document.querySelector(".zoomable-image").style.cursor = "zoom-in";
+  //   };
+
+  //   document.addEventListener("keydown", handleKeyDown);
+  //   document.addEventListener("keyup", handleKeyUp);
+
+  //   return () => {
+  //     document.removeEventListener("keydown", handleKeyDown);
+  //     document.removeEventListener("keyup", handleKeyUp);
+  //   };
+  // }, []);
 
   useEffect(() => {
     if (dataCtx.imageMappedData.length === 0) {
@@ -133,19 +164,32 @@ const Correction = () => {
       >
         {state.length !== 0 && (
           <div className="w-full pt-20">
-            <div className={` ${classes.imgdiv}`}>
+            <div className={`flex justify-center w-full ${classes.imgdiv}`}>
               <h1
-                className={`text-center font-bold lg:text-3xl md:text-2xl sm:text-xl ${classes.imgHead}`}
+                className={`font-bold lg:text-3xl md:text-2xl sm:text-xl ${classes.imgHead}`}
               >
                 Image Name : {state[currIndex].img.imgName}
               </h1>
+              <Tooltip
+                title="Use mouse scroll wheel to zoom in and zoom out"
+                className="cursor-pointer float-right ml-3"
+                arrow
+              >
+                <InfoRoundedIcon />
+              </Tooltip>
             </div>
-
-            <img
-              src={state[currIndex].img.imgUrl}
-              className={`w-full  object-contain p-5 ${classes.imgContainer}`}
-              alt="omr sheet"
-            />
+            <div className="overflow-hidden flex justify-center pt-2 ">
+              <TransformWrapper defaultScale={1}>
+                <TransformComponent>
+                  <img
+                    // key={state[currIndex].img.imgUrl}
+                    src={state[currIndex].img.imgUrl}
+                    className={`w-full object-contain p-5 ${classes.imgContainer} zoomable-image  bg-opacity-15 bg-black rounded`}
+                    alt="omr sheet"
+                  />
+                </TransformComponent>
+              </TransformWrapper>
+            </div>
           </div>
         )}
         {state.length !== 0 && (
