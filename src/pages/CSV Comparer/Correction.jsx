@@ -112,7 +112,8 @@ const Correction = () => {
     // Create a download link
     const link = document.createElement("a");
     link.href = window.URL.createObjectURL(blob);
-    link.download = "data.csv";
+    const date = new Date().toJSON();
+    link.download = `data_${date}.csv`;
     link.click();
   };
 
@@ -123,9 +124,9 @@ const Correction = () => {
       >
         {state.length !== 0 && (
           <div className="w-full pt-20">
-            <div className={`text-center text-3xl font-bold ${classes.imgdiv}`}>
+            <div className={` ${classes.imgdiv}`}>
               <h1
-                className={`text-center text-3xl font-bold ${classes.imgHead}`}
+                className={`text-center font-bold lg:text-3xl md:text-2xl sm:text-xl ${classes.imgHead}`}
               >
                 Image Name : {state[currIndex].img.imgName}
               </h1>
