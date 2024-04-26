@@ -14,33 +14,9 @@ import { REACT_APP_IP } from "../../services/common";
 const CsvHomepage = () => {
   const navigate = useNavigate();
   const dataCtx = useContext(dataContext);
-  const navbarRef = useRef(null);
-  const [mainContentHeight, setMainContentHeight] = useState('90vh'); // Default height
-
-  useEffect(() => {
-    // Function to update main content height dynamically based on Navbar height
-    function updateMainContentHeight() {
-      if (navbarRef.current) {
-        const navbarHeight = navbarRef.current.clientHeight;
-        const viewportHeight = window.innerHeight;
-        const mainContentHeight = `calc(${viewportHeight}px - ${navbarHeight}px)`;
-        setMainContentHeight(mainContentHeight);
-      }
-    }
-
-    // Call the function once to set the initial height
-    updateMainContentHeight();
-
-    // Recalculate height when the window is resized
-    window.addEventListener('resize', updateMainContentHeight);
-
-    // Clean up event listener on component unmount
-    return () => {
-      window.removeEventListener('resize', updateMainContentHeight);
-    };
-  }, []);
-
-
+useEffect(()=>{
+  dataCtx.addToCsvHeader([])
+},[])
   useEffect(() => {
     document.body.style.userSelect = "none";
     return () => {
@@ -65,11 +41,13 @@ const CsvHomepage = () => {
     } else if (secondInputCsvFiles.length === 0) {
       alert("Choose second CSV file");
       return;
+    } else if (zipImageFile.length === 0) {
+      alert("Please select image zip file");
     } else if (primaryKey === "") {
       alert("Please select primary key");
       return;
-    } else if (zipImageFile.length === 0) {
-      alert("Please select image zip file");
+    } else if (imageColName === "") {
+      alert("Please select image column name");
     }
 
     const sendRequest = async () => {
