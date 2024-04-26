@@ -25,6 +25,8 @@ const MarksApply = () => {
                 className="w-[60px] text-center bg-transparent border-2 text-white focus:bg-white focus:text-black outline-0 font-bold"
                 ref={correctAnswerPoint}
                 type="number"
+                min={0}
+                step={0.25}
                 onChange={handleCorrectPoints}
                 defaultValue={1}
                 onBlur={() =>
@@ -43,6 +45,8 @@ const MarksApply = () => {
                 ref={wrongAnswerPoint}
                 type="number"
                 defaultValue={0}
+                min={0}
+                step={0.25}
                 onBlur={() => {
                   ctx.paperMarkHandler({
                     wrongPoint: +wrongAnswerPoint.current.value,
