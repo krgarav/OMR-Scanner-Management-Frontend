@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { TiThMenu } from "react-icons/ti";
 import { RxCross2 } from "react-icons/rx";
 import logo from "../../assets/images/image.png";
@@ -32,20 +32,22 @@ const menuItems = [
     href: "resultGeneration",
   },
 ];
+
 export default function Navbar() {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const naviagte = useNavigate();
   const [isUserMenuOpen, setIsUserMenuOpen] = React.useState(false);
   const mainUrl = location.pathname?.slice(1)?.split("/");
-  const userData = JSON.parse(localStorage.getItem("userData"));
+  // const userData = JSON.parse(localStorage.getItem("userData"));
+  const [userData, setUserData] = useState({});
   const datactx = useContext(dataContext);
 
   useEffect(() => {
     const getUser = async () => {
       try {
         const response = await onGetVerifiedUserHandler();
-        console.log(response);
+        setUserData(response.user);
       } catch (error) {
         console.log(error);
       }
@@ -88,13 +90,13 @@ export default function Navbar() {
     setIsUserMenuOpen(!isUserMenuOpen);
   };
 
-  // const filteredMenuItems = menuItems?.filter(
-  //   (item) => userData?.permissions[item.permission]
-  // );
-
-  const filteredMenuItems = [];
-  // console.log(menuItems)
-  // console.log(userData)
+  const filteredMenuItems =
+    userData &&
+    menuItems?.filter((item) => {
+      if (Object.keys(userData).length !== 0) {
+        return userData?.permissions[item?.permission];
+      }
+    });
 
   return (
     <div className="fixed w-full z-10 bg-white">

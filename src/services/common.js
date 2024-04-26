@@ -33,7 +33,6 @@ export const onGetVerifiedUserHandler = async () => {
       `http://${REACT_APP_IP}:4000/users/getuser`,
       { token: token }
     );
-    console.log(response)
     return response.data;
   } catch (error) {
     toast.error(error.message);
