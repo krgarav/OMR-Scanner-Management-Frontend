@@ -94,7 +94,7 @@ export function AllUser() {
   return (
     <div className="pt-40">
       <section className="mx-auto w-full max-w-7xl  px-12 py-10 bg-white rounded-xl">
-        <div className="flex flex-col space-y-4  md:flex-row md:items-center md:justify-between md:space-y-0">
+        <div className="flex flex-col space-y-4  sm:flex-row md:items-center sm:justify-between sm:space-y-0">
           <div>
             <h2 className="text-3xl font-semibold">All Users</h2>
           </div>

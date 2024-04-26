@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { TiThMenu } from "react-icons/ti";
 import { RxCross2 } from "react-icons/rx";
 import logo from "../../assets/images/image.png";
@@ -9,34 +9,31 @@ import dataContext from "../../Store/DataContext";
 const menuItems = [
   {
     name: "Create Template",
-<<<<<<< HEAD
     href: ["/imageuploader", "/scanner"],
-=======
-    href: "imageuploader",
->>>>>>> d25df4c50536ab71a0a00806e6d02c2bfffe4aef
   },
   {
     name: "Csv Uploader",
-    href: "csvuploader",
+    href: ["/csvuploader"],
   },
   {
     name: "Data Entry",
     permission: "userEditor",
-    href: "",
+    href: ["/dataEntry"],
   },
   {
     name: "CSV Compare",
     permission: "csvCompare",
-    href: "comparecsv",
+    href: ["/comparecsv"],
   },
   {
-    name: "Result Generator",
+    name: ["Result Generator"],
     permission: "resultGenerator",
-    href: "resultGeneration",
+    href: ["/resultgeneration"],
   },
 ];
+const urls = [{}];
 export default function Navbar() {
-  const location = useLocation();
+  const url = useLocation();
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const naviagte = useNavigate();
   const [isUserMenuOpen, setIsUserMenuOpen] = React.useState(false);
@@ -83,7 +80,6 @@ export default function Navbar() {
   const filteredMenuItems = menuItems?.filter(
     (item) => userData?.permissions[item.permission]
   );
-
   return (
     <div className="fixed w-full z-10 bg-white">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2 sm:px-6 lg:px-8">
@@ -94,45 +90,41 @@ export default function Navbar() {
           <ul className="flex justify-center items-center space-x-2">
             {userData?.role === "Admin"
               ? menuItems?.map((item) => {
-                  const mainUrl = location.pathname?.slice(1)?.split("/");
-                  const active = mainUrl[0] === item.href ? "bg-gray-300 " : "";
+                  const active = item.href.includes(url.pathname)
+                    ? "bg-gray-300 "
+                    : "";
                   return (
                     <li key={item.name}>
                       <Link
-                        to={item.href}
+                        to={item.href[0]}
                         onClick={() => {
                           setIsUserMenuOpen(false);
                         }}
-                        // className={
-                        //   url.pathname === item.href
-                        //     ? "active:bg-gray-600 text-lg px-2 rounded-md py-1 font-semibold text-gray-700 no-underline hover:text-black hover:bg-gray-300"
-                        //     : "text-lg px-2 rounded-md py-1 font-semibold text-gray-700 no-underline hover:text-black hover:bg-gray-300"
-                        // }
-                        className={`text-lg px-2 rounded-md py-1 font-semibold text-gray-700 no-underline hover:text-black hover:bg-gray-300 ${active}`}
+                        className={`text-lg px-2  rounded-md py-1 font-semibold text-gray-700 no-underline hover:text-black transition-colors ease-in duration-1000 ${active}`}
                       >
                         {item.name}
                       </Link>
                     </li>
                   );
                 })
-              : filteredMenuItems?.map((item) => (
-                  <li key={item.name}>
-                    <NavLink
-                      to={item.href}
-                      activeClassName="bg-gray-300"
-                      onClick={() => {
-                        setIsUserMenuOpen(false);
-                      }}
-                      // className={
-                      //   url.pathname === item.href
-                      //     ? "active:bg-gray-300 text-lg px-2 rounded-md py-1 font-semibold text-gray-700 no-underline hover:text-black hover:bg-gray-300"
-                      //     : "text-lg px-2 rounded-md py-1 font-semibold text-gray-700 no-underline hover:text-black hover:bg-gray-300"
-                      // }
-                    >
-                      {item.name}
-                    </NavLink>
-                  </li>
-                ))}
+              : filteredMenuItems?.map((item) => {
+                  const active = item.href.includes(url.pathname)
+                    ? "bg-gray-300 "
+                    : "";
+                  return (
+                    <li key={item.name}>
+                      <Link
+                        to={item.href[0]}
+                        onClick={() => {
+                          setIsUserMenuOpen(false);
+                        }}
+                        className={`text-lg px-2 rounded-md py-1 font-semibold text-gray-700 no-underline hover:text-black  ${active} transition-colors ease-in-out duration-1000`}
+                      >
+                        {item.name}
+                      </Link>
+                    </li>
+                  );
+                })}
           </ul>
         </div>
         <div className="relative">
@@ -196,34 +188,34 @@ export default function Navbar() {
                       alt="Your Company"
                     />
                   </div>
-                  <div className="">
-                    <nav className="grid gap-y-4">
+                  <div className="mx-8">
+                    <nav className="grid ">
                       <ul className="inline-flex space-x-8">
                         {userData?.role === "Admin"
                           ? menuItems?.map((item) => (
                               <p key={item.name}>
-                                <a
+                                <Link
                                   href={item.href}
                                   className="text-sm px-2 no-underline rounded-md py-1 font-semibold text-gray-700 hover:text-black hover:bg-gray-300 "
                                 >
                                   {item.name}
-                                </a>
+                                </Link>
                               </p>
                             ))
                           : filteredMenuItems?.map((item) => (
                               <p key={item.name}>
-                                <a
+                                <Link
                                   href={item.href}
                                   className="text-sm px-2 rounded-md py-1 font-semibold text-gray-700 hover:text-black hover:bg-gray-300 "
                                 >
                                   {item.name}
-                                </a>
+                                </Link>
                               </p>
                             ))}
                       </ul>
                     </nav>
                   </div>
-                  <div className="-mr-2">
+                  <div className="">
                     <button
                       type="button"
                       onClick={toggleMenu}
