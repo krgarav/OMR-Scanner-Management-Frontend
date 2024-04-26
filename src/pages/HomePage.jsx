@@ -1,6 +1,6 @@
 import React from 'react'
 import Navbar from '../components/Navbar/Navbar'
-import { Outlet } from 'react-router-dom'
+// import { Outlet } from 'react-router-dom'
 
 function HomePage() {
   
@@ -8,7 +8,7 @@ function HomePage() {
     <>
     <div>
     <Navbar />
-    <Outlet />
+    {/* <Outlet /> */}
     </div>
     </>
 

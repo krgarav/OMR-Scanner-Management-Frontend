@@ -23,16 +23,25 @@ const ImageUploader = () => {
   // Function to handle both image selection and drop
   const handleImage = (file) => {
     if (file) {
-      const reader = new FileReader();
+      // Check if the file type is an image
+      const imageTypes = ["image/jpeg", "image/png", "image/gif"]; // Add more image types if needed
+      if (imageTypes.includes(file.type)) {
+        const reader = new FileReader();
 
-      reader.onload = () => {
-        toast.success("Image selected successfully.");
-        setImage(reader.result);
-        navigate("/scanner", { state: { imageURL: reader.result } });
-      };
+        reader.onload = () => {
+          toast.success("Image selected successfully.");
+          setImage(reader.result);
+          navigate("/imageuploader/scanner", {
+            state: { imageURL: reader.result },
+          });
+        };
 
-      // Read the file as data URL regardless of the file type
-      reader.readAsDataURL(file);
+        // Read the file as data URL regardless of the file type
+        reader.readAsDataURL(file);
+      } else {
+        // If the file type is not an image, display a toast message
+        toast.error("Please select a valid image file (jpg, png, etc).");
+      }
     }
   };
 

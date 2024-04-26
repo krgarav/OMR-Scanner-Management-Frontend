@@ -142,7 +142,7 @@ const CsvHomepage = () => {
           }
         }
         dataCtx.setImageMappedData(objArr);
-        navigate("/correct_compare_csv", { state: objArr });
+        navigate("/comparecsv/correct_compare_csv", { state: objArr });
       } catch (err) {
         console.log(err);
       }

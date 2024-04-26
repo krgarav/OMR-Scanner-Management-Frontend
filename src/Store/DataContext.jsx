@@ -2,6 +2,7 @@ import React from "react";
 const dataContext = React.createContext({
   csvHeader: [],
   isLogin: false,
+  isLoading: true,
   primaryKey: "",
   imageColName: "",
   skippingKey: [],
@@ -14,7 +15,6 @@ const dataContext = React.createContext({
   imageMappedData: [],
   csvFile: [],
   csvDataWithImage: [],
-  isLoading: false,
 
   modifyIsLoading: () => {},
   modifyIslogin: () => {},

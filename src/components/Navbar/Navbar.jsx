@@ -3,45 +3,41 @@ import { TiThMenu } from "react-icons/ti";
 import { RxCross2 } from "react-icons/rx";
 import logo from "../../assets/images/image.png";
 import { FaCircleUser } from "react-icons/fa6";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import dataContext from "../../Store/DataContext";
 
 const menuItems = [
   {
     name: "Create Template",
-    href: "/imageuploader",
+    href: "imageuploader",
   },
   {
     name: "Csv Uploader",
-    href: "/csvuploader",
+    href: "csvuploader",
   },
   {
     name: "Data Entry",
     permission: "userEditor",
-    href: "#",
+    href: "",
   },
   {
     name: "CSV Compare",
     permission: "csvCompare",
-    href: "/comparecsv",
+    href: "comparecsv",
   },
   {
     name: "Result Generator",
     permission: "resultGenerator",
-    href: "#",
+    href: "resultGeneration",
   },
 ];
-const urls = [{}]
-export default function Navbar(props) {
-  const url = useLocation();
-  console.log(url.pathname);
+export default function Navbar() {
+  const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const naviagte = useNavigate();
   const [isUserMenuOpen, setIsUserMenuOpen] = React.useState(false);
 
   const userData = JSON.parse(localStorage.getItem("userData"));
-
-  const { state } = props;
 
   const datactx = useContext(dataContext);
 
@@ -85,7 +81,7 @@ export default function Navbar(props) {
   );
 
   return (
-    <div className="fixed w-full z-10 bg-white ">
+    <div className="fixed w-full z-10 bg-white">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2 sm:px-6 lg:px-8">
         <div className="inline-flex items-center space-x-2">
           <img className="h-14 w-auto" src={logo} alt="Your Company" />
@@ -93,24 +89,44 @@ export default function Navbar(props) {
         <div className="hidden lg:block">
           <ul className="flex justify-center items-center space-x-2">
             {userData?.role === "Admin"
-              ? menuItems?.map((item) => (
-                  <li key={item.name}>
-                    <Link
-                      to={item.href}
-                      className="text-lg px-2 rounded-md py-1 font-semibold text-gray-700 no-underline hover:text-black hover:bg-gray-300 "
-                    >
-                      {item.name}
-                    </Link>
-                  </li>
-                ))
+              ? menuItems?.map((item) => {
+                  const mainUrl = location.pathname?.slice(1)?.split("/");
+                  const active = mainUrl[0] === item.href ? "bg-gray-300 " : "";
+                  return (
+                    <li key={item.name}>
+                      <Link
+                        to={item.href}
+                        onClick={() => {
+                          setIsUserMenuOpen(false);
+                        }}
+                        // className={
+                        //   url.pathname === item.href
+                        //     ? "active:bg-gray-600 text-lg px-2 rounded-md py-1 font-semibold text-gray-700 no-underline hover:text-black hover:bg-gray-300"
+                        //     : "text-lg px-2 rounded-md py-1 font-semibold text-gray-700 no-underline hover:text-black hover:bg-gray-300"
+                        // }
+                        className={`text-lg px-2 rounded-md py-1 font-semibold text-gray-700 no-underline hover:text-black hover:bg-gray-300 ${active}`}
+                      >
+                        {item.name}
+                      </Link>
+                    </li>
+                  );
+                })
               : filteredMenuItems?.map((item) => (
                   <li key={item.name}>
-                    <Link
+                    <NavLink
                       to={item.href}
-                      className="text-lg px-2 rounded-md py-1 font-semibold text-gray-700 hover:text-black hover:bg-gray-300 "
+                      activeClassName="bg-gray-300"
+                      onClick={() => {
+                        setIsUserMenuOpen(false);
+                      }}
+                      // className={
+                      //   url.pathname === item.href
+                      //     ? "active:bg-gray-300 text-lg px-2 rounded-md py-1 font-semibold text-gray-700 no-underline hover:text-black hover:bg-gray-300"
+                      //     : "text-lg px-2 rounded-md py-1 font-semibold text-gray-700 no-underline hover:text-black hover:bg-gray-300"
+                      // }
                     >
                       {item.name}
-                    </Link>
+                    </NavLink>
                   </li>
                 ))}
           </ul>

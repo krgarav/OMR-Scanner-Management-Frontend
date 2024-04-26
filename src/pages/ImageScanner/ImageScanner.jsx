@@ -119,11 +119,7 @@ const ImageScanner = () => {
     };
 
     try {
-      const response = await axios.post(
-        `http://${REACT_APP_IP}:4000/add/templete`,
-        data
-      );
-      // console.log(response);
+      await axios.post(`http://${REACT_APP_IP}:4000/add/templete`, data);
       toast.success("Template created successfully!");
       navigate("/imageuploader");
     } catch (error) {
@@ -133,13 +129,12 @@ const ImageScanner = () => {
   };
 
   return (
-    <div className="flex scannerbg">
+    <div className="flex scannerbg border-1 pt-16 ">
       {/* LEFT SECTION  */}
-
       <div className="flex">
         <div className="flex flex-1 flex-col justify-between border-e bg-teal-50">
           <div className="px-4 py-6">
-            <ul className="space-y-1 ">
+            <ul className="space-y-1">
               <li
                 style={{ marginTop: "40px" }}
                 className="block w-full rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium  mb-5"
@@ -337,14 +332,13 @@ const ImageScanner = () => {
                                         <div className="mt-2">
                                           <button
                                             type="button"
-                                            className=" text-red-600"
+                                            className=" text-red-600 w-[30px] h-[30px]  text-xl"
                                             onClick={onResetHandler}
                                           >
-                                            <RxCross1 />
+                                            <RxCross1 className="font-extrabold" />
                                           </button>
                                         </div>
                                       </div>
-
                                     </div>
                                     <div className="flex gap-5 p-3 mt-3">
                                       <label
@@ -418,81 +412,6 @@ const ImageScanner = () => {
                           </div>
                         </Dialog>
                       </Transition.Root>
-
-                      {/* <div
-                        className="modal fade"
-                        id="exampleModal"
-                        tabIndex="-1"
-                        aria-labelledby="exampleModalLabel"
-                        aria-hidden="true"
-                      >
-                        <div className="modal-dialog modal-dialog-centered">
-                          <div className="modal-content px-3 py-2">
-                            <div className="modal-header">
-                              <h1
-                                className="modal-title fs-5 fw-semibold text-gray-600"
-                                id="exampleModalLabel"
-                              >
-                                Add Field Entity..
-                              </h1>
-                              <button
-                                type="button"
-                                className="btn-close"
-                                data-bs-dismiss="modal"
-                                aria-label="Close"
-                                onClick={onResetHandler}
-                              ></button>
-                            </div>
-                            <div className="modal-body justify-between my-1">
-                              <div className="flex gap-5 p-3">
-                                <label
-                                  htmlFor="formField"
-                                  className="flex items-center font-semibold"
-                                >
-                                  <input
-                                    type="radio"
-                                    id="formField"
-                                    name="fieldType"
-                                    value="formField"
-                                    className="form-radio text-blue-500"
-                                    required
-                                    checked={fieldType === "formField"}
-                                    onChange={(e) =>
-                                      setFieldType(e.target.value)
-                                    }
-                                  />
-                                  <span className="ml-2 text-lg text-gray-700">
-                                    Form Field
-                                  </span>
-                                </label>
-                                <label
-                                  htmlFor="questionsField"
-                                  className="flex items-center font-semibold"
-                                >
-                                  <input
-                                    type="radio"
-                                    id="questionsField"
-                                    name="fieldType"
-                                    value="questionsField"
-                                    className="form-radio text-blue-500"
-                                    required
-                                    checked={fieldType === "questionsField"}
-                                    onChange={(e) =>
-                                      setFieldType(e.target.value)
-                                    }
-                                  />
-                                  <span className="ml-2 text-lg text-gray-700">
-                                    Questions Field
-                                  </span>
-                                </label>
-                              </div>
-                              <div className="flex justify-between my-2">
-                                
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div> */}
                     </>
                   </div>
                 )}
