@@ -8,7 +8,6 @@
   width: 100dvw;
   height: 100dvh;
   background-image: url("../../assets/images/csvcompare.jpg");
-  /* object-fit: contain; */
   background-size: cover; /* This will make the background image cover the entire container */
   background-position: center;
 }
@@ -29,7 +28,7 @@
  margin-top:10px;
 }
 .imgContainer{
-  height: 92dvh;
+  height: 83dvh;
 }
 @keyframes slideLeftToRight {
   0% {

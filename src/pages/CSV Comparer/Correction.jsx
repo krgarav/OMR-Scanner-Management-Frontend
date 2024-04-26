@@ -122,7 +122,7 @@ const Correction = () => {
         className={`flex lg:flex-row md:flex-col justify-between animate-slide-left-to-right ${classes.correction} `}
       >
         {state.length !== 0 && (
-          <div className="w-full">
+          <div className="w-full pt-20">
             <div className={`text-center text-3xl font-bold ${classes.imgdiv}`}>
               <h1
                 className={`text-center text-3xl font-bold ${classes.imgHead}`}
@@ -139,7 +139,7 @@ const Correction = () => {
           </div>
         )}
         {state.length !== 0 && (
-          <div className="w-full">
+          <div className="w-full pt-20 pr-5">
             <h1 className="text-center text-3xl font-bold m-5">
               {currIndex + 1} of {state.length}
             </h1>
