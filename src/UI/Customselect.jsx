@@ -69,10 +69,8 @@ const Customselect = (props) => {
         label={`${props.label} *`}
         sx={{
           "& .MuiSelect-select": {
-            // paddingTop: "10px",
-            // paddingBottom: "10px",
-            // height :"10px",
-            // marginTop : "20px"
+            backdropFilter: "blur(5px)",
+            fontWeight:"500"
           },
         }}
         MenuProps={{

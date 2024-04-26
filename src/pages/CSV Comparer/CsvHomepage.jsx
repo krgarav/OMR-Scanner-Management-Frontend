@@ -14,9 +14,9 @@ import { REACT_APP_IP } from "../../services/common";
 const CsvHomepage = () => {
   const navigate = useNavigate();
   const dataCtx = useContext(dataContext);
-useEffect(()=>{
-  dataCtx.addToCsvHeader([])
-},[])
+  useEffect(() => {
+    dataCtx.addToCsvHeader([]);
+  }, []);
   useEffect(() => {
     document.body.style.userSelect = "none";
     return () => {
@@ -122,6 +122,7 @@ useEffect(()=>{
         dataCtx.setImageMappedData(objArr);
         navigate("/comparecsv/correct_compare_csv", { state: objArr });
       } catch (err) {
+        alert("Error Occured : ", err);
         console.log(err);
       }
     };

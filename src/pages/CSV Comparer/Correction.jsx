@@ -17,7 +17,6 @@ const Correction = () => {
   const state = dataCtx.imageMappedData;
   const location = useLocation();
   const lengthOfResult = location.state?.length;
-  // const { instance, zoomIn, zoomOut, ...rest } = useControls();
   const navigate = useNavigate();
 
   // const toggleZoom = (e) => {
@@ -57,42 +56,47 @@ const Correction = () => {
 
   useEffect(() => {
     const confirmExit = (e) => {
-      // Cancel the event
-      e.preventDefault();
-      // Chrome requires returnValue to be set
-      e.returnValue = "";
-
-      // Optionally, display a confirmation dialog
+      // Display a confirmation message
       const confirmationMessage =
         "Are you sure you want to leave this page? Please download corrected CSV before closing this page.";
       e.returnValue = confirmationMessage;
       return confirmationMessage;
     };
-
+  
     // Add event listener when the component mounts
     window.addEventListener("beforeunload", confirmExit);
-
+  
     // Remove event listener when the component unmounts
     return () => {
       window.removeEventListener("beforeunload", confirmExit);
     };
   }, []); // Empty dependency array to run effect only once on mount
+  
   useEffect(() => {
-    const handleBackButton = (event) => {
-      const confirmationMessage =
-        "Are you sure you want to leave this page? Please download corrected CSV before closing this page.";
-      event.returnValue = confirmationMessage; // For Chrome
-      return confirmationMessage; // For other browsers
+    console.log("called");
+    // window.confirm("Hello")
+
+    const handlePopstate = (e) => {
+      console.log("treig")
+      // Display a confirmation message
+      window.confirm()
+      const confirmationMessage = "Are you sure you want to leave this page?";
+      if (!window.confirm(confirmationMessage)) {
+        // Prevent navigation if the user cancels
+        window.history.pushState(null, "", window.location.href);
+      }
     };
-
-    // Add event listener for popstate when the component mounts
-    window.addEventListener("popstate", handleBackButton);
-
+  
+    // Add event listener when the component mounts
+    window.addEventListener("popstate", handlePopstate);
+  
     // Remove event listener when the component unmounts
     return () => {
-      window.removeEventListener("popstate", handleBackButton);
+      window.removeEventListener("popstate", handlePopstate);
     };
-  }, []);
+  }, [location]); // Empty dependency array to run effect only once on mount
+   // Empty dependency array to run effect only once on mount
+  
   useEffect(() => {
     document.body.style.userSelect = "none";
     return () => {
