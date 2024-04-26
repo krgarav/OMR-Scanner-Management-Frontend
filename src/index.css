@@ -18,7 +18,7 @@ body {
   background-image: url("assets/images/uploaderbg.jpg");
   background-position: 50% 0;
   background-size: cover;
-  height: auto;
+  height: 100vh;
 }
 a {
   text-decoration: none !important;
