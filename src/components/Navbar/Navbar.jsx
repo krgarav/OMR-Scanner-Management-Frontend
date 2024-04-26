@@ -1,10 +1,11 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { TiThMenu } from "react-icons/ti";
 import { RxCross2 } from "react-icons/rx";
 import logo from "../../assets/images/image.png";
 import { FaCircleUser } from "react-icons/fa6";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import dataContext from "../../Store/DataContext";
+import { onGetVerifiedUserHandler } from "../../services/common";
 
 const menuItems = [
   {
@@ -31,15 +32,28 @@ const menuItems = [
     href: "resultGeneration",
   },
 ];
+
 export default function Navbar() {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const naviagte = useNavigate();
   const [isUserMenuOpen, setIsUserMenuOpen] = React.useState(false);
-
-  const userData = JSON.parse(localStorage.getItem("userData"));
-
+  const mainUrl = location.pathname?.slice(1)?.split("/");
+  // const userData = JSON.parse(localStorage.getItem("userData"));
+  const [userData, setUserData] = useState({});
   const datactx = useContext(dataContext);
+
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        const response = await onGetVerifiedUserHandler();
+        setUserData(response.user);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getUser();
+  }, []);
 
   const userMenuItems = [
     {
@@ -76,9 +90,13 @@ export default function Navbar() {
     setIsUserMenuOpen(!isUserMenuOpen);
   };
 
-  const filteredMenuItems = menuItems?.filter(
-    (item) => userData?.permissions[item.permission]
-  );
+  const filteredMenuItems =
+    userData &&
+    menuItems?.filter((item) => {
+      if (Object.keys(userData).length !== 0) {
+        return userData?.permissions[item?.permission];
+      }
+    });
 
   return (
     <div className="fixed w-full z-10 bg-white">
@@ -90,7 +108,6 @@ export default function Navbar() {
           <ul className="flex justify-center items-center space-x-2">
             {userData?.role === "Admin"
               ? menuItems?.map((item) => {
-                  const mainUrl = location.pathname?.slice(1)?.split("/");
                   const active = mainUrl[0] === item.href ? "bg-gray-300 " : "";
                   return (
                     <li key={item.name}>
@@ -99,11 +116,6 @@ export default function Navbar() {
                         onClick={() => {
                           setIsUserMenuOpen(false);
                         }}
-                        // className={
-                        //   url.pathname === item.href
-                        //     ? "active:bg-gray-600 text-lg px-2 rounded-md py-1 font-semibold text-gray-700 no-underline hover:text-black hover:bg-gray-300"
-                        //     : "text-lg px-2 rounded-md py-1 font-semibold text-gray-700 no-underline hover:text-black hover:bg-gray-300"
-                        // }
                         className={`text-lg px-2 rounded-md py-1 font-semibold text-gray-700 no-underline hover:text-black hover:bg-gray-300 ${active}`}
                       >
                         {item.name}
@@ -111,24 +123,22 @@ export default function Navbar() {
                     </li>
                   );
                 })
-              : filteredMenuItems?.map((item) => (
-                  <li key={item.name}>
-                    <NavLink
-                      to={item.href}
-                      activeClassName="bg-gray-300"
-                      onClick={() => {
-                        setIsUserMenuOpen(false);
-                      }}
-                      // className={
-                      //   url.pathname === item.href
-                      //     ? "active:bg-gray-300 text-lg px-2 rounded-md py-1 font-semibold text-gray-700 no-underline hover:text-black hover:bg-gray-300"
-                      //     : "text-lg px-2 rounded-md py-1 font-semibold text-gray-700 no-underline hover:text-black hover:bg-gray-300"
-                      // }
-                    >
-                      {item.name}
-                    </NavLink>
-                  </li>
-                ))}
+              : filteredMenuItems?.map((item) => {
+                  const active = mainUrl[0] === item.href ? "bg-gray-300 " : "";
+                  return (
+                    <li key={item.name}>
+                      <NavLink
+                        to={item.href}
+                        className={`text-lg px-2 rounded-md py-1 font-semibold text-gray-700 no-underline hover:text-black hover:bg-gray-300 ${active}`}
+                        onClick={() => {
+                          setIsUserMenuOpen(false);
+                        }}
+                      >
+                        {item.name}
+                      </NavLink>
+                    </li>
+                  );
+                })}
           </ul>
         </div>
         <div className="relative">

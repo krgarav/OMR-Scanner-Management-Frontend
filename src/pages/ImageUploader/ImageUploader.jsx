@@ -24,7 +24,7 @@ const ImageUploader = () => {
   const handleImage = (file) => {
     if (file) {
       // Check if the file type is an image
-      const imageTypes = ["image/jpeg", "image/png", "image/gif"]; // Add more image types if needed
+      const imageTypes = ["image/jpeg", "image/png", "image/gif"];
       if (imageTypes.includes(file.type)) {
         const reader = new FileReader();
 
@@ -53,13 +53,13 @@ const ImageUploader = () => {
   return (
     <div>
       <section
-        className="bgImage"
+        className="bgImage h-[100vh]"
         onDrop={handleDrop}
         onDragOver={handleDragOver}
       >
         <div className="mx-auto max-w-screen-sm px-4 py-12 lg:flex lg:h-screen lg:items-center flex-col">
           <div className="mt-40">
-            <h1 className="text-white text-4xl mb-8 font-bold">
+            <h1 className="text-white text-center text-4xl mb-8 font-bold">
               OMR India Outsources{" "}
             </h1>
           </div>
@@ -95,7 +95,7 @@ const ImageUploader = () => {
                 className="absolute -top-full opacity-0"
               />
             </div>
-            <p className="mt-4 text-sm text-gray-400">
+            <p className="mt-4 text-sm text-white">
               or drag and drop an image here
             </p>
           </div>

@@ -90,7 +90,7 @@ const TemplateMapping = () => {
     try {
       await axios.post(`http://${REACT_APP_IP}:4000/data`, newObj);
       toast.success("Mapping successfully done.");
-      navigate(`/datamatching/${fileId}`, { state: id });
+      navigate(`/csvuploader/taskAssign/${id}`, { state: fileId });
     } catch (error) {
       toast.error(error.message);
     }
@@ -98,7 +98,7 @@ const TemplateMapping = () => {
 
   return (
     <div className="py-12 min-h-[100vh] overflow-y overflow-x-auto flex justify-center templatemapping">
-      <div className="w-[700px] mt-16">
+      <div className="w-[700px] mt-20">
         <h1 className="text-white text-4xl text-center mb-10">Mapping</h1>
         {csvHeaders &&
           csvHeaders.map((csvHeader, index) => (

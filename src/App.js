@@ -17,6 +17,7 @@ import HomePage from "./components/Navbar/Navbar"
 import TemplateMapping from "./pages/TemplateMapping/TemplateMapping";
 import HomePageTest from "./pages/HomePageTest";
 import ResultGenerationProvider from "./Store/ResultGenerationProvider";
+import TaskManager from "./pages/TaskManager/TaskManager";
 
 
 function App() {
@@ -42,6 +43,10 @@ function App() {
             <Route
               path="/csvuploader/templatemap/:id"
               element={<TemplateMapping />}
+            />
+            <Route
+              path="/csvuploader/taskAssign/:id"
+              element={<TaskManager />}
             />
 
             <Route path="/templatemap/:id" element={<TemplateMapping />} />
