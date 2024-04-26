@@ -11,14 +11,11 @@ import ImageUploader from "./pages/ImageUploader/ImageUploader";
 import ImageScanner from "./pages/ImageScanner/ImageScanner";
 import dataContext from "./Store/DataContext";
 import CsvUploader from "./pages/CsvUploader/CsvUploader";
-
-import HomePage from "./components/Navbar/Navbar"
-
+import HomePage from "./components/Navbar/Navbar";
 import TemplateMapping from "./pages/TemplateMapping/TemplateMapping";
 import HomePageTest from "./pages/HomePageTest";
 import ResultGenerationProvider from "./Store/ResultGenerationProvider";
 import TaskManager from "./pages/TaskManager/TaskManager";
-
 
 function App() {
   const datactx = useContext(dataContext);

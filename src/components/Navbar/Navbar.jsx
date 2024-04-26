@@ -61,7 +61,6 @@ export default function Navbar() {
       onClick: () => {
         naviagte("/create-user");
         setIsUserMenuOpen(false);
-        setIsMenuOpen(!isMenuOpen);
 
       },
     },
@@ -70,7 +69,6 @@ export default function Navbar() {
       onClick: () => {
         naviagte("/all-user");
         setIsUserMenuOpen(false);
-        setIsMenuOpen(!isMenuOpen);
 
       },
     },
@@ -80,7 +78,6 @@ export default function Navbar() {
         localStorage.clear();
         datactx.modifyIslogin(false);
         naviagte("/");
-        setIsMenuOpen(!isMenuOpen);
         setIsUserMenuOpen(false);
       },
     },
