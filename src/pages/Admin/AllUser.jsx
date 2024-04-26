@@ -30,18 +30,10 @@ export function AllUser() {
     fetchUsers();
   }, [selectedUser]);
 
-  const handleEditUser = async (user) => {
-    // console.log(user)
-    try {
-      const response = await axios.get(
-        `http://${REACT_APP_IP}:4000/users/getuser/${user.id}`
-      );
-      console.log(response.data);
-      setSelectedUser(response.data.user);
-      setOpen(true);
-    } catch (error) {
-      console.error("Error fetching user details:", error);
-    }
+  console.log(users);
+
+  const onModelHandler = async (user) => {
+    setOpen(true);
   };
 
   const handlePermissionChange = (e) => {
@@ -55,10 +47,10 @@ export function AllUser() {
     }));
   };
 
-  const handleUpdateUser = async (e) => {
+  const onUpdateHandler = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.put(
+      await axios.put(
         `http://${REACT_APP_IP}:4000/users/updateuser/${selectedUser.id}`,
         selectedUser
       );
@@ -72,9 +64,8 @@ export function AllUser() {
   };
 
   const handleDeleteUser = async (userId) => {
-    console.log(userId);
     try {
-      const response = await axios.delete(
+      await axios.delete(
         `http://${REACT_APP_IP}:4000/users/deleteuser/${userId}`
       );
       setUsers(users.filter((user) => user.id !== userId));
@@ -188,7 +179,7 @@ export function AllUser() {
                           <button>
                             <BiEdit
                               className=" text-blue-500"
-                              onClick={() => handleEditUser(user)}
+                              onClick={() => onModelHandler(user)}
                             />
                           </button>
                         </td>
@@ -207,7 +198,6 @@ export function AllUser() {
             </div>
           </div>
         </div>
-
         <Transition.Root show={open} as={Fragment}>
           <Dialog
             as="div"
@@ -242,7 +232,7 @@ export function AllUser() {
                     <div className="bg-gray-50 px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                       <div className="sm:flex sm:items-start">
                         <form
-                          onSubmit={handleUpdateUser}
+                          onSubmit={onUpdateHandler}
                           className="px-4 pb-4  sm:px-6 sm:pb-4"
                         >
                           <div className="sm:flex sm:items-start">
