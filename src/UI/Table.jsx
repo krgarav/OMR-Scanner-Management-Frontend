@@ -58,8 +58,8 @@ const TableCol = (props) => {
       dataCtx.setImageMappedData(mappedData);
       dataCtx.setCsvFile(csvFile);
     }
-    toast("Saved the corrected file", {
-      position: "top-left",
+    toast.success("Saved the corrected file", {
+      position: "bottom-left",
       autoClose: 1000,
       hideProgressBar: false,
       closeOnClick: true,

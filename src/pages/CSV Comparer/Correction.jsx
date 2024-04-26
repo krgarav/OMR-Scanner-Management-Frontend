@@ -8,6 +8,7 @@ import Table from "../../UI/Table";
 import { useNavigate } from "react-router";
 import DownloadIcon from "@mui/icons-material/Download";
 import { useLocation } from "react-router";
+import { toast } from "react-toastify";
 
 const Correction = () => {
   const [currIndex, setCurrIndex] = useState(0);
@@ -15,9 +16,8 @@ const Correction = () => {
   const state = dataCtx.imageMappedData;
   const location = useLocation();
   const lengthOfResult = location.state?.length;
-
   const navigate = useNavigate();
-  console.log(location.pathname);
+
   useEffect(() => {
     if (dataCtx.imageMappedData.length === 0) {
       navigate("/comparecsv", { replace: true });
@@ -48,7 +48,6 @@ const Correction = () => {
   }, []); // Empty dependency array to run effect only once on mount
   useEffect(() => {
     const handleBackButton = (event) => {
-      console.log("trig");
       const confirmationMessage =
         "Are you sure you want to leave this page? Please download corrected CSV before closing this page.";
       event.returnValue = confirmationMessage; // For Chrome
@@ -115,6 +114,16 @@ const Correction = () => {
     const date = new Date().toJSON();
     link.download = `data_${date}.csv`;
     link.click();
+    toast.success("Downloaded the corrected csv file", {
+      position: "bottom-left",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+    });
   };
 
   return (
