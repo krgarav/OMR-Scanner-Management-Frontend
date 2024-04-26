@@ -7,6 +7,7 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { REACT_APP_IP } from "../../services/common";
+import { onGetAllUsersHandler } from "../../services/common";
 
 export function AllUser() {
   const [users, setUsers] = useState([]);
@@ -18,11 +19,8 @@ export function AllUser() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get(
-          `http://${REACT_APP_IP}:4000/users/getallusers`
-        );
-        console.log(response.data);
-        const { users } = response.data;
+        const response = await onGetAllUsersHandler();
+        const { users } = response;
         setUsers(users);
       } catch (error) {
         console.error("Error fetching users:", error);
@@ -94,7 +92,7 @@ export function AllUser() {
   return (
     <div className="pt-40">
       <section className="mx-auto w-full max-w-7xl  px-12 py-10 bg-white rounded-xl">
-        <div className="flex flex-col space-y-4  md:flex-row md:items-center md:justify-between md:space-y-0">
+        <div className="flex flex-col space-y-4  sm:flex-row md:items-center sm:justify-between sm:space-y-0">
           <div>
             <h2 className="text-3xl font-semibold">All Users</h2>
           </div>

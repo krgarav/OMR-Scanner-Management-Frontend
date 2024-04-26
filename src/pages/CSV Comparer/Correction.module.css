@@ -2,34 +2,32 @@
   margin: 0;
   padding: 0;
 }
- .correction{
+.correction {
   margin: 0;
   padding: 0;
   width: 100dvw;
   height: 100dvh;
   background-image: url("../../assets/images/csvcompare.jpg");
-  /* object-fit: contain; */
   background-size: cover; /* This will make the background image cover the entire container */
   background-position: center;
 }
 
-.imgHead{
-  width: 50%;
+.imgHead {
   padding: 5px;
-  border : 1px solid white;
+  border: 1px solid white;
   background-color: aliceblue;
-  border-radius: 10px ;
+  border-radius: 10px;
   height: 100%;
 }
-.imgdiv{
+.imgdiv {
   width: 100%;
   text-align: center;
   display: flex;
   justify-content: center;
- margin-top:10px;
+  margin-top: 10px;
 }
-.imgContainer{
-  height: 92dvh;
+.imgContainer {
+  height: 83dvh;
 }
 @keyframes slideLeftToRight {
   0% {

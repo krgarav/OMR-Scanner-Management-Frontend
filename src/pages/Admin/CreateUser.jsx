@@ -103,8 +103,8 @@ const CreateUser = () => {
           </h2>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="flex justify-between">
-            <div>
+          <div className="flex flex-col sm:flex-row sm:space-x-10 w-full">
+            <div className="w-full">
               <label htmlFor="userName" className="block text-lg font-medium ">
                 Username
               </label>
@@ -115,27 +115,29 @@ const CreateUser = () => {
                 autoComplete="userName"
                 required
                 value={formData?.userName}
+                placeholder="Enter Username"
                 onChange={handleChange}
-                className="mt-1  focus:ring-indigo-500 focus:border-indigo-500 block w-full px-4 py-2 shadow-md shadow-blue-100 sm:text-sm border-gray-300 rounded-md"
+                className="mt-2  focus:ring-indigo-500 focus:border-indigo-500 block w-full px-4 py-2 shadow-md shadow-blue-100 sm:text-sm border-gray-300 rounded-md"
               />
             </div>
-            <div className="mr-20">
+            <div className="w-full mt-4 sm:mt-0">
               <label htmlFor="mobile" className="block text-lg font-medium ">
-                Mobile No.
+                Mobile  
               </label>
               <input
                 id="mobile"
                 name="mobile"
                 type="number"
                 autoComplete="mobile"
+                placeholder="Enter Mobile no."
                 required
                 value={formData?.mobile}
                 onChange={handleChange}
-                className="mt-1  focus:ring-indigo-500 focus:border-indigo-500 block w-full px-4 py-2 shadow-md shadow-blue-100 sm:text-sm border-gray-300 rounded-md"
+                className="mt-2  focus:ring-indigo-500 focus:border-indigo-500 block w-full px-4 py-2 shadow-md shadow-blue-100 sm:text-sm border-gray-300 rounded-md"
               />
             </div>
           </div>
-          <div>
+          <div className="w-full">
             <label htmlFor="email" className="block text-lg font-medium ">
               Email
             </label>
@@ -144,13 +146,15 @@ const CreateUser = () => {
               name="email"
               type="email"
               autoComplete="email"
+              placeholder="Enter Email ID"
               required
               value={formData?.email}
               onChange={handleChange}
-              className="mt-1  px-4 py-2 shadow-md shadow-blue-100 focus:ring-indigo-500 focus:border-indigo-500 block w-full  sm:text-sm border-gray-300 rounded-md"
+              className="mt-2  px-4 py-2 shadow-md shadow-blue-100 focus:ring-indigo-500 focus:border-indigo-500 block w-full  sm:text-sm border-gray-300 rounded-md"
             />
           </div>
-          <div>
+          <div className="flex flex-col sm:flex-row sm:space-x-10 w-full">
+            <div className="w-full">
             <label htmlFor="password" className="block text-lg font-medium">
               Password
             </label>
@@ -158,23 +162,22 @@ const CreateUser = () => {
               id="password"
               name="password"
               type="password"
-              autoComplete="new-password"
+              placeholder="Enter Password"
               required
               value={formData?.password}
               onChange={handleChange}
-              className="mt-1  px-4 py-2 shadow-md shadow-blue-100 focus:ring-indigo-500 focus:border-indigo-500 block w-full  sm:text-sm border-gray-300 rounded-md"
+              className="mt-2 px-4 py-2 shadow-md shadow-blue-100 focus:ring-indigo-500 focus:border-indigo-500 block w-full  sm:text-sm border-gray-300 rounded-md"
             />
-          </div>
-
-          <div>
-            <label className="block text-lg   font-medium">Role</label>
+            </div>
+          <div className="w-full mt-4  sm:mt-0">
+            <label className="block text-lg font-medium">Role</label>
             <select
               id="role"
               name="role"
               required
               value={formData?.role}
               onChange={handleChange}
-              className="mt-1 block w-64 py-2 px-3 border  shadow-blue-100 bg-white rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="mt-2 block w-full py-2 px-4 border  shadow-blue-100 bg-white rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             >
               <option disabled value="">
                 Select role
@@ -184,10 +187,12 @@ const CreateUser = () => {
               <option value="Operator">Operator</option>
             </select>
           </div>
+          </div>
+
 
           <div>
             <label className="block text-lg   font-medium">Permissions</label>
-            <div className="flex gap-4 w-screen mt-2 ">
+            <div className="flex flex-wrap justify-between gap-4 w-full mt-2 ">
               <div className="flex items-center">
                 <input
                   id="dataEntry"

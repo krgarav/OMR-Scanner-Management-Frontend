@@ -30,7 +30,7 @@ export default function Login() {
       );
 
       if (response.status === 200) {
-        localStorage.setItem("userData", JSON.stringify(response.data.user));
+        localStorage.setItem("userData", JSON.stringify(response.data.token));
         dataCtx.modifyIslogin(true);
         navigate("/home");
         toast.success("Login Successfull");
