@@ -29,8 +29,8 @@ const GenerateResultCsv = (props) => {
       toast.error("please select mapped key");
       return;
     }
-    if (ctx.paperMarkings.start === null) {
-      toast.error("please select starting question");
+    if (ctx.paperMarkings.start === null && !subjectWiseMarking>=0) {
+      toast.error("please select start question");
       return;
     }
     if (ctx.paperMarkings.end <= 0) {

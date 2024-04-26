@@ -4,8 +4,8 @@ import { toast } from "react-toastify";
 import { RiDeleteBin6Line } from "react-icons/ri";
 
 const SubjectWiseMarkApply = () => {
-  const SubjectStartKey = useRef(null);
-  const SubjectEndKey = useRef(null);
+  const SubjectStartKey = useRef(-1);
+  const SubjectEndKey = useRef(-1);
   const correctSubjectPoint = useRef();
   const wrongSubjectPoint = useRef();
   const subjectName = useRef("");
@@ -87,9 +87,9 @@ const SubjectWiseMarkApply = () => {
                     // setSubjectStartDropDownOpen(!subjectStartDropDownOpen);
                   }}
                 >
-                  Start que :
-                  <div className="w-[120px]   min-[816px]:mx-4 my-2  overflow-x-hidden font-medium border-white border-2">
-                    {SubjectStartKey.current < 0 || !SubjectStartKey.current ? (
+                  Start Que :
+                  <div className="w-[120px]   min-[816px]:mx-4 my-2  overflow-x-hidden font-medium border-white border-2  cursor-pointer">
+                    {SubjectStartKey.current < 0 ? (
                       <div
                         className="text-white text-center"
                         onClick={() => {
@@ -112,7 +112,7 @@ const SubjectWiseMarkApply = () => {
                       </p>
                     )}
                     {subjectStartDropDownOpen && (
-                      <div className="bg-blue-500  overflow-x-hidden overflow-y-scroll  h-[60px] ">
+                      <div className="bg-blue-500  overflow-x-hidden overflow-y-scroll  h-[80px] ">
                         {keyHEaders[0].map((current, index) => {
                           return (
                             <div
@@ -124,6 +124,7 @@ const SubjectWiseMarkApply = () => {
 
                                 SubjectStartKey.current = index;
                               }}
+                              key={index}
                             >
                               {" "}
                               {current}
@@ -135,18 +136,18 @@ const SubjectWiseMarkApply = () => {
                   </div>
                 </div>
                 <div
-                  className="font-bold text-[1.1rem]"
+                  className="font-bold text-[1.1rem] "
                   onClick={() => {
                     // setSubjectEndDropdownOpen(!subjectEndDropDownOpen);
                   }}
                 >
-                  End que :
-                  <div className="w-[120px]   min-[816px]:mx-4 my-2  overflow-x-hidden font-medium border-white border-2">
-                    {SubjectEndKey.current < 0 || !SubjectEndKey.current ? (
+                  End Que :
+                  <div className="w-[120px]   min-[816px]:mx-4 my-2  overflow-x-hidden font-medium border-white border-2  cursor-pointer">
+                    {SubjectEndKey.current == -1 ? (
                       <div
                         className="text-white text-md text-center"
                         onClick={() => {
-                          setSubjectEndDropdownOpen(!subjectStartDropDownOpen);
+                          setSubjectEndDropdownOpen(!subjectEndDropDownOpen);
                         }}
                       >
                         select here
@@ -161,7 +162,7 @@ const SubjectWiseMarkApply = () => {
                       </p>
                     )}
                     {subjectEndDropDownOpen && (
-                      <div className="bg-blue-500  overflow-x-hidden overflow-y-scroll  h-[60px] ">
+                      <div className="bg-blue-500  overflow-x-hidden overflow-y-scroll  h-[80px] ">
                         {keyHEaders[0].map((current, index) => {
                           return (
                             <div
@@ -187,8 +188,10 @@ const SubjectWiseMarkApply = () => {
                 <div className="font-bold text-[1.1rem]">
                   Correct <span className="">(+)</span> :
                   <input
-                    className="w-[50px] mx-4 my-2 text-center"
+                    className="w-[50px] mx-4 my-2 text-center cursor-pointer"
                     defaultValue={1}
+                    min={0}
+                    step={0.25}
                     type="number"
                     ref={correctSubjectPoint}
                     onChange={(e) =>
@@ -199,8 +202,10 @@ const SubjectWiseMarkApply = () => {
                 <div className="font-bold text-[1.1rem]">
                   Wrong <span className="">(-)</span> :
                   <input
-                    className="w-[50px] mx-4 my-2 text-center"
+                    className="w-[50px] mx-4 my-2 text-center  cursor-pointer"
                     defaultValue={0}
+                    min={0}
+                    step={0.25}
                     type="number"
                     ref={wrongSubjectPoint}
                     onChange={(e) =>
@@ -216,7 +221,9 @@ const SubjectWiseMarkApply = () => {
               </div>
               <div className="overflow-y-scroll h-[100px] w-[100%] text-center  ">
                 {subjectWiseMarking.length <= 0 && (
-                  <div className="flex items-center w-full h-full justify-center">no subject present</div>
+                  <div className="flex items-center w-full h-full justify-center">
+                    no subject present
+                  </div>
                 )}
                 {subjectWiseMarking.map((current) => (
                   <div className="font-bold bg-white items-center border-b border-blue-600 flex justify-between py-2">
