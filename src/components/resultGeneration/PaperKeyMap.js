@@ -31,7 +31,7 @@ const PaperkeyMap = () => {
                 Select Mapped Key
               </div>
               <div
-                className="border w-[90%] md:w-[80%] md:ms-2 flex flex-col items-center  py-1 text-white"
+                className="border w-[90%] md:w-[80%] md:ms-2 flex flex-col items-center  py-1 text-white  cursor-pointer"
                 onClick={() => setSelectedKeyOpen(!selectedKeyOpen)}
               >
                 {!mappedKey ? (

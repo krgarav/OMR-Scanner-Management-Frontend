@@ -6,10 +6,10 @@ const OutPutHeaders = () => {
   const ctx = useContext(ResultGenerationContext);
   const dataHeaders = ctx.dataHeaders;
   const subjectMArking = ctx.subjectMarkings.length;
-
+  const [selectAll, setSelectAll] = useState(false);
   const [headers, setHeaders] = useState([]);
   const outPutHeadersHandler = (data) => {
-    console.log(data)
+    console.log(data);
     // headers.push(data);
     const findHeader = headers.includes(data);
 
@@ -21,7 +21,14 @@ const OutPutHeaders = () => {
       setHeaders((prev) => [...prev, data]);
     }
   };
-
+  const allOutputSelector = (dataArray) => {
+    setSelectAll(true);
+    setHeaders(dataArray);
+  };
+  const allOutPutDeselector = () => {
+    setSelectAll(false);
+    setHeaders([]);
+  };
   console.log(headers);
   return (
     //  {/* outputheaders */}
@@ -34,48 +41,61 @@ const OutPutHeaders = () => {
             <div className=" w-[100%] bg-gradient-to-r from-red-600 to-yellow-500 shadow-lg flex justify-center text-2xl font-bold border-4  border-white my-4  shadow-gray-500">
               <p className="bg-grey py-4 text-white "> OutPut Headers</p>
             </div>
-            <div className=" flex justify-end my-2">
-              <div className="flex mx-2 border-2 border-gray-500 font-bold p-1">
-                <input
-                  className="w-[20px] h-[20px] mx-2 border-2 border-blue-500"
-                  type="checkbox"
-                  onClick={() => {
-                    dataHeaders[0].forEach((current) =>outPutHeadersHandler(current)
-                   
-                      
-                    );
-                  }}
-                ></input>
-                <p>select all</p>
+            <div> <div className=" flex justify-end bg-gradient-to-r from-cyan-500 to-blue-500 ">
+                {!selectAll ? (
+                  <div className="flex mx-2 border-2 border-white font-bold p-1  bg-yellow-500">
+                    <input
+                      className="w-[20px] h-[20px] mx-2 border-2 border-blue-500"
+                      type="checkbox"
+                      onClick={() => {
+                        allOutputSelector(dataHeaders[0]);
+                      }}
+                    ></input>
+                    <p className="text-white">select all</p>
+                  </div>
+                ) : (
+                  <div className="flex mx-2 border-2 border-gray-500 font-bold p-1  bg-yellow-500 text-white">
+                    <input
+                      className="w-[20px] h-[20px] mx-2 border-2 border-blue-500"
+                      type="checkbox"
+                      checked
+                      onClick={() => {
+                        allOutPutDeselector([]);
+                      }}
+                    ></input>
+                    <p>unSelectAll</p>
+                  </div>
+                )}
               </div>
-            </div>
-            <div className="h-[400px] bg-gradient-to-r from-cyan-500 to-blue-500 border-2 overflow-y-scroll pb-[70px] shadow-lg shadow-gray-500">
-              {dataHeaders &&
-                dataHeaders[0].map((current, index) => {
-                  return (
-                    <div
-                      className="    hover:bg-yellow-500"
-                      key={index}
-                      onClick={() => outPutHeadersHandler(current)}
-                    >
-                      <input
-                        type="checkbox"
-                        id={current}
-                        name={current}
-                        checked={headers.includes(current)}
-                        className="mx-2 h-[20px] w-[20px] my-2"
-                      />
-                      <label
-                        htmlFor="scales"
-                        className="mx-4 text-[1.1rem] font-bold text-white"
+              <div className="h-[400px] bg-gradient-to-r from-cyan-500 to-blue-500 border-2 overflow-y-scroll pb-[70px] shadow-lg shadow-gray-500">
+                {" "}
+                {dataHeaders &&
+                  dataHeaders[0].map((current, index) => {
+                    return (
+                      <div
+                        className="    hover:bg-yellow-500"
+                        key={index}
+                        onClick={() => outPutHeadersHandler(current)}
                       >
-                        {current}
-                      </label>
-                      <hr className="mt-2"></hr>
-                    </div>
-                  );
-                })}
-            </div>{" "}
+                        <input
+                          type="checkbox"
+                          id={current}
+                          name={current}
+                          checked={headers.includes(current)}
+                          className="mx-2 h-[20px] w-[20px] my-2"
+                        />
+                        <label
+                          htmlFor="scales"
+                          className="mx-4 text-[1.1rem] font-bold text-white"
+                        >
+                          {current}
+                        </label>
+                        <hr className="mt-2"></hr>
+                      </div>
+                    );
+                  })}
+              </div>{" "}
+            </div>
           </div>{" "}
           <GenerateResultCsv headers={headers}></GenerateResultCsv>
         </div>
