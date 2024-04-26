@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { FaArrowRight } from "react-icons/fa6";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import logo from "../../assets/images/image.png";
+import dataContext from "../../Store/DataContext";
+import { REACT_APP_IP } from "../../services/common";
 
 export default function Login() {
   const [values, setValues] = useState({
@@ -13,6 +15,7 @@ export default function Login() {
   });
 
   const navigate = useNavigate();
+  const dataCtx = useContext(dataContext);
 
   const handleInput = (e) => {
     setValues((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -22,12 +25,13 @@ export default function Login() {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:4000/users/login",
+        `http://${REACT_APP_IP}:4000/users/login`,
         values
       );
 
       if (response.status === 200) {
         localStorage.setItem("userData", JSON.stringify(response.data.user));
+        dataCtx.modifyIslogin(true);
         navigate("/home");
         toast.success("Login Successfull");
       } else {
@@ -37,7 +41,6 @@ export default function Login() {
     } catch (error) {
       console.error("Login request failed:", error.message);
       toast.error("email and password Didn't match");
-
     }
   };
 

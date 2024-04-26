@@ -9,7 +9,7 @@ import dataContext from "../../Store/DataContext";
 import axios from "axios";
 import { useNavigate } from "react-router";
 import classes from "./CSVHompage.module.css";
-import Navbar from "../../components/Navbar/Navbar";
+import { REACT_APP_IP } from "../../services/common";
 
 const CsvHomepage = () => {
   const navigate = useNavigate();
@@ -89,7 +89,7 @@ const CsvHomepage = () => {
 
         // Make the POST request with Axios
         const response = await axios.post(
-          "http://localhost:5000/compareData",
+          `http://${REACT_APP_IP}:4000/compareData`,
           formData,
           {
             headers: {
@@ -151,12 +151,11 @@ const CsvHomepage = () => {
   };
   return (
     <>
-   <Navbar  state="csvComparer" ref={navbarRef}/>
       <main
-        className={`flex flex-col h-auto lg:h-${mainContentHeight} p-4 gap-5 bg-white rounded-md ${classes.homepage}`}
+        className={`flex flex-col  gap-5 bg-white rounded-md ${classes.homepage}`}
       >
         <div
-          className={`border-dashed p-6 border-4 rounded-md  ${classes.innerBox}`}
+          className={`border-dashed pt-28 px-5 rounded-md  ${classes.innerBox}`}
         >
           <h1 className="text-center mt-2 mb-6 text-black-300 text-3xl font-bold">
             MATCH AND COMPARE DATA
@@ -179,7 +178,7 @@ const CsvHomepage = () => {
             </div>
           </div>
 
-          <div className="flex justify-between">
+          <div className="flex justify-between ">
             <div className="bg-opacity-60 border pl-2 pb-2  bg-slate-100 rounded lg:w-1/3  ">
               <div className="flex flex-row pt-2 pb-2 justify-between self-center ">
                 <p className="text-sm font-semibold align-bottom self-center ">

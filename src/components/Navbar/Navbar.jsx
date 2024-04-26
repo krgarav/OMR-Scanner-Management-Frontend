@@ -1,17 +1,22 @@
-import React from "react";
+import React, { useContext } from "react";
 import { TiThMenu } from "react-icons/ti";
 import { RxCross2 } from "react-icons/rx";
 import logo from "../../assets/images/image.png";
 import { FaCircleUser } from "react-icons/fa6";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import dataContext from "../../Store/DataContext";
 
 const menuItems = [
   {
     name: "Create Template",
-    href: "#",
+    href: "/imageuploader",
   },
   {
-    name: "User Editor",
+    name: "Csv Uploader",
+    href: "/csvuploader",
+  },
+  {
+    name: "Data Entry",
     permission: "userEditor",
     href: "#",
   },
@@ -26,26 +31,32 @@ const menuItems = [
     href: "#",
   },
 ];
-
+const urls = [{}]
 export default function Navbar(props) {
+  const url = useLocation();
+  console.log(url.pathname);
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const naviagte = useNavigate();
   const [isUserMenuOpen, setIsUserMenuOpen] = React.useState(false);
 
   const userData = JSON.parse(localStorage.getItem("userData"));
-const {state} = props;
+
+  const { state } = props;
+
+  const datactx = useContext(dataContext);
+
   const userMenuItems = [
     {
       name: "Create User",
       onClick: () => {
-        naviagte("create-user");
+        naviagte("/create-user");
         setIsUserMenuOpen(false);
       },
     },
     {
       name: "All Users",
       onClick: () => {
-        naviagte("all-user");
+        naviagte("/all-user");
         setIsUserMenuOpen(false);
       },
     },
@@ -53,7 +64,9 @@ const {state} = props;
       name: "Logout",
       onClick: () => {
         localStorage.clear();
+        datactx.modifyIslogin(false);
         naviagte("/");
+
         setIsUserMenuOpen(false);
       },
     },
@@ -71,39 +84,38 @@ const {state} = props;
     (item) => userData?.permissions[item.permission]
   );
 
-
   return (
-    <div className="relative h-[9vh] w-full bg-white">
+    <div className="fixed w-full z-10 bg-white ">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2 sm:px-6 lg:px-8">
         <div className="inline-flex items-center space-x-2">
           <img className="h-14 w-auto" src={logo} alt="Your Company" />
         </div>
         <div className="hidden lg:block">
-          <ul className="inline-flex space-x-8">
+          <ul className="flex justify-center items-center space-x-2">
             {userData?.role === "Admin"
               ? menuItems?.map((item) => (
-                  <p key={item.name}>
+                  <li key={item.name}>
                     <Link
                       to={item.href}
-                      className="text-lg px-2 rounded-md py-1 font-semibold text-gray-700 hover:text-black hover:bg-gray-300 "
+                      className="text-lg px-2 rounded-md py-1 font-semibold text-gray-700 no-underline hover:text-black hover:bg-gray-300 "
                     >
                       {item.name}
                     </Link>
-                  </p>
+                  </li>
                 ))
               : filteredMenuItems?.map((item) => (
-                  <p key={item.name}>
+                  <li key={item.name}>
                     <Link
                       to={item.href}
                       className="text-lg px-2 rounded-md py-1 font-semibold text-gray-700 hover:text-black hover:bg-gray-300 "
                     >
                       {item.name}
                     </Link>
-                  </p>
+                  </li>
                 ))}
           </ul>
         </div>
-        <div className=" relative">
+        <div className="relative">
           <button
             type="button"
             className="rounded-full"
@@ -172,7 +184,7 @@ const {state} = props;
                               <p key={item.name}>
                                 <a
                                   href={item.href}
-                                  className="text-sm px-2 rounded-md py-1 font-semibold text-gray-700 hover:text-black hover:bg-gray-300 "
+                                  className="text-sm px-2 no-underline rounded-md py-1 font-semibold text-gray-700 hover:text-black hover:bg-gray-300 "
                                 >
                                   {item.name}
                                 </a>

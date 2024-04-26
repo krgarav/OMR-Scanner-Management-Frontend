@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { REACT_APP_IP } from "../../services/common";
 
 const CreateUser = () => {
   const [formData, setFormData] = useState({
@@ -16,7 +17,6 @@ const CreateUser = () => {
       resultGenerator: false,
     },
   });
-  
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -44,25 +44,32 @@ const CreateUser = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if(!formData.role || !formData.permissions || !formData.userName ||!formData.mobile || !formData.email || !formData.password){
-      return toast.error("plzz select role and permission")
+    if (
+      !formData.role ||
+      !formData.permissions ||
+      !formData.userName ||
+      !formData.mobile ||
+      !formData.email ||
+      !formData.password
+    ) {
+      return toast.error("plzz select role and permission");
     }
 
     if (!validateMobile(formData.mobile)) {
-    return  toast.error("Invalid mobile number:", formData.mobile);
-    } 
+      return toast.error("Invalid mobile number:", formData.mobile);
+    }
 
     const { permissions } = formData;
     const isAnyPermissionTrue = Object.values(permissions).some(
       (permission) => permission === true
     );
-  
+
     if (!isAnyPermissionTrue) {
       return toast.error("Please select at least one permission");
     }
     try {
       const response = await axios.post(
-        "http://localhost:5000/users/createuser",
+        `http://${REACT_APP_IP}:4000/users/createuser`,
         formData
       );
       console.log(response.data);
@@ -76,7 +83,7 @@ const CreateUser = () => {
           userEditor: false,
           csvCompare: false,
           resultGenerator: false,
-        }
+        },
       });
       toast.success("User Created successfully");
     } catch (error) {
@@ -86,7 +93,7 @@ const CreateUser = () => {
   };
 
   return (
-    <div className="mt-20">
+    <div className="pt-28">
       <div className="max-w-xl mx-auto mt-8 shadow-lg rounded-xl py-10 px-20 bg-green-50">
         <div className="mb-10">
           <h2 className="text-center text-3xl font-bold leading-tight text-black">
@@ -167,7 +174,9 @@ const CreateUser = () => {
               onChange={handleChange}
               className="mt-1 block w-64 py-2 px-3 border  shadow-blue-100 bg-white rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             >
-               <option disabled value="">Select role</option>
+              <option disabled value="">
+                Select role
+              </option>
               <option value="Admin">Admin</option>
               <option value="Moderator">Moderator</option>
               <option value="Operator">Operator</option>

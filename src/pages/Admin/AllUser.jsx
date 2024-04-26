@@ -6,6 +6,7 @@ import { BiEdit } from "react-icons/bi";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { REACT_APP_IP } from "../../services/common";
 
 export function AllUser() {
   const [users, setUsers] = useState([]);
@@ -18,7 +19,7 @@ export function AllUser() {
     const fetchUsers = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/users/getallusers"
+          `http://${REACT_APP_IP}:4000/users/getallusers`
         );
         console.log(response.data);
         const { users } = response.data;
@@ -35,7 +36,7 @@ export function AllUser() {
     // console.log(user)
     try {
       const response = await axios.get(
-        `http://localhost:5000/users/getuser/${user.id}`
+        `http://${REACT_APP_IP}:4000/users/getuser/${user.id}`
       );
       console.log(response.data);
       setSelectedUser(response.data.user);
@@ -60,7 +61,7 @@ export function AllUser() {
     e.preventDefault();
     try {
       const response = await axios.put(
-        `http://localhost:5000/users/updateuser/${selectedUser.id}`,
+        `http://${REACT_APP_IP}:4000/users/updateuser/${selectedUser.id}`,
         selectedUser
       );
       setOpen(false);
@@ -76,7 +77,7 @@ export function AllUser() {
     console.log(userId);
     try {
       const response = await axios.delete(
-        `http://localhost:5000/users/deleteuser/${userId}`
+        `http://${REACT_APP_IP}:4000/users/deleteuser/${userId}`
       );
       setUsers(users.filter((user) => user.id !== userId));
       toast.success("User Deleted Successfully");
@@ -91,8 +92,8 @@ export function AllUser() {
   };
 
   return (
-    <>
-      <section className="mx-auto w-full max-w-7xl px-12 py-10 mt-20 bg-white rounded-xl">
+    <div className="pt-40">
+      <section className="mx-auto w-full max-w-7xl  px-12 py-10 bg-white rounded-xl">
         <div className="flex flex-col space-y-4  md:flex-row md:items-center md:justify-between md:space-y-0">
           <div>
             <h2 className="text-3xl font-semibold">All Users</h2>
@@ -100,7 +101,7 @@ export function AllUser() {
           <div>
             <button
               type="button"
-              onClick={() => navigate("/home/create-user")}
+              onClick={() => navigate("/create-user")}
               className="rounded-md  bg-indigo-700 hover:bg-indigo-600 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 px-3 py-2 text-sm  text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
             >
               Add New User
@@ -124,7 +125,7 @@ export function AllUser() {
                         scope="col"
                         className="px-12 py-3.5 text-left  text-md font-semibold text-gray-700"
                       >
-                        Mobile 
+                        Mobile
                       </th>
 
                       <th
@@ -208,7 +209,6 @@ export function AllUser() {
             </div>
           </div>
         </div>
-     
 
         <Transition.Root show={open} as={Fragment}>
           <Dialog
@@ -405,6 +405,6 @@ export function AllUser() {
           </Dialog>
         </Transition.Root>
       </section>
-    </>
+    </div>
   );
 }
