@@ -30,10 +30,19 @@ const CreateUser = () => {
         },
       });
     } else {
-      setFormData({
-        ...formData,
-        [name]: value,
-      });
+      if (name === "mobile") {
+        // Limit input to 10 digits
+        const formattedValue = value.slice(0, 10);
+        setFormData({
+          ...formData,
+          [name]: formattedValue,
+        });
+      } else {
+        setFormData({
+          ...formData,
+          [name]: value,
+        });
+      }
     }
   };
 
