@@ -22,9 +22,7 @@ const UploadStatus = () => {
             </div>
 
             <div className="my-2 flex items-center justify-center  p-2  text-xl md:text-2xl w-[150px] h-[100px] break-all ">
-              <p className="line-clamp-2 md:line-clamp-3 flex ">
-                {current}
-              </p>
+              <p className="line-clamp-2 md:line-clamp-3 flex ">{current}</p>
             </div>
           </div>
         </div>
