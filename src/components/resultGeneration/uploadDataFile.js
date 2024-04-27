@@ -73,7 +73,7 @@ const UploadDataFile = () => {
         </div>
       )}
 
-      <div className=" w-[100%] flex max-[1103px]:flex-col overflow-y-scroll " style={{scrollbarWidth:"thin"}}>
+      <div className=" w-[100%] flex max-[1103px]:flex-col overflow-y-scroll ms-4" style={{scrollbarWidth:"none"}} >
         <div className="h-auto  flex w-[100%] ">
           {!keyHEaders && (
             <div className="h-[100vh] flex flex-col items-center justify-center  w-[100%]">
@@ -117,7 +117,7 @@ const UploadDataFile = () => {
           )}
           {/* marks apply  */}
           {dataHeaders && keyHEaders && (
-            <div className="w-[100%]">
+            <div className="w-[100%] ">
               {dataHeaders && keyHEaders && <MarksApply></MarksApply>}
               {dataHeaders && keyHEaders && (
                 <SubjectWiseMarkApply></SubjectWiseMarkApply>
