@@ -50,10 +50,6 @@ const TemplateMapping = () => {
     fetchUsers();
   }, [selectedUser]);
 
-  if (!fileId) {
-    navigate("/csvuploader");
-  }
-
   const onTaskAssignedHandler = () => {
     if (
       !taskValue.max ||

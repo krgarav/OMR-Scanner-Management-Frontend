@@ -1,6 +1,5 @@
-import React, { useState, useContext, useEffect, useRef, useId } from "react";
-import { useParams, useLocation } from "react-router-dom";
-import axios, { all } from "axios";
+import React, { useState, useEffect, useRef } from "react";
+import axios from "axios";
 import ImageNotFound from "../../components/ImageNotFound/ImageNotFound";
 import { toast } from "react-toastify";
 import {
@@ -16,19 +15,14 @@ const DataMatching = () => {
   const [templateHeaders, setTemplateHeaders] = useState();
   const [csvCurrentData, setCsvCurrentData] = useState([]);
   const [allTasks, setAllTasks] = useState([]);
-
-  const [templateId, setTemplateId] = useState("");
   const [imageName, setImageName] = useState("");
   const [currentTaskData, setCurrentTaskData] = useState({});
   const [selectedCoordintes, setSelectedCoordinates] = useState(false);
-  const [userId, setUserId] = useState("");
+  const [imageNotFound, setImageNotFound] = useState("");
   const [currentIndex, setCurrentIndex] = useState(1);
   const [csvData, setCsvData] = useState([]);
   const imageContainerRef = useRef(null);
   const imageRef = useRef(null);
-  const { id } = useParams();
-  const location = useLocation();
-  // const templateId = location.state;
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
@@ -38,7 +32,7 @@ const DataMatching = () => {
         const templateData = await onGetTemplateHandler();
         const updatedTasks = tasks.map((task) => {
           const matchedTemplate = templateData.find(
-            (template) => template.id == task.templeteId
+            (template) => template.id === parseInt(task.templeteId)
           );
           if (matchedTemplate) {
             return {
@@ -71,59 +65,31 @@ const DataMatching = () => {
     fetchTemplate();
   }, [currentTaskData]);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await axios.get(
-  //         `http://${REACT_APP_IP}:4000/get/csvdata/${parseInt(
-  //           currentTaskData.fileId
-  //         )}`
-  //       );
-  //       setCsvData(response.data);
-  //       const headers = response.data[0];
-  //       const getKeyByValue = (object, value) => {
-  //         return Object.keys(object).find((key) => object[key] === value);
-  //       };
-  //       if (currentIndex === 0) {
-  //         setCurrentIndex(1);
-  //       }
-  //       if (currentIndex === 1) {
-  //         const objects = { ...response.data[currentIndex] };
-  //         setCsvCurrentData(objects);
-  //       }
-  //       const keyForImage = getKeyByValue(headers, "Image");
-  //       setImageName(keyForImage);
-  //       setPopUp(false);
-  //     } catch (error) {
-  //       // console.log(error);
-  //     }
-  //   };
-  //   fetchData();
-  // }, [currentIndex, currentTaskData]);
+  const onImageHandler = async (direction, csvData) => {
+    console.log(direction);
+    const headers = csvData[0];
+    const getKeyByValue = (object, value) => {
+      return Object.keys(object).find((key) => object[key] === value);
+    };
 
-  console.log(csvData);
-
-  const onImageHandler = async (direction) => {
+    const keyForImage = getKeyByValue(headers, "Image");
+    setImageName(keyForImage);
     try {
       let imageName1;
-      let newIndex;
+      let newIndex = currentIndex;
 
       if (direction === "initial") {
-        const objects = { ...csvData[currentIndex] };
-        console.log(objects);
-        imageName1 = objects[imageName];
+        const objects = csvData[newIndex];
+        imageName1 = objects[keyForImage];
         setCsvCurrentData(objects);
-
-        newIndex = currentIndex;
-        console.log(imageName1);
+        newIndex = newIndex + 1;
       } else {
-        newIndex = direction === "next" ? currentIndex + 1 : currentIndex - 1;
-
+        newIndex = direction === "next" ? newIndex + 1 : newIndex - 1;
+        console.log(newIndex);
         if (newIndex > 0 && newIndex < csvData.length) {
           setCurrentIndex(newIndex);
-
-          const objects = { ...csvData[newIndex] };
-          imageName1 = objects[imageName];
+          const objects = csvData[newIndex];
+          imageName1 = objects[keyForImage];
           setCsvCurrentData(objects);
         } else {
           toast.warning(
@@ -134,35 +100,41 @@ const DataMatching = () => {
           return;
         }
       }
-
       const response = await axios.post(
         `http://${REACT_APP_IP}:4000/get/image`,
         {
           imageName: imageName1,
-          id: parseInt(currentTaskData.templateId),
         }
       );
-
-      console.log(response);
       const url = response.data?.base64Image;
       setImage(url);
       setPopUp(false);
     } catch (error) {
-      toast.error("An error occurred while processing the image.");
-      console.log(error.message);
+      toast.error("Image not found!.");
+      setPopUp(true);
     }
   };
 
-  const onCsvUpdateHandler = async () => {
-    const updatedData = [...csvData];
-    updatedData[currentIndex] = csvCurrentData;
-    setCsvData(updatedData);
 
+  console.log(csvData)
+
+  const onCsvUpdateHandler = async () => {
+    // const updatedData = [...csvData];
+    // updatedData[currentIndex] = csvCurrentData;
+    // setCsvData(updatedData);
+    // console.log(csvCurrentData);
+    // console.log(currentIndex);
     try {
-      await axios.post(
-        `http://${REACT_APP_IP}:4000/updatecsvdata/${id}`,
-        updatedData
+      const response = await axios.post(
+        `http://${REACT_APP_IP}:4000/updatecsvdata/${parseInt(
+          currentTaskData?.fileId
+        )}`,
+        {
+          data: csvCurrentData,
+          index: currentIndex + Number(currentTaskData.min),
+        }
       );
+      console.log(response);
       toast.success("Data update successfully.");
     } catch (error) {
       toast.error(error.message);
@@ -177,6 +149,10 @@ const DataMatching = () => {
   };
 
   const imageFocusHandler = (headerName) => {
+    if (!image || !imageContainerRef || !imageRef) {
+      setPopUp(true);
+    }
+
     if (!csvData[0].hasOwnProperty(headerName)) {
       toast.error("Header not found: " + headerName);
       return;
@@ -193,8 +169,8 @@ const DataMatching = () => {
 
     const { coordinateX, coordinateY, width, height } = metaDataEntry;
 
-    const containerWidth = imageContainerRef.current.offsetWidth;
-    const containerHeight = imageContainerRef.current.offsetHeight;
+    const containerWidth = imageContainerRef?.current?.offsetWidth;
+    const containerHeight = imageContainerRef?.current?.offsetHeight;
 
     // Calculate the zoom level based on the container size and the selected area size
     const zoomLevel = Math.min(
@@ -224,31 +200,18 @@ const DataMatching = () => {
   const onTaskStartHandler = async (taskData) => {
     setCurrentTaskData(taskData);
     try {
-      const response = await axios.get(
-        `http://${REACT_APP_IP}:4000/get/csvdata/${parseInt(taskData.fileId)}`
+      const response = await axios.post(
+        `http://${REACT_APP_IP}:4000/get/csvdata`,
+        taskData
       );
       setCsvData(response.data);
-      const headers = response.data[0];
-      const getKeyByValue = (object, value) => {
-        return Object.keys(object).find((key) => object[key] === value);
-      };
-      if (currentIndex === 0) {
-        setCurrentIndex(1);
-      }
-      if (currentIndex === 1) {
-        const objects = { ...response.data[currentIndex] };
-        setCsvCurrentData(objects);
-      }
-      const keyForImage = getKeyByValue(headers, "Image");
-      setImageName(keyForImage);
-      onImageHandler("initial");
+
+      onImageHandler("initial", response.data);
       setPopUp(false);
     } catch (error) {
-      console.log(error);
+      toast.error(error.message);
     }
   };
-
-  console.log(csvCurrentData);
 
   return (
     <>
@@ -268,42 +231,30 @@ const DataMatching = () => {
                     <div className=" border border-gray-200 md:rounded-lg">
                       <div className="divide-y divide-gray-200 ">
                         <div className="bg-gray-50">
-                          <tr className="flex justify-between">
-                            <th
-                              scope="col"
-                              className="px-8 py-3.5 text-left text-xl font-semibold text-gray-700"
-                            >
+                          <div className="flex justify-between items-center">
+                            <div className="px-8 py-3.5 text-left text-xl font-semibold text-gray-700">
                               <span>Templates</span>
-                            </th>
+                            </div>
 
-                            <th
-                              scope="col"
-                              className="px-12 py-3.5 text-left  text-xl font-semibold text-gray-700"
-                            >
+                            <div className="px-12 py-3.5 text-left  text-xl font-semibold text-gray-700">
                               Min
-                            </th>
+                            </div>
 
-                            <th
-                              scope="col"
-                              className="px-12 py-3.5 text-left text-xl font-semibold text-gray-700"
-                            >
+                            <div className="px-12 py-3.5 text-left text-xl font-semibold text-gray-700">
                               Max
-                            </th>
-                            <th
-                              scope="col"
-                              className="px-12 py-3.5 text-left text-xl font-semibold text-gray-700"
-                            >
+                            </div>
+                            <div className="px-16 py-3.5 text-left text-xl font-semibold text-gray-700">
                               Start Task
-                            </th>
-                          </tr>
+                            </div>
+                          </div>
                         </div>
                         <div className="divide-y divide-gray-200 bg-white overflow-y-auto max-h-[300px]">
                           {allTasks?.map((taskData) => (
-                            <tr
+                            <div
                               key={taskData.id}
                               className="flex justify-between items-center"
                             >
-                              <td className="whitespace-nowrap px-4 py-4 ">
+                              <div className="whitespace-nowrap px-4 py-4 ">
                                 <div className="flex items-center">
                                   <div className="ml-4 w-full font-semibold">
                                     <div className=" px-2">
@@ -311,30 +262,30 @@ const DataMatching = () => {
                                     </div>
                                   </div>
                                 </div>
-                              </td>
-                              <td className="whitespace-nowrap flex justify-center itemCe px-2 py-2 border-2">
+                              </div>
+                              <div className="whitespace-nowrap flex justify-center itemCe px-2 py-2 border-2">
                                 <div className="flex">
                                   <div className="w-full font-semibold">
                                     <div className=" px-2">{taskData.min}</div>
                                   </div>
                                 </div>
-                              </td>
-                              <td className="whitespace-nowrap flex justify-center itemCe px-2 py-2 border-2">
+                              </div>
+                              <div className="whitespace-nowrap flex justify-center itemCe px-2 py-2 border-2">
                                 <div className="flex">
                                   <div className="w-full font-semibold">
                                     <div className=" px-2">{taskData.max}</div>
                                   </div>
                                 </div>
-                              </td>
-                              <td className="whitespace-nowrap px-4 py-4 text-right">
+                              </div>
+                              <div className="whitespace-nowrap px-4 py-4 text-right">
                                 <button
                                   onClick={() => onTaskStartHandler(taskData)}
                                   className="rounded border border-indigo-500 bg-indigo-500 px-10 py-1 font-semibold text-white"
                                 >
                                   Start
                                 </button>
-                              </td>
-                            </tr>
+                              </div>
+                            </div>
                           ))}
                         </div>
                       </div>
@@ -351,7 +302,7 @@ const DataMatching = () => {
           {/* LEFT SECTION */}
           <div className=" border-e lg:w-3/12 order-lg-1 second">
             <div className=" flex flex-col overflow-hidden w-[100%]">
-              <article className="p-3 shadow transition mt-32 hover:shadow-lg overflow-auto h-[100vh] bg-gradient-to-r from-[rgb(255,195,36)] to-orange-500">
+              <article className="p-3 shadow transition pt-28 hover:shadow-lg overflow-auto h-[100vh] bg-gradient-to-r from-[rgb(255,195,36)] to-orange-500">
                 {csvCurrentData &&
                   Object.entries({ ...csvData[0] }).map(([key, value], i) => {
                     const templateData = templateHeaders?.templetedata.find(
@@ -365,7 +316,7 @@ const DataMatching = () => {
                           key={i}
                           className="w-5/6 lg:w-full px-3 py-1 flex justify-between items-center overflow-x font-bold"
                         >
-                          <label className="flex w-full gap-2 justify-between items-center overflow-hidden  rounded-md border-2 font-semibold  border-white px-3  py-2 shadow-sm focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600">
+                          <label className="flex w-full gap-2 justify-between items-center overflow-hidden  rounded-md border-2 font-semibold  border-white px-3  py-2 shadow-sm focus-within:ring-1 ">
                             <span className="text-md text-gray-700 font-bold">
                               {key?.toUpperCase()}
                             </span>
@@ -452,7 +403,7 @@ const DataMatching = () => {
             {/* View image */}
           </div>
           {/* RIGHT SECTION */}
-          <div className="w-full lg:w-9/12 order-1 order-lg-2 bg-gradient-to-r from-[rgb(255,195,36)] to-orange-300 matchingMain">
+          <div className="w-full lg:w-9/12 order-1 pt-32 order-lg-2 bg-gradient-to-r from-[rgb(255,195,36)] to-orange-300 matchingMain">
             {!image ? (
               <div className="flex justify-center items-center ">
                 <div className="mt-64">
@@ -517,13 +468,13 @@ const DataMatching = () => {
                   </button>
 
                   <button
-                    onClick={() => onImageHandler("prev")}
+                    onClick={() => onImageHandler("prev", csvData)}
                     className="block w-full rounded  px-4 py-3 border-[red]  border-2 hover:bg-red-500 hover:text-white  font-bold text-xl sm:w-auto"
                   >
                     Prev
                   </button>
                   <button
-                    onClick={() => onImageHandler("next")}
+                    onClick={() => onImageHandler("next", csvData)}
                     className="block w-full rounded  px-4 py-3 border-[red]  border-2 hover:bg-red-500 hover:text-white  font-bold text-xl sm:w-auto"
                   >
                     Next
