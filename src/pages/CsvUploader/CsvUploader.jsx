@@ -125,6 +125,7 @@ const CsvUploader = () => {
     }
   };
 
+
   return (
     <div className="">
       {dataCtx.isLoading ? (
@@ -171,6 +172,7 @@ const CsvUploader = () => {
               <div className="overflow-y-scroll h-[240px] px-2">
                 {filteredTemplates?.map((template) => (
                   <button
+                    key={template.id}
                     onClick={() => setSelectedId(template.id)}
                     className={`group flex items-center justify-between w-full mt-2 rounded-lg hover:bg-gray-300 bg-gray-100 px-4 py-2 text-gray-700 ${
                       selectedId === template.id

@@ -8,6 +8,7 @@ import {
   onGetTemplateHandler,
   onGetVerifiedUserHandler,
 } from "../../services/common";
+import { REACT_APP_IP } from "../../services/common";
 
 const DataMatching = () => {
   const [popUp, setPopUp] = useState(true);
@@ -17,8 +18,8 @@ const DataMatching = () => {
   const [allTasks, setAllTasks] = useState([]);
 
   const [templateId, setTemplateId] = useState("");
-  const [fileId, setFileId] = useState("");
   const [imageName, setImageName] = useState("");
+  const [currentTaskData, setCurrentTaskData] = useState({});
   const [selectedCoordintes, setSelectedCoordinates] = useState(false);
   const [userId, setUserId] = useState("");
   const [currentIndex, setCurrentIndex] = useState(1);
@@ -59,41 +60,48 @@ const DataMatching = () => {
     const fetchTemplate = async () => {
       try {
         const response = await onGetTemplateHandler();
-        const templateData = response.find((data) => data.id == templateId);
+        const templateData = response.find(
+          (data) => data.id === parseInt(currentTaskData.templeteId)
+        );
         setTemplateHeaders(templateData);
       } catch (error) {
         console.log(error);
       }
     };
     fetchTemplate();
-  }, [templateId]);
+  }, [currentTaskData]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          `http://192.168.0.116:4000/get/csvdata/${id}`
-        );
-        setCsvData(response.data);
-        const headers = response.data[0];
-        const getKeyByValue = (object, value) => {
-          return Object.keys(object).find((key) => object[key] === value);
-        };
-        if (currentIndex === 0) {
-          setCurrentIndex(1);
-        }
-        if (currentIndex === 1) {
-          const objects = { ...response.data[currentIndex] };
-          setCsvCurrentData(objects);
-        }
-        const keyForImage = getKeyByValue(headers, "Image");
-        setImageName(keyForImage);
-      } catch (error) {
-        // console.log(error);
-      }
-    };
-    fetchData();
-  }, [id, currentIndex]);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await axios.get(
+  //         `http://${REACT_APP_IP}:4000/get/csvdata/${parseInt(
+  //           currentTaskData.fileId
+  //         )}`
+  //       );
+  //       setCsvData(response.data);
+  //       const headers = response.data[0];
+  //       const getKeyByValue = (object, value) => {
+  //         return Object.keys(object).find((key) => object[key] === value);
+  //       };
+  //       if (currentIndex === 0) {
+  //         setCurrentIndex(1);
+  //       }
+  //       if (currentIndex === 1) {
+  //         const objects = { ...response.data[currentIndex] };
+  //         setCsvCurrentData(objects);
+  //       }
+  //       const keyForImage = getKeyByValue(headers, "Image");
+  //       setImageName(keyForImage);
+  //       setPopUp(false);
+  //     } catch (error) {
+  //       // console.log(error);
+  //     }
+  //   };
+  //   fetchData();
+  // }, [currentIndex, currentTaskData]);
+
+  console.log(csvData);
 
   const onImageHandler = async (direction) => {
     try {
@@ -102,9 +110,12 @@ const DataMatching = () => {
 
       if (direction === "initial") {
         const objects = { ...csvData[currentIndex] };
+        console.log(objects);
         imageName1 = objects[imageName];
         setCsvCurrentData(objects);
+
         newIndex = currentIndex;
+        console.log(imageName1);
       } else {
         newIndex = direction === "next" ? currentIndex + 1 : currentIndex - 1;
 
@@ -124,11 +135,15 @@ const DataMatching = () => {
         }
       }
 
-      const response = await axios.post(`http://192.168.0.116:4000/get/image`, {
-        imageName: imageName1,
-        id: templateId,
-      });
+      const response = await axios.post(
+        `http://${REACT_APP_IP}:4000/get/image`,
+        {
+          imageName: imageName1,
+          id: parseInt(currentTaskData.templateId),
+        }
+      );
 
+      console.log(response);
       const url = response.data?.base64Image;
       setImage(url);
       setPopUp(false);
@@ -145,7 +160,7 @@ const DataMatching = () => {
 
     try {
       await axios.post(
-        `http://192.168.0.116:4000/updatecsvdata/${id}`,
+        `http://${REACT_APP_IP}:4000/updatecsvdata/${id}`,
         updatedData
       );
       toast.success("Data update successfully.");
@@ -206,9 +221,34 @@ const DataMatching = () => {
     setSelectedCoordinates(true);
   };
 
-  const onTaskStartHandler = (taskData) => {
-    console.log(taskData);
+  const onTaskStartHandler = async (taskData) => {
+    setCurrentTaskData(taskData);
+    try {
+      const response = await axios.get(
+        `http://${REACT_APP_IP}:4000/get/csvdata/${parseInt(taskData.fileId)}`
+      );
+      setCsvData(response.data);
+      const headers = response.data[0];
+      const getKeyByValue = (object, value) => {
+        return Object.keys(object).find((key) => object[key] === value);
+      };
+      if (currentIndex === 0) {
+        setCurrentIndex(1);
+      }
+      if (currentIndex === 1) {
+        const objects = { ...response.data[currentIndex] };
+        setCsvCurrentData(objects);
+      }
+      const keyForImage = getKeyByValue(headers, "Image");
+      setImageName(keyForImage);
+      onImageHandler("initial");
+      setPopUp(false);
+    } catch (error) {
+      console.log(error);
+    }
   };
+
+  console.log(csvCurrentData);
 
   return (
     <>
@@ -259,7 +299,10 @@ const DataMatching = () => {
                         </div>
                         <div className="divide-y divide-gray-200 bg-white overflow-y-auto max-h-[300px]">
                           {allTasks?.map((taskData) => (
-                            <tr className="flex justify-between items-center">
+                            <tr
+                              key={taskData.id}
+                              className="flex justify-between items-center"
+                            >
                               <td className="whitespace-nowrap px-4 py-4 ">
                                 <div className="flex items-center">
                                   <div className="ml-4 w-full font-semibold">
@@ -306,9 +349,9 @@ const DataMatching = () => {
       {!popUp && (
         <div className=" flex flex-col lg:flex-row md:flex-col-reverse">
           {/* LEFT SECTION */}
-          <div className=" border-e mx-auto lg:w-3/12 order-lg-1 second">
+          <div className=" border-e lg:w-3/12 order-lg-1 second">
             <div className=" flex flex-col overflow-hidden w-[100%]">
-              <article className="p-3 shadow transition hover:shadow-lg overflow-auto h-[100vh] bg-gradient-to-r from-[rgb(255,195,36)] to-orange-500">
+              <article className="p-3 shadow transition mt-32 hover:shadow-lg overflow-auto h-[100vh] bg-gradient-to-r from-[rgb(255,195,36)] to-orange-500">
                 {csvCurrentData &&
                   Object.entries({ ...csvData[0] }).map(([key, value], i) => {
                     const templateData = templateHeaders?.templetedata.find(
