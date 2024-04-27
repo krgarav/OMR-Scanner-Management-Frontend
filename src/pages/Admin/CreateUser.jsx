@@ -31,8 +31,8 @@ const CreateUser = () => {
       });
     } else {
       if (name === "mobile") {
-        // Limit input to 10 digits
-        const formattedValue = value.slice(0, 10);
+        // Allow only numbers
+        const formattedValue = value.replace(/\D/g, '');
         setFormData({
           ...formData,
           [name]: formattedValue,
@@ -136,9 +136,10 @@ const CreateUser = () => {
               <input
                 id="mobile"
                 name="mobile"
-                type="number"
+                type="text"
                 autoComplete="mobile"
                 placeholder="Enter Mobile no."
+                maxLength={10}
                 required
                 value={formData?.mobile}
                 onChange={handleChange}
