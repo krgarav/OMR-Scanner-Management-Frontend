@@ -58,18 +58,23 @@ export default function Navbar() {
 
   useEffect(() => {
     if (userData && Object.keys(userData).length !== 0) {
-      // If user is admin, set the first link to "Create Template"
       if (userData.role === "Admin") {
-        navigate("imageuploader");
+        const currentPath = localStorage.getItem("currentPath")==="/" ? "imageuploader" : localStorage.getItem("currentPath");
+        console.log(currentPath)
+        navigate(currentPath)
+
       } else {
-        // If user is not admin, find the first allowed link based on permissions
         const firstAllowedLink = menuItems.find(item => userData.permissions[item.permission]);
         if (firstAllowedLink) {
-          navigate(firstAllowedLink.href);
+        const currentPath = localStorage.getItem("currentPath")==="/" ? firstAllowedLink.href : localStorage.getItem("currentPath");
+          navigate(currentPath);
         }
       }
     }
   }, [userData]);
+  useEffect(()=>{
+    localStorage.setItem("currentPath", location.pathname)
+  },[location.pathname])
 
   const userMenuItems = [
     {
