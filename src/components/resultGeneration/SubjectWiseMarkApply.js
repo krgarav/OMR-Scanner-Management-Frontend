@@ -74,10 +74,10 @@ const SubjectWiseMarkApply = () => {
     <div className="m-2 mt-10 w-[100%]  pe-4">
       <div className="flex justify-center">
         <div
-          className={`animate__animated animate__zoomInUp animate__delay-2s w-[100%] max-w-[600px] h-fit bg-gradient-to-r from-red-600 to-yellow-500 pb-8 rounded-lg shadow-md shadow-gray-500 ${effect.blurEffect}`}
+          className={` animate__animated animate__zoomInUp animate__delay-2s w-[100%] max-w-[600px] h-fit bg-gradient-to-r from-red-600 to-yellow-500 pb-8 rounded-lg shadow-md shadow-gray-500 `}
           style={{ filter: "" }}
         >
-          <div className="flex justify-center">
+          <div className="flex justify-center ">
             <p className="font-bold pt-8 pb-2 text-2xl border-b-2 border-grey-500 text-white">
               Subject Wise Marking
             </p>
@@ -189,10 +189,12 @@ const SubjectWiseMarkApply = () => {
                 </div>
               </div>
               <div className="flex justify-between mt-2 mx-4 min-[816px]:text-center ">
-                <div className="font-bold text-[1.1rem]">
-                  Correct <span className="">(+)</span> :
+                <div className="font-bold text-[1.1rem] mx-4">
+                  <p>
+                    Correct <span className="">(+)</span> :
+                  </p>
                   <input
-                    className="w-[50px] mx-4 my-2 text-center cursor-pointer"
+                    className="w-[50px] mx-4 my-2 text-center cursor-pointer bg-transparent border-2 text-white"
                     defaultValue={1}
                     min={0}
                     step={0.25}
@@ -204,9 +206,11 @@ const SubjectWiseMarkApply = () => {
                   ></input>
                 </div>
                 <div className="font-bold text-[1.1rem]">
-                  Wrong <span className="">(-)</span> :
+                  <p>
+                    Wrong<span className="">(-)</span> :
+                  </p>
                   <input
-                    className="w-[50px] mx-4 my-2 text-center  cursor-pointer"
+                    className="w-[50px] mx-4 my-2 text-center  cursor-pointer bg-transparent border-2 text-white"
                     defaultValue={0}
                     min={0}
                     step={0.25}
@@ -220,8 +224,8 @@ const SubjectWiseMarkApply = () => {
               </div>
             </div>
             <div className=" mt-4 h-[150px] w-[60%] min-[816px]:w-[40%] mx-2 flex flex-col items-center bg-white shadow-md shadow-blue-400 ">
-              <div className="bg-blue-400 w-[100%] text-center font-semibold text-xl py-2">
-                selected subject
+              <div className="bg-blue-400 w-[100%] text-center font-semibold text-xl py-2 text-yellow-400">
+                Selected Subject
               </div>
               <div className="overflow-y-scroll h-[100px] w-[100%] text-center  ">
                 {subjectWiseMarking.length <= 0 && (
@@ -250,7 +254,7 @@ const SubjectWiseMarkApply = () => {
             <div className="flex text-[1.1rem] font-bold justify-center  mx-8">
               Subject :{" "}
               <input
-                className="text-center mx-2 max-w-[150px] min-w-[120px]"
+                className="text-center mx-2 max-w-[150px] min-w-[120px] "
                 placeholder="type here... "
                 ref={subjectName}
               ></input>

@@ -27,7 +27,7 @@ const PaperkeyMap = () => {
                 // setSelectedKeyOpen(!selectedKeyOpen);
               }}
             >
-              <div className="text-[1.2rem] font-bold  text-yellow-400 mb-3">
+              <div className="md:text-[1.2rem] text-[1.1rem] font-bold  text-yellow-400 mb-3">
                 Select Mapped Key
               </div>
               <div

@@ -20,13 +20,9 @@ const UploadStatus = () => {
             <div className="my-2">
               <FaRegCircleCheck className=" w-[60px] h-[60px] md:w-[80px] md:h-[80px] mx-2 mt-4" />
             </div>
-    
-            <div className="my-2 flex items-center  p-2  text-xl md:text-2xl w-[150px] h-[100px] break-all ">
-            
-              <p className="line-clamp-2 md:line-clamp-3">
-                {" "}  {current}
-                g
-              </p>
+
+            <div className="my-2 flex items-center justify-center  p-2  text-xl md:text-2xl w-[150px] h-[100px] break-all ">
+              <p className="line-clamp-2 md:line-clamp-3 flex ">{current}</p>
             </div>
           </div>
         </div>
