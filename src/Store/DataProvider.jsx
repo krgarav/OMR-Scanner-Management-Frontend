@@ -15,7 +15,7 @@ const initialData = {
   imageColName: "",
   imageMappedData: [],
   csvFile: [],
-  isLoading: true,
+  isLoading: false,
   csvDataWithImage: [],
 };
 

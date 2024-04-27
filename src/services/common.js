@@ -38,3 +38,25 @@ export const onGetVerifiedUserHandler = async () => {
     toast.error(error.message);
   }
 };
+
+export const onGetAllTasksHandler = async () => {
+  try {
+    const response = await axios.get(
+      `http://${REACT_APP_IP}:4000/get/alltasks`
+    );
+    return response.data;
+  } catch (error) {
+    toast.error(error.message);
+  }
+};
+
+export const onGetTaskHandler = async (id) => {
+  try {
+    const response = await axios.get(
+      `http://${REACT_APP_IP}:4000/get/task/${id}`
+    );
+    return response.data;
+  } catch (error) {
+    toast.error(error.message);
+  }
+};

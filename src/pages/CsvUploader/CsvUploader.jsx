@@ -30,13 +30,13 @@ const CsvUploader = () => {
     fetchTemplate();
   }, []);
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      dataCtx.modifyIsLoading(false);
-    }, 500);
+  // useEffect(() => {
+  //   const timeout = setTimeout(() => {
+  //     dataCtx.modifyIsLoading(false);
+  //   }, 500);
 
-    return () => clearTimeout(timeout);
-  }, []);
+  //   return () => clearTimeout(timeout);
+  // }, []);
 
   const filteredTemplates = allTemplates?.filter((template) =>
     template.name.toLowerCase().includes(templateName.toLowerCase())
@@ -170,18 +170,16 @@ const CsvUploader = () => {
               </div>
               <div className="overflow-y-scroll h-[240px] px-2">
                 {filteredTemplates?.map((template) => (
-                  <div key={template.id}>
-                    <button
-                      onClick={() => setSelectedId(template.id)}
-                      className={`block rounded-lg px-4 py-1 text-md font-medium ${
-                        selectedId === template.id
-                          ? "bg-teal-500 text-white"
-                          : "text-gray-500  hover:text-gray-700"
-                      }`}
-                    >
-                      {template.name}
-                    </button>
-                  </div>
+                  <button
+                    onClick={() => setSelectedId(template.id)}
+                    className={`group flex items-center justify-between w-full mt-2 rounded-lg hover:bg-gray-300 bg-gray-100 px-4 py-2 text-gray-700 ${
+                      selectedId === template.id
+                        ? "bg-gray-500 text-white"
+                        : "text-gray-500  hover:text-gray-700"
+                    }`}
+                  >
+                    <span className="text-sm font-medium">{template.name}</span>
+                  </button>
                 ))}
               </div>
               <div className="mt-4">

@@ -2,12 +2,22 @@ import React, { useState, useContext, useEffect } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import dataContext from "../../Store/DataContext";
-import { onGetAllUsersHandler } from "../../services/common";
+import {
+  onGetAllUsersHandler,
+  onGetVerifiedUserHandler,
+} from "../../services/common";
+import { REACT_APP_IP } from "../../services/common";
+import axios from "axios";
 
 const TemplateMapping = () => {
   const [showModal, setShowModal] = useState(false);
   const [assignedUsers, setAssignedUsers] = useState([]);
-  const [selectedUser, setSelectedUser] = useState({});
+  const [allUsers, setAllUsers] = useState([]);
+  const [currentUser, setCurrentUser] = useState({});
+  const [selectedUser, setSelectedUser] = useState({
+    userId: "",
+    userName: "",
+  });
   const [taskValue, setTaskValue] = useState({ min: 1, max: null });
   const dataCtx = useContext(dataContext);
   const { id } = useParams();
@@ -19,7 +29,7 @@ const TemplateMapping = () => {
     const fetchUsers = async () => {
       try {
         const response = await onGetAllUsersHandler();
-        console.log(response);
+        setAllUsers(response.users);
       } catch (error) {
         console.error("Error fetching users:", error);
       }
@@ -28,19 +38,72 @@ const TemplateMapping = () => {
     fetchUsers();
   }, [selectedUser]);
 
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await onGetVerifiedUserHandler();
+        setCurrentUser(response.user);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
+    fetchUsers();
+  }, [selectedUser]);
+
   if (!fileId) {
-    navigate("/comparecsv");
+    navigate("/csvuploader");
   }
 
   const onTaskAssignedHandler = () => {
-    const newTask = {
+    if (
+      !taskValue.max ||
+      taskValue.max <= 0 ||
+      taskValue.max <= taskValue.min
+    ) {
+      toast.warning("Please check your input values.");
+      return;
+    }
+
+    if (!fileId) {
+      toast.warning("File Id not present!");
+      return;
+    }
+    if (!selectedUser.userName || !selectedUser.userId) {
+      toast.warning("Please select the file id or username!");
+      return;
+    }
+
+    const newAssignedTask = {
       fileId: fileId,
-      userId: "",
+      templeteId: id,
+      userId: selectedUser.userId,
       min: taskValue.min,
       max: taskValue.max,
+      userName: selectedUser.userName,
     };
-    console.log(newTask);
-    setTaskValue({ ...taskValue, min: Math.abs(taskValue.max) + 1, max: "" });
+    setAssignedUsers([...assignedUsers, newAssignedTask]);
+
+    let newMinValue = parseInt(taskValue.max) + 1;
+    if (isNaN(newMinValue)) {
+      newMinValue = taskValue.min;
+    }
+    setTaskValue({ ...taskValue, min: newMinValue, max: "" });
+    toast.success("Task successfully assigned. Thank you.");
+  };
+
+  const onTaskSubmitHandler = async () => {
+    try {
+      await axios.post(
+        `http://${REACT_APP_IP}:4000/assign/user`,
+        assignedUsers
+      );
+      toast.success("Task assignment successful.");
+      dataCtx.modifyIsLoading(false);
+      navigate(`/csvuploader`);
+    } catch (error) {
+      console.error("Error uploading files: ", error);
+      toast.error("Error submitting task. Please try again.");
+    }
   };
 
   return (
@@ -75,12 +138,7 @@ const TemplateMapping = () => {
                         >
                           <span>Users</span>
                         </th>
-                        <th
-                          scope="col"
-                          className="px-4 py-3.5 text-left text-xl font-semibold text-gray-700"
-                        >
-                          Permissions
-                        </th>
+
                         <th
                           scope="col"
                           className="px-12 py-3.5 text-left  text-xl font-semibold text-gray-700"
@@ -108,28 +166,39 @@ const TemplateMapping = () => {
                         <td className="whitespace-nowrap px-4 py-4 border-2">
                           <div className="flex items-center">
                             <div className="ml-4 w-full">
-                              <div className="overflow-y-scroll h-[310px] px-2">
-                                {[
-                                  0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,
-                                  14, 15, 16, 17, 18, 19, 20,
-                                ].map((template) => (
-                                  <div>
-                                    <button
-                                      className={`block rounded-lg px-4 py-1 text-md font-medium`}
-                                    >
-                                      abhishek
-                                    </button>
-                                  </div>
-                                ))}
+                              <div className="overflow-y-auto h-[310px] px-2 ">
+                                {allUsers?.map((user, i) => {
+                                  if (currentUser.id !== user.id) {
+                                    return (
+                                      <button
+                                        onClick={() =>
+                                          setSelectedUser({
+                                            ...selectedUser,
+                                            userId: user.id,
+                                            userName: user.userName,
+                                          })
+                                        }
+                                        className={`group flex items-center justify-between w-full mt-2 rounded-lg hover:bg-gray-300 bg-gray-100 px-4 py-2 text-gray-700 
+                                       ${
+                                         selectedUser.userId === user.id
+                                           ? "bg-gray-500 text-white"
+                                           : "text-gray-500  hover:text-gray-700"
+                                       }`}
+                                      >
+                                        <span className="text-sm font-medium">
+                                          {user.userName}
+                                        </span>
+                                      </button>
+                                    );
+                                  } else {
+                                    return null;
+                                  }
+                                })}
                               </div>
                             </div>
                           </div>
                         </td>
-                        <td className="whitespace-nowrap px-4 py-4 text-sm text-gray-700">
-                          <span className="inline-flex rounded-full bg-blue-100 px-2 py-1 text-md font-semibold leading-5 text-blue-800 mr-2">
-                            Data entry
-                          </span>
-                        </td>
+
                         <td className="whitespace-nowrap px-12 py-4">
                           <div className="text-2xl text-gray-900 ">
                             <input
@@ -207,14 +276,28 @@ const TemplateMapping = () => {
                           <h1 className="text-xl  font-bold text-gray-500 mb-6">
                             Mapped Data..
                           </h1>
+                          <div className="overflow-y-auto h-[400px]">
+                            {assignedUsers.map((assignUser) => (
+                              <article className="flex justify-between rounded-lg border border-gray-100 bg-white p-6">
+                                <p className="text-2xl font-medium text-gray-900 text-center">
+                                  {assignUser.userName}
+                                </p>
+
+                                <span className="text-md font-medium text-center rounded bg-green-100 p-3 min-w-[50px] border-2 text-green-600 ">
+                                  {assignUser.min}
+                                </span>
+                                <span className="text-md font-medium text-center rounded bg-green-100 p-3 min-w-[50px] border-2 text-green-600 ">
+                                  {assignUser.max}
+                                </span>
+                              </article>
+                            ))}
+                          </div>
                         </div>
                       </div>
                     </div>
                     <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                       <button
-                        onClick={() => {
-                          setShowModal(false);
-                        }}
+                        onClick={onTaskSubmitHandler}
                         type="button"
                         className=" my-3 ml-3 w-full sm:w-auto inline-flex justify-center rounded-xl
                border border-transparent px-4 py-2 bg-teal-600 text-base leading-6 font-semibold text-white shadow-sm hover:bg-teal-500 focus:outline-none focus:border-teal-700 focus:shadow-outline-teal transition ease-in-out duration-150 sm:text-sm sm:leading-5"

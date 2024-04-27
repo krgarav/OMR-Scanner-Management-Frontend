@@ -30,18 +30,12 @@ export function AllUser() {
     fetchUsers();
   }, [selectedUser]);
 
-  const handleEditUser = async (user) => {
-    // console.log(user)
-    try {
-      const response = await axios.get(
-        `http://${REACT_APP_IP}:4000/users/getuser/${user.id}`
-      );
-      console.log(response.data);
-      setSelectedUser(response.data.user);
-      setOpen(true);
-    } catch (error) {
-      console.error("Error fetching user details:", error);
-    }
+  console.log(users);
+
+  
+  const onModelHandler = async (user) => {
+    setOpen(true);
+    setSelectedUser(user)
   };
 
   const handlePermissionChange = (e) => {
@@ -55,10 +49,10 @@ export function AllUser() {
     }));
   };
 
-  const handleUpdateUser = async (e) => {
+  const onUpdateHandler = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.put(
+      await axios.put(
         `http://${REACT_APP_IP}:4000/users/updateuser/${selectedUser.id}`,
         selectedUser
       );
@@ -72,9 +66,8 @@ export function AllUser() {
   };
 
   const handleDeleteUser = async (userId) => {
-    console.log(userId);
     try {
-      const response = await axios.delete(
+      await axios.delete(
         `http://${REACT_APP_IP}:4000/users/deleteuser/${userId}`
       );
       setUsers(users.filter((user) => user.id !== userId));
@@ -188,7 +181,7 @@ export function AllUser() {
                           <button>
                             <BiEdit
                               className=" text-blue-500"
-                              onClick={() => handleEditUser(user)}
+                              onClick={() => onModelHandler(user)}
                             />
                           </button>
                         </td>
@@ -207,7 +200,6 @@ export function AllUser() {
             </div>
           </div>
         </div>
-
         <Transition.Root show={open} as={Fragment}>
           <Dialog
             as="div"
@@ -227,7 +219,7 @@ export function AllUser() {
               <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
             </Transition.Child>
 
-            <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
+            <div className="fixed inset-0 z-10 w-full overflow-y-auto">
               <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
                 <Transition.Child
                   as={Fragment}
@@ -238,11 +230,11 @@ export function AllUser() {
                   leaveFrom="opacity-100 translate-y-0 sm:scale-100"
                   leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
                 >
-                  <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg lg:max-w-xl">
+                  <Dialog.Panel className="relative transform overflow-hidden rounded-lg mx-4 bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full  md:max-w-xl lg:max-w-2xl">
                     <div className="bg-gray-50 px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                       <div className="sm:flex sm:items-start">
                         <form
-                          onSubmit={handleUpdateUser}
+                          onSubmit={onUpdateHandler}
                           className="px-4 pb-4  sm:px-6 sm:pb-4"
                         >
                           <div className="sm:flex sm:items-start">
@@ -344,10 +336,10 @@ export function AllUser() {
                                   </select>
                                 </div>
                                 <div className="mb-5 ">
-                                  <label className="block text-lg mb-2 font-medium text-gray-700">
+                                  <label className="block text-left text-lg mb-2 font-medium text-gray-700">
                                     Permissions
                                   </label>
-                                  <div className="flex gap-6">
+                                  <div className="flex gap-6 flex-wrap">
                                     {selectedUser?.permissions &&
                                       Object.entries(
                                         selectedUser?.permissions
