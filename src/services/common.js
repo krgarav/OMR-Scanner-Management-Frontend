@@ -55,7 +55,6 @@ export const onGetTaskHandler = async (id) => {
     const response = await axios.get(
       `http://${REACT_APP_IP}:4000/get/task/${id}`
     );
-    console.log(response)
     return response.data;
   } catch (error) {
     toast.error(error.message);
