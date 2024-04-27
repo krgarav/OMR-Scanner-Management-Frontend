@@ -19,7 +19,6 @@ const menuItems = [
   },
   {
     name: "Data Entry",
-    // permission: "userEditor",
     permission: "dataEntry",
     href: "datamatching",
   },
@@ -38,7 +37,7 @@ const menuItems = [
 export default function Navbar() {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-  const naviagte = useNavigate();
+  const navigate = useNavigate();
   const [isUserMenuOpen, setIsUserMenuOpen] = React.useState(false);
   const mainUrl = location.pathname?.slice(1)?.split("/");
   // const userData = JSON.parse(localStorage.getItem("userData"));
@@ -57,23 +56,34 @@ export default function Navbar() {
     getUser();
   }, []);
 
+  useEffect(() => {
+    if (userData && Object.keys(userData).length !== 0) {
+      // If user is admin, set the first link to "Create Template"
+      if (userData.role === "Admin") {
+        navigate("imageuploader");
+      } else {
+        // If user is not admin, find the first allowed link based on permissions
+        const firstAllowedLink = menuItems.find(item => userData.permissions[item.permission]);
+        if (firstAllowedLink) {
+          navigate(firstAllowedLink.href);
+        }
+      }
+    }
+  }, [userData]);
+
   const userMenuItems = [
     {
       name: "Create User",
       onClick: () => {
-        naviagte("/create-user");
+        navigate("/create-user");
         setIsUserMenuOpen(false);
-        setIsMenuOpen(!isMenuOpen);
-
       },
     },
     {
       name: "All Users",
       onClick: () => {
-        naviagte("/all-user");
+        navigate("/all-user");
         setIsUserMenuOpen(false);
-        setIsMenuOpen(!isMenuOpen);
-
       },
     },
     {
@@ -81,8 +91,7 @@ export default function Navbar() {
       onClick: () => {
         localStorage.clear();
         datactx.modifyIslogin(false);
-        naviagte("/");
-        setIsMenuOpen(!isMenuOpen);
+        navigate("/");
         setIsUserMenuOpen(false);
       },
     },
@@ -235,7 +244,10 @@ export default function Navbar() {
                               {userMenuItems?.map((item) => (
                                 <button
                                   key={item.name}
-                                  onClick={item.onClick}
+                                  onClick={() => {
+                                    item.onClick();
+                                    setIsMenuOpen(!isMenuOpen);
+                                  }}
                                   className="block px-4 py-2 text-md font-medium text-gray-600 hover:bg-gray-300 w-full text-left"
                                 >
                                   {item.name}
@@ -252,7 +264,10 @@ export default function Navbar() {
                                   item.name === "Logout" && (
                                     <button
                                       key={item.name}
-                                      onClick={item.onClick}
+                                      onClick={() => {
+                                        item.onClick();
+                                        setIsMenuOpen(!isMenuOpen);
+                                      }}
                                       className="block px-4 py-2 text-md font-medium text-gray-600 hover:bg-gray-300 w-full text-left"
                                     >
                                       {item.name}
