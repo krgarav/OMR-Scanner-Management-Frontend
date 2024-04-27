@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect, useRef, useId } from "react";
 import { useParams, useLocation } from "react-router-dom";
-import axios from "axios";
+import axios, { all } from "axios";
 import ImageNotFound from "../../components/ImageNotFound/ImageNotFound";
 import { toast } from "react-toastify";
 import {
@@ -15,8 +15,9 @@ const DataMatching = () => {
   const [templateHeaders, setTemplateHeaders] = useState();
   const [csvCurrentData, setCsvCurrentData] = useState([]);
   const [allTasks, setAllTasks] = useState([]);
-  const [allTemplateData, setAllTemplateData] = useState([]);
+
   const [templateId, setTemplateId] = useState("");
+  const [fileId, setFileId] = useState("");
   const [imageName, setImageName] = useState("");
   const [selectedCoordintes, setSelectedCoordinates] = useState(false);
   const [userId, setUserId] = useState("");
@@ -34,8 +35,19 @@ const DataMatching = () => {
         const verifiedUser = await onGetVerifiedUserHandler();
         const tasks = await onGetTaskHandler(verifiedUser.user.id);
         const templateData = await onGetTemplateHandler();
-        console.log(tasks);
-        setAllTasks(tasks);
+        const updatedTasks = tasks.map((task) => {
+          const matchedTemplate = templateData.find(
+            (template) => template.id == task.templeteId
+          );
+          if (matchedTemplate) {
+            return {
+              ...task,
+              templateName: matchedTemplate.name,
+            };
+          }
+          return task;
+        });
+        setAllTasks(updatedTasks);
       } catch (error) {
         console.log(error);
       }
@@ -194,6 +206,10 @@ const DataMatching = () => {
     setSelectedCoordinates(true);
   };
 
+  const onTaskStartHandler = (taskData) => {
+    console.log(taskData);
+  };
+
   return (
     <>
       {popUp && (
@@ -212,7 +228,7 @@ const DataMatching = () => {
                     <div className=" border border-gray-200 md:rounded-lg">
                       <div className="divide-y divide-gray-200 ">
                         <div className="bg-gray-50">
-                          <tr>
+                          <tr className="flex justify-between">
                             <th
                               scope="col"
                               className="px-8 py-3.5 text-left text-xl font-semibold text-gray-700"
@@ -233,43 +249,50 @@ const DataMatching = () => {
                             >
                               Max
                             </th>
+                            <th
+                              scope="col"
+                              className="px-12 py-3.5 text-left text-xl font-semibold text-gray-700"
+                            >
+                              Start Task
+                            </th>
                           </tr>
                         </div>
                         <div className="divide-y divide-gray-200 bg-white overflow-y-auto max-h-[300px]">
-                          <tr>
-                            <td className="whitespace-nowrap px-4 py-4 ">
-                              <div className="flex items-center">
-                                <div className="ml-4 w-full font-semibold">
-                                  <div className=" px-2">Template</div>
-                                </div>
-                              </div>
-                            </td>
-
-                            <td className="whitespace-nowrap px-12 py-4">
-                              <div className="text-2xl text-gray-900 ">
-                                <div className="h-10 w-16 rounded border-gray-400 border-2 p-0 text-center text-gray-600 [-moz-appearance:_textfield] focus:outline-none [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none">
-                                  1
-                                </div>
-                              </div>
-                            </td>
-                            <td className="whitespace-nowrap px-12 py-4">
-                              <div className="text-2xl text-gray-900">
-                                <div className="text-2xl text-gray-900">
-                                  <div className="h-10 w-16 rounded border-gray-400 border-2 p-0 text-center text-gray-600 [-moz-appearance:_textfield] focus:outline-none [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none">
-                                    100
+                          {allTasks?.map((taskData) => (
+                            <tr className="flex justify-between items-center">
+                              <td className="whitespace-nowrap px-4 py-4 ">
+                                <div className="flex items-center">
+                                  <div className="ml-4 w-full font-semibold">
+                                    <div className=" px-2">
+                                      {taskData.templateName}
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
-                            </td>
-                            <td className="whitespace-nowrap px-4 py-4 text-right">
-                              <button
-                                // onClick={onTaskAssignedHandler}
-                                className="rounded border border-indigo-500 bg-indigo-500 px-10 py-1 font-semibold text-white"
-                              >
-                                Start
-                              </button>
-                            </td>
-                          </tr>
+                              </td>
+                              <td className="whitespace-nowrap flex justify-center itemCe px-2 py-2 border-2">
+                                <div className="flex">
+                                  <div className="w-full font-semibold">
+                                    <div className=" px-2">{taskData.min}</div>
+                                  </div>
+                                </div>
+                              </td>
+                              <td className="whitespace-nowrap flex justify-center itemCe px-2 py-2 border-2">
+                                <div className="flex">
+                                  <div className="w-full font-semibold">
+                                    <div className=" px-2">{taskData.max}</div>
+                                  </div>
+                                </div>
+                              </td>
+                              <td className="whitespace-nowrap px-4 py-4 text-right">
+                                <button
+                                  onClick={() => onTaskStartHandler(taskData)}
+                                  className="rounded border border-indigo-500 bg-indigo-500 px-10 py-1 font-semibold text-white"
+                                >
+                                  Start
+                                </button>
+                              </td>
+                            </tr>
+                          ))}
                         </div>
                       </div>
                     </div>
