@@ -1,5 +1,5 @@
 import "./App.css";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Login from "./pages/Auth/Login";
 import CreateUser from "./pages/Admin/CreateUser";
 import { AllUser } from "./pages/Admin/AllUser";
@@ -38,10 +38,8 @@ function App() {
   const role = user?.user?.role;
   const permissions = user?.user?.permissions;
 
-  console.log(permissions);
-
   return (
-    <BrowserRouter>
+    <Router>
       {datactx.isLogin && <HomePage />}
       <Routes>
         {datactx.isLogin && (
@@ -56,7 +54,6 @@ function App() {
                   path="/imageuploader/scanner"
                   element={<ImageScanner />}
                 />
-
                 <Route path="/csvuploader" element={<CsvUploader />} />
                 <Route
                   path="/csvuploader/templatemap/:id"
@@ -85,25 +82,21 @@ function App() {
               role === "Moderator" ||
               role === "Operator") &&
               permissions.dataEntry && (
-                <>
-                  <Route path="/datamatching" element={<DataMatching />} />
-                </>
+                <Route path="/datamatching" element={<DataMatching />} />
               )}
 
             {(role === "Admin" ||
               role === "Moderator" ||
               role === "Operator") &&
               permissions.resultGenerator && (
-                <>
-                  <Route
-                    path="/resultGeneration"
-                    element={
-                      <ResultGenerationProvider>
-                        <HomePageTest />
-                      </ResultGenerationProvider>
-                    }
-                  />
-                </>
+                <Route
+                  path="/resultGeneration"
+                  element={
+                    <ResultGenerationProvider>
+                      <HomePageTest />
+                    </ResultGenerationProvider>
+                  }
+                />
               )}
 
             <Route
@@ -130,7 +123,7 @@ function App() {
           </>
         )}
       </Routes>
-    </BrowserRouter>
+    </Router>
   );
 }
 

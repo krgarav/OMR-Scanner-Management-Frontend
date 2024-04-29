@@ -15,6 +15,8 @@ export function AllUser() {
   const [open, setOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const cancelButtonRef = useRef(null);
+  const [updateSuccess, setUpdateSuccess] = useState(false);
+  const token = JSON.parse(localStorage.getItem("userData"));
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -28,14 +30,11 @@ export function AllUser() {
     };
 
     fetchUsers();
-  }, [selectedUser]);
+  }, [updateSuccess]);
 
-  console.log(users);
-
-  
   const onModelHandler = async (user) => {
     setOpen(true);
-    setSelectedUser(user)
+    setSelectedUser(user);
   };
 
   const handlePermissionChange = (e) => {
@@ -52,12 +51,13 @@ export function AllUser() {
   const onUpdateHandler = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(
+      await axios.post(
         `http://${REACT_APP_IP}:4000/users/updateuser/${selectedUser.id}`,
-        selectedUser
+        { token: token, selectedUser }
       );
       setOpen(false);
       setSelectedUser(null);
+      setUpdateSuccess(true);
       toast.success("User Updated Successfully");
     } catch (error) {
       console.error("Error updating user:", error);
@@ -67,8 +67,11 @@ export function AllUser() {
 
   const handleDeleteUser = async (userId) => {
     try {
-      await axios.delete(
-        `http://${REACT_APP_IP}:4000/users/deleteuser/${userId}`
+      await axios.post(
+        `http://${REACT_APP_IP}:4000/users/deleteuser/${userId}`,
+        {
+          token: token,
+        }
       );
       setUsers(users.filter((user) => user.id !== userId));
       toast.success("User Deleted Successfully");

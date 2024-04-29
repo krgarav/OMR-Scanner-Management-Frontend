@@ -17,6 +17,7 @@ const CsvUploader = () => {
   const [imageName, setImageName] = useState("");
   const dataCtx = useContext(dataContext);
   const navigate = useNavigate();
+  const token = JSON.parse(localStorage.getItem("userData"));
 
   useEffect(() => {
     const fetchTemplate = async () => {
@@ -102,6 +103,7 @@ const CsvUploader = () => {
     const formData = new FormData();
     formData.append("csvFile", csvFile);
     formData.append("zipFile", imageFolder);
+    formData.append("token", token);
 
     if (selectedId) {
       try {
@@ -117,14 +119,14 @@ const CsvUploader = () => {
         const fileId = response.data;
         toast.success("Files uploaded successfully!");
         dataCtx.modifyIsLoading(false);
-        navigate(`/csvuploader/templatemap/${selectedId}`, { state: fileId });
+        navigate(`/csvuploader/templatemap/${selectedId}`);
+        localStorage.setItem("fileId", JSON.stringify(fileId));
       } catch (error) {
         console.error("Error uploading files: ", error);
         toast.error(error.message);
       }
     }
   };
-
 
   return (
     <div className="">

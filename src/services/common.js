@@ -4,10 +4,15 @@ import { toast } from "react-toastify";
 export const REACT_APP_IP = "192.168.0.189";
 // export const REACT_APP_IP = "192.168.0.116";
 
+const token = JSON.parse(localStorage.getItem("userData"));
+
 export const onGetTemplateHandler = async () => {
   try {
-    const response = await axios.get(
-      `http://${REACT_APP_IP}:4000/get/templetes`
+    const response = await axios.post(
+      `http://${REACT_APP_IP}:4000/get/templetes`,
+      {
+        token: token,
+      }
     );
     return response.data;
   } catch (error) {
@@ -17,8 +22,9 @@ export const onGetTemplateHandler = async () => {
 
 export const onGetAllUsersHandler = async () => {
   try {
-    const response = await axios.get(
-      `http://${REACT_APP_IP}:4000/users/getallusers`
+    const response = await axios.post(
+      `http://${REACT_APP_IP}:4000/users/getallusers`,
+      { token: token }
     );
     return response.data;
   } catch (error) {
@@ -27,7 +33,6 @@ export const onGetAllUsersHandler = async () => {
 };
 
 export const onGetVerifiedUserHandler = async () => {
-  const token = JSON.parse(localStorage.getItem("userData"));
   try {
     const response = await axios.post(
       `http://${REACT_APP_IP}:4000/users/getuser`,

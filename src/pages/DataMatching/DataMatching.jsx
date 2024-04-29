@@ -18,11 +18,12 @@ const DataMatching = () => {
   const [imageName, setImageName] = useState("");
   const [currentTaskData, setCurrentTaskData] = useState({});
   const [selectedCoordintes, setSelectedCoordinates] = useState(false);
-  const [imageNotFound, setImageNotFound] = useState("");
+  const [imageNotFound, setImageNotFound] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(1);
   const [csvData, setCsvData] = useState([]);
   const imageContainerRef = useRef(null);
   const imageRef = useRef(null);
+  const token = JSON.parse(localStorage.getItem("userData"));
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
@@ -66,7 +67,6 @@ const DataMatching = () => {
   }, [currentTaskData]);
 
   const onImageHandler = async (direction, csvData) => {
-    console.log(direction);
     const headers = csvData[0];
     const getKeyByValue = (object, value) => {
       return Object.keys(object).find((key) => object[key] === value);
@@ -104,18 +104,18 @@ const DataMatching = () => {
         `http://${REACT_APP_IP}:4000/get/image`,
         {
           imageName: imageName1,
+          token: token,
         }
       );
       const url = response.data?.base64Image;
       setImage(url);
+      setImageNotFound(true);
       setPopUp(false);
     } catch (error) {
       toast.error("Image not found!.");
-      setPopUp(true);
+      setImageNotFound(false);
     }
   };
-
-  console.log(csvData);
 
   const onCsvUpdateHandler = async () => {
     // const updatedData = [...csvData];
@@ -124,7 +124,7 @@ const DataMatching = () => {
     // console.log(csvCurrentData);
     // console.log(currentIndex);
     try {
-      const response = await axios.post(
+      await axios.post(
         `http://${REACT_APP_IP}:4000/updatecsvdata/${parseInt(
           currentTaskData?.fileId
         )}`,
@@ -133,7 +133,12 @@ const DataMatching = () => {
           index: currentIndex + Number(currentTaskData.min),
         }
       );
-      console.log(response);
+      setCsvData((prevCsvData) => {
+        const newCsvData = [...prevCsvData];
+        newCsvData[currentIndex] = csvCurrentData;
+        return newCsvData;
+      });
+
       toast.success("Data update successfully.");
     } catch (error) {
       toast.error(error.message);
@@ -141,6 +146,10 @@ const DataMatching = () => {
   };
 
   const changeCurrentCsvDataHandler = (key, value) => {
+    if (!imageNotFound) {
+      return;
+    }
+
     setCsvCurrentData((prevData) => ({
       ...prevData,
       [key]: value,
@@ -148,6 +157,10 @@ const DataMatching = () => {
   };
 
   const imageFocusHandler = (headerName) => {
+    if (!imageNotFound) {
+      return;
+    }
+
     if (!image || !imageContainerRef || !imageRef) {
       setPopUp(true);
     }
@@ -201,7 +214,10 @@ const DataMatching = () => {
     try {
       const response = await axios.post(
         `http://${REACT_APP_IP}:4000/get/csvdata`,
-        taskData
+        {
+          taskData,
+          token,
+        }
       );
       setCsvData(response.data);
 

@@ -73,7 +73,10 @@ const UploadDataFile = () => {
         </div>
       )}
 
-      <div className=" w-[100%] flex max-[1103px]:flex-col overflow-y-scroll ms-4" style={{scrollbarWidth:"none"}} >
+      <div
+        className=" w-[100%] flex max-[1103px]:flex-col overflow-y-scroll ms-4"
+        style={{ scrollbarWidth: "none" }}
+      >
         <div className="h-auto  flex w-[100%] ">
           {!keyHEaders && (
             <div className="h-[100vh] flex flex-col items-center justify-center  w-[100%]">

@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import { useParams, useLocation, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import dataContext from "../../Store/DataContext";
 import {
@@ -21,9 +21,8 @@ const TemplateMapping = () => {
   const [taskValue, setTaskValue] = useState({ min: 1, max: null });
   const dataCtx = useContext(dataContext);
   const { id } = useParams();
-  const location = useLocation();
   const navigate = useNavigate();
-  const fileId = location.state;
+  const fileId = JSON.parse(localStorage.getItem("fileId"));
 
   useEffect(() => {
     const fetchUsers = async () => {

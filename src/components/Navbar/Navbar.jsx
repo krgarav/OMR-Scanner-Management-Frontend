@@ -62,7 +62,6 @@ export default function Navbar() {
           localStorage.getItem("currentPath") === "/"
             ? "imageuploader"
             : localStorage.getItem("currentPath");
-        console.log(currentPath);
         navigate(currentPath);
       } else {
         const firstAllowedLink = menuItems.find(
