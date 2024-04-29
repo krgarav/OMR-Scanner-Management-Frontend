@@ -115,8 +115,7 @@ const DataMatching = () => {
     }
   };
 
-
-  console.log(csvData)
+  console.log(csvData);
 
   const onCsvUpdateHandler = async () => {
     // const updatedData = [...csvData];

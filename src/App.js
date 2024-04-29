@@ -4,7 +4,7 @@ import Login from "./pages/Auth/Login";
 import CreateUser from "./pages/Admin/CreateUser";
 import { AllUser } from "./pages/Admin/AllUser";
 import { PageNotFound } from "./pages/PageNotFound";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import CsvHomepage from "./pages/CSV Comparer/CsvHomepage";
 import Correction from "./pages/CSV Comparer/Correction";
 import ImageUploader from "./pages/ImageUploader/ImageUploader";
@@ -12,14 +12,33 @@ import ImageScanner from "./pages/ImageScanner/ImageScanner";
 import dataContext from "./Store/DataContext";
 import CsvUploader from "./pages/CsvUploader/CsvUploader";
 import HomePage from "./components/Navbar/Navbar";
-  import TemplateMapping from "./pages/TemplateMapping/TemplateMapping";
+import TemplateMapping from "./pages/TemplateMapping/TemplateMapping";
 import HomePageTest from "./pages/HomePageTest";
 import ResultGenerationProvider from "./Store/ResultGenerationProvider";
 import TaskManager from "./pages/TaskManager/TaskManager";
 import DataMatching from "./pages/DataMatching/DataMatching";
+import { onGetVerifiedUserHandler } from "./services/common";
 
 function App() {
   const datactx = useContext(dataContext);
+  const [user, setUser] = useState({});
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await onGetVerifiedUserHandler();
+        setUser(response);
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+    fetchUserData();
+  }, [datactx]);
+
+  const role = user?.user?.role;
+  const permissions = user?.user?.permissions;
+
+  console.log(permissions);
 
   return (
     <BrowserRouter>
@@ -28,35 +47,65 @@ function App() {
         {datactx.isLogin && (
           <>
             <Route path="/home" element={""} />
-            <Route path="/create-user" element={<CreateUser />} />
-            <Route path="/all-user" element={<AllUser />} />
-            <Route path="/comparecsv" element={<CsvHomepage />} />
-            <Route
-              path="/comparecsv/correct_compare_csv"
-              element={<Correction />}
-            />
-            <Route path="/imageuploader" element={<ImageUploader />} />
-            <Route path="/imageuploader/scanner" element={<ImageScanner />} />
-            <Route path="/csvuploader" element={<CsvUploader />} />
-            <Route
-              path="/csvuploader/templatemap/:id"
-              element={<TemplateMapping />}
-            />
-            <Route
-              path="/csvuploader/taskAssign/:id"
-              element={<TaskManager />}
-            />
-            <Route path="/datamatching" element={<DataMatching />} />
+            {role === "Admin" && (
+              <>
+                <Route path="/create-user" element={<CreateUser />} />
+                <Route path="/all-user" element={<AllUser />} />
+                <Route path="/imageuploader" element={<ImageUploader />} />
+                <Route
+                  path="/imageuploader/scanner"
+                  element={<ImageScanner />}
+                />
 
-            <Route path="/templatemap/:id" element={<TemplateMapping />} />
-            <Route
-              path="/resultGeneration"
-              element={
-                <ResultGenerationProvider>
-                  <HomePageTest />
-                </ResultGenerationProvider>
-              }
-            />
+                <Route path="/csvuploader" element={<CsvUploader />} />
+                <Route
+                  path="/csvuploader/templatemap/:id"
+                  element={<TemplateMapping />}
+                />
+                <Route
+                  path="/csvuploader/taskAssign/:id"
+                  element={<TaskManager />}
+                />
+              </>
+            )}
+            {(role === "Admin" ||
+              role === "Moderator" ||
+              role === "Operator") &&
+              permissions.csvCompare && (
+                <>
+                  <Route path="/comparecsv" element={<CsvHomepage />} />
+                  <Route
+                    path="/comparecsv/correct_compare_csv"
+                    element={<Correction />}
+                  />
+                </>
+              )}
+
+            {(role === "Admin" ||
+              role === "Moderator" ||
+              role === "Operator") &&
+              permissions.dataEntry && (
+                <>
+                  <Route path="/datamatching" element={<DataMatching />} />
+                </>
+              )}
+
+            {(role === "Admin" ||
+              role === "Moderator" ||
+              role === "Operator") &&
+              permissions.resultGenerator && (
+                <>
+                  <Route
+                    path="/resultGeneration"
+                    element={
+                      <ResultGenerationProvider>
+                        <HomePageTest />
+                      </ResultGenerationProvider>
+                    }
+                  />
+                </>
+              )}
+
             <Route
               path="*"
               element={

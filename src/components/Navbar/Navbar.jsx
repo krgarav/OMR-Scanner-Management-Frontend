@@ -15,7 +15,6 @@ const menuItems = [
   {
     name: "Csv Uploader",
     href: "csvuploader",
-    permission: "dataEntry",
   },
   {
     name: "Data Entry",
@@ -59,22 +58,29 @@ export default function Navbar() {
   useEffect(() => {
     if (userData && Object.keys(userData).length !== 0) {
       if (userData.role === "Admin") {
-        const currentPath = localStorage.getItem("currentPath")==="/" ? "imageuploader" : localStorage.getItem("currentPath");
-        console.log(currentPath)
-        navigate(currentPath)
-
+        const currentPath =
+          localStorage.getItem("currentPath") === "/"
+            ? "imageuploader"
+            : localStorage.getItem("currentPath");
+        console.log(currentPath);
+        navigate(currentPath);
       } else {
-        const firstAllowedLink = menuItems.find(item => userData.permissions[item.permission]);
+        const firstAllowedLink = menuItems.find(
+          (item) => userData.permissions[item.permission]
+        );
         if (firstAllowedLink) {
-        const currentPath = localStorage.getItem("currentPath")==="/" ? firstAllowedLink.href : localStorage.getItem("currentPath");
+          const currentPath =
+            localStorage.getItem("currentPath") === "/"
+              ? firstAllowedLink.href
+              : localStorage.getItem("currentPath");
           navigate(currentPath);
         }
       }
     }
   }, [userData]);
-  useEffect(()=>{
-    localStorage.setItem("currentPath", location.pathname)
-  },[location.pathname])
+  useEffect(() => {
+    localStorage.setItem("currentPath", location.pathname);
+  }, [location.pathname]);
 
   const userMenuItems = [
     {
