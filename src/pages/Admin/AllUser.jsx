@@ -7,10 +7,14 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { REACT_APP_IP } from "../../services/common";
-import { onGetAllUsersHandler } from "../../services/common";
+import {
+  onGetAllUsersHandler,
+  onGetVerifiedUserHandler,
+} from "../../services/common";
 
 export function AllUser() {
   const [users, setUsers] = useState([]);
+  const [currentUser, setCurrentUser] = useState([]);
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -22,7 +26,9 @@ export function AllUser() {
     const fetchUsers = async () => {
       try {
         const response = await onGetAllUsersHandler();
+        const curentUser = await onGetVerifiedUserHandler();
         const { users } = response;
+        setCurrentUser(curentUser.user)
         setUsers(users);
       } catch (error) {
         console.error("Error fetching users:", error);
@@ -31,7 +37,6 @@ export function AllUser() {
 
     fetchUsers();
   }, [updateSuccess]);
-
   const onModelHandler = async (user) => {
     setOpen(true);
     setSelectedUser(user);
@@ -76,9 +81,9 @@ export function AllUser() {
         `http://${REACT_APP_IP}:4000/users/deleteuser/${userId}`,
         {},
         {
-          headers : {
-            token : token
-          }
+          headers: {
+            token: token,
+          },
         }
       );
       setUsers(users.filter((user) => user.id !== userId));
@@ -92,9 +97,9 @@ export function AllUser() {
   const closeModal = () => {
     setOpen(false);
   };
-
+console.log(currentUser.email )
   return (
-    <div className="pt-40">
+    <div className="pt-48">
       <section className="mx-auto w-full max-w-7xl  px-12 py-10 bg-white rounded-xl">
         <div className="flex flex-col space-y-4  sm:flex-row md:items-center sm:justify-between sm:space-y-0">
           <div>
@@ -151,60 +156,62 @@ export function AllUser() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200 bg-white ">
-                    {users?.map((user, index) => (
-                      <tr key={index}>
-                        <td className="whitespace-nowrap px-4 py-4">
-                          <div className="flex items-center">
-                            <div className="ml-4">
-                              <div className="text-sm font-medium text-gray-900">
-                                {user.userName}
-                              </div>
-                              <div className="text-sm text-gray-700">
-                                {user.email}
+                    {users
+                      .filter((user) => user.email != currentUser.email)
+                      .map((user, index) => (
+                        <tr key={index}>
+                          <td className="whitespace-nowrap px-4 py-4">
+                            <div className="flex items-center">
+                              <div className="ml-4">
+                                <div className="text-sm font-medium text-gray-900">
+                                  {user.userName}
+                                </div>
+                                <div className="text-sm text-gray-700">
+                                  {user.email}
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        </td>
-                        <td className="whitespace-nowrap px-12 py-4">
-                          <div className="text-sm text-gray-900 ">
-                            {user.mobile}
-                          </div>
-                        </td>
-                        <td className="whitespace-nowrap px-12 py-4">
-                          <div className="text-sm text-gray-900 ">
-                            {user.role}
-                          </div>
-                        </td>
-                        <td className="whitespace-nowrap px-4 py-4 text-sm text-gray-700">
-                          {user?.permissions &&
-                            Object.entries(user.permissions)
-                              .filter(([key, value]) => value === true)
-                              .map(([key, value]) => (
-                                <span
-                                  key={key}
-                                  className="inline-flex rounded-full bg-blue-100 px-2 py-1 text-sm font-semibold leading-5 text-blue-800 mr-2"
-                                >
-                                  {key}
-                                </span>
-                              ))}
-                        </td>
-                        <td className="whitespace-nowrap px-4 py-4 text-right text-2xl font-medium">
-                          <button>
-                            <BiEdit
-                              className=" text-blue-500"
-                              onClick={() => onModelHandler(user)}
-                            />
-                          </button>
-                        </td>
-                        <td className="whitespace-nowrap px-4 py-4 text-right text-2xl font-semibold">
-                          <Link to="#" className="text-red-600">
-                            <RiDeleteBin6Line
-                              onClick={() => handleDeleteUser(user.id)}
-                            />
-                          </Link>
-                        </td>
-                      </tr>
-                    ))}
+                          </td>
+                          <td className="whitespace-nowrap px-12 py-4">
+                            <div className="text-sm text-gray-900 ">
+                              {user.mobile}
+                            </div>
+                          </td>
+                          <td className="whitespace-nowrap px-12 py-4">
+                            <div className="text-sm text-gray-900 ">
+                              {user.role}
+                            </div>
+                          </td>
+                          <td className="whitespace-nowrap px-4 py-4 text-sm text-gray-700">
+                            {user?.permissions &&
+                              Object.entries(user.permissions)
+                                .filter(([key, value]) => value === true)
+                                .map(([key, value]) => (
+                                  <span
+                                    key={key}
+                                    className="inline-flex rounded-full bg-blue-100 px-2 py-1 text-sm font-semibold leading-5 text-blue-800 mr-2"
+                                  >
+                                    {key}
+                                  </span>
+                                ))}
+                          </td>
+                          <td className="whitespace-nowrap px-4 py-4 text-right text-2xl font-medium">
+                            <button>
+                              <BiEdit
+                                className=" text-blue-500"
+                                onClick={() => onModelHandler(user)}
+                              />
+                            </button>
+                          </td>
+                          <td className="whitespace-nowrap px-4 py-4 text-right text-2xl font-semibold">
+                            <Link to="#" className="text-red-600">
+                              <RiDeleteBin6Line
+                                onClick={() => handleDeleteUser(user.id)}
+                              />
+                            </Link>
+                          </td>
+                        </tr>
+                      ))}
                   </tbody>
                 </table>
               </div>
