@@ -59,7 +59,6 @@ const PaperkeyMap = () => {
                           // event.stopPropagation();
                           setMappedKEy(currentKey);
                           setSelectedKeyOpen(!selectedKeyOpen); // Close the dropdown after selecting the key
-                          console.log("selected key:", currentKey);
                           selectedKEyOptionOpen(currentKey);
                         }}
                       >

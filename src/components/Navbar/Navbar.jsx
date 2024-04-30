@@ -54,27 +54,33 @@ export default function Navbar() {
       }
     };
     getUser();
-  }, []);
+  }, [userData]);
 
   useEffect(() => {
     if (userData && Object.keys(userData).length !== 0) {
       if (userData.role === "Admin") {
-        const currentPath = localStorage.getItem("currentPath")==="/" ? "imageuploader" : localStorage.getItem("currentPath");
-        console.log(currentPath)
-        navigate(currentPath)
-
+        const currentPath =
+          localStorage.getItem("currentPath") === "/"
+            ? "imageuploader"
+            : localStorage.getItem("currentPath");
+        navigate(currentPath);
       } else {
-        const firstAllowedLink = menuItems.find(item => userData.permissions[item.permission]);
+        const firstAllowedLink = menuItems.find(
+          (item) => userData.permissions[item.permission]
+        );
         if (firstAllowedLink) {
-        const currentPath = localStorage.getItem("currentPath")==="/" ? firstAllowedLink.href : localStorage.getItem("currentPath");
+          const currentPath =
+            localStorage.getItem("currentPath") === "/"
+              ? firstAllowedLink.href
+              : localStorage.getItem("currentPath");
           navigate(currentPath);
         }
       }
     }
   }, [userData]);
-  useEffect(()=>{
-    localStorage.setItem("currentPath", location.pathname)
-  },[location.pathname])
+  useEffect(() => {
+    localStorage.setItem("currentPath", location.pathname);
+  }, [location.pathname]);
 
   const userMenuItems = [
     {
@@ -106,9 +112,25 @@ export default function Navbar() {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  const toggleUserMenu = () => {
+  const toggleUserMenu = (event) => {
+    event.stopPropagation();
     setIsUserMenuOpen(!isUserMenuOpen);
   };
+
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      if (isUserMenuOpen && event.target.closest(".user-menu") === null) {
+        setIsUserMenuOpen(false);
+      }
+    };
+    if (isUserMenuOpen) {
+      document.addEventListener("click", handleOutsideClick);
+    }
+
+    return () => {
+      document.removeEventListener("click", handleOutsideClick);
+    };
+  }, [isUserMenuOpen]);
 
   const filteredMenuItems =
     userData &&
@@ -244,7 +266,7 @@ export default function Navbar() {
                     </button>
                     {userData?.role === "Admin"
                       ? isUserMenuOpen && (
-                          <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
+                          <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 user-menu">
                             <div className="py-1">
                               {userMenuItems?.map((item) => (
                                 <button
@@ -262,7 +284,7 @@ export default function Navbar() {
                           </div>
                         )
                       : isUserMenuOpen && (
-                          <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
+                          <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 user-menu">
                             <div className="py-1">
                               {userMenuItems?.map(
                                 (item) =>

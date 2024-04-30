@@ -8,7 +8,6 @@ const PaperQueMapper = () => {
   const ctx = useContext(ResultGenerationContext);
   const keyHEaders = ctx.keyHeaders;
   const dataHeaders = ctx.dataHeaders;
-  console.log(mappedQue);
   return (
     <>
       {" "}

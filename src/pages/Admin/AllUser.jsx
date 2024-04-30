@@ -30,7 +30,6 @@ export function AllUser() {
     fetchUsers();
   }, [selectedUser]);
 
-  console.log(users);
 
   
   const onModelHandler = async (user) => {

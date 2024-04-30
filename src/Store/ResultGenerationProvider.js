@@ -48,7 +48,6 @@ const reducerfn = (state, action) => {
 
 const ResultGenerationProvider = (props) => {
   const [currentState, dispatch] = useReducer(reducerfn, initialState);
-  console.log(currentState);
   const keyHeadersHandler = (headers) => {
     dispatch({ type: "uploadKeyHeaders", payload: headers });
   };
@@ -59,7 +58,6 @@ const ResultGenerationProvider = (props) => {
     dispatch({ type: "subjectMarking", payload: subjectData });
   };
   const uploadFilesHandler = (fileName) => {
-    console.log("hello ", typeof fileName);
     dispatch({ type: "fileHandle", payload: fileName });
   };
   const paperMarkHandler = (paperData) => {

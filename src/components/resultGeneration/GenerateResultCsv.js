@@ -12,9 +12,7 @@ const GenerateResultCsv = (props) => {
   let subjectHeaders = [];
   let finalAnswers = [];
   let headers = [];
-  console.log(subjectWiseMarking);
   const resultGenerator = () => {
-    console.log(ctx.paperMappedKey);
     subjectHeaders = [];
     finalAnswers = [];
     headers = [];
@@ -50,7 +48,6 @@ const GenerateResultCsv = (props) => {
       //we will go to each student attempted question in data file
 
       let startpoint = +ctx.paperMarkings.start;
-      console.log(startpoint);
 
       let endPoint = +startpoint + +ctx.paperMarkings.end - 1;
 
@@ -179,7 +176,6 @@ const GenerateResultCsv = (props) => {
 
     const data = finalAnswers;
     headers = [...props.headers, ...headers];
-    console.log(finalAnswers);
     //  return;
     const csvData = convertArrayOfObjectsToCSV(
       data,

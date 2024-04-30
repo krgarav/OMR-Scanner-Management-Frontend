@@ -9,7 +9,6 @@ const OutPutHeaders = () => {
   const [selectAll, setSelectAll] = useState(false);
   const [headers, setHeaders] = useState([]);
   const outPutHeadersHandler = (data) => {
-    console.log(data);
     // headers.push(data);
     const findHeader = headers.includes(data);
 
@@ -29,7 +28,6 @@ const OutPutHeaders = () => {
     setSelectAll(false);
     setHeaders([]);
   };
-  console.log(headers);
   return (
     //  {/* outputheaders */}
     <>
