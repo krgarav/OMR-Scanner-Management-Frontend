@@ -14,11 +14,9 @@ import { REACT_APP_IP } from "../../services/common";
 const CsvHomepage = () => {
   const navigate = useNavigate();
   const dataCtx = useContext(dataContext);
-<<<<<<< HEAD
-=======
+
   const token = JSON.parse(localStorage.getItem("userData"));
 
->>>>>>> 2666b17978e46f0dac74b87fb616040dbd6d7515
   useEffect(() => {
     dataCtx.addToCsvHeader([]);
   }, []);
@@ -137,12 +135,12 @@ const CsvHomepage = () => {
   return (
     <>
       <main
-        className={`flex flex-col  gap-5 bg-white rounded-md ${classes.homepage}`}
+        className={`flex flex-col gap-5 bg-white rounded-md ${classes.homepage}`}
       >
         <div
-          className={`border-dashed pt-28 px-5 rounded-md  ${classes.innerBox}`}
+          className={`border-dashed pt-24 px-5 rounded-md  ${classes.innerBox}`}
         >
-          <h1 className="text-center mt-2 mb-6 text-black-300 text-3xl font-bold">
+          <h1 className="text-center mb-6 text-black-300 text-2xl font-bold">
             MATCH AND COMPARE DATA
           </h1>
           <div className="flex flex-row justify-between  gap-10 mb-6">

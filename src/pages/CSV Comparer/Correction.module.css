@@ -6,10 +6,11 @@
   margin: 0;
   padding: 0;
   width: 100dvw;
-  height: 100dvh;
+  min-height: 100dvh;
   background-image: url("../../assets/images/csvcompare.jpg");
   background-size: cover; /* This will make the background image cover the entire container */
   background-position: center;
+  padding-bottom: 10px;
 }
 
 .imgHead {
@@ -20,10 +21,7 @@
   height: 100%;
 }
 .imgdiv {
-  /* width: 100%; */
-  /* text-align: center; */
-  /* border: 1px solid black; */
-  margin-top: 10px;
+  /* margin-top: 10px; */
 }
 .imgContainer {
   height: 83dvh;

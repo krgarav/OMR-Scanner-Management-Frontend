@@ -170,7 +170,7 @@ const Correction = () => {
           <div className="w-full pt-20">
             <div className={`flex justify-center w-full ${classes.imgdiv}`}>
               <h1
-                className={`font-bold lg:text-3xl md:text-2xl sm:text-xl ${classes.imgHead}`}
+                className={`font-bold lg:text-2xl md:text-xl sm:text-lg ${classes.imgHead}`}
               >
                 Image Name : {state[currIndex].img.imgName}
               </h1>
@@ -188,7 +188,7 @@ const Correction = () => {
                   <img
                     // key={state[currIndex].img.imgUrl}
                     src={state[currIndex].img.imgUrl}
-                    className={`w-full object-contain p-5 ${classes.imgContainer} zoomable-image  bg-opacity-15 bg-black rounded`}
+                    className={`w-full object-contain p-1 ${classes.imgContainer} zoomable-image   rounded`}
                     alt="omr sheet"
                   />
                 </TransformComponent>
