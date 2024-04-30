@@ -11,7 +11,7 @@ export function PageNotFound(props) {
         navigate("/")
     }else{
         console.log("ioi");
-        navigate("/home");
+        // navigate("/home");
     }
     
   };

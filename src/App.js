@@ -18,6 +18,8 @@ import ResultGenerationProvider from "./Store/ResultGenerationProvider";
 import TaskManager from "./pages/TaskManager/TaskManager";
 import DataMatching from "./pages/DataMatching/DataMatching";
 import { onGetVerifiedUserHandler } from "./services/common";
+import Navbar from "./components/Navbar/Navbar";
+import Profile from "./pages/Auth/Profile";
 
 function App() {
   const datactx = useContext(dataContext);
@@ -40,11 +42,12 @@ function App() {
 
   return (
     <Router>
-      {datactx.isLogin && <HomePage />}
+      {datactx.isLogin && <Navbar />}
       <Routes>
         {datactx.isLogin && (
           <>
-            <Route path="/home" element={""} />
+            <Route path="/profile" element={<Profile />} />
+            {/* <Route path="/home" element={""} /> */}
             {role === "Admin" && (
               <>
                 <Route path="/create-user" element={<CreateUser />} />

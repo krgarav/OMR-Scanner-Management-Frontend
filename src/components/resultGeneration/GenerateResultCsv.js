@@ -176,7 +176,6 @@ const GenerateResultCsv = (props) => {
 
     const data = finalAnswers;
     headers = [...props.headers, ...headers];
-    console.log(finalAnswers);
     //  return;
     const csvData = convertArrayOfObjectsToCSV(
       data,

@@ -37,7 +37,7 @@ export default function Navbar() {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const navigate = useNavigate();
-  const [isUserMenuOpen, setIsUserMenuOpen] = React.useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const mainUrl = location.pathname?.slice(1)?.split("/");
   // const userData = JSON.parse(localStorage.getItem("userData"));
   const [userData, setUserData] = useState({});
@@ -53,8 +53,8 @@ export default function Navbar() {
       }
     };
     getUser();
+    console.log(userData);
   }, []);
-
   useEffect(() => {
     if (userData && Object.keys(userData).length !== 0) {
       if (userData.role === "Admin") {
@@ -79,12 +79,17 @@ export default function Navbar() {
   }, [userData]);
 
   useEffect(() => {
-    console.log("lulu");
-
     localStorage.setItem("currentPath", location.pathname);
   }, [location.pathname]);
 
   const userMenuItems = [
+    {
+      name: "Profile",
+      onClick: () => {
+        navigate("/profile");
+        setIsUserMenuOpen(false);
+      },
+    },
     {
       name: "Create User",
       onClick: () => {
@@ -103,6 +108,7 @@ export default function Navbar() {
       name: "Logout",
       onClick: () => {
         localStorage.clear();
+        setUserData({});
         datactx.modifyIslogin(false);
         navigate("/");
         setIsUserMenuOpen(false);
@@ -114,9 +120,25 @@ export default function Navbar() {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  const toggleUserMenu = () => {
+  const toggleUserMenu = (event) => {
+    event.stopPropagation();
     setIsUserMenuOpen(!isUserMenuOpen);
   };
+
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      if (isUserMenuOpen && event.target.closest(".user-menu") === null) {
+        setIsUserMenuOpen(false);
+      }
+    };
+    if (isUserMenuOpen) {
+      document.addEventListener("click", handleOutsideClick);
+    }
+
+    return () => {
+      document.removeEventListener("click", handleOutsideClick);
+    };
+  }, [isUserMenuOpen]);
 
   const filteredMenuItems =
     userData &&
@@ -190,13 +212,13 @@ export default function Navbar() {
             </button>
             {userData?.role === "Admin"
               ? isUserMenuOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
+                  <div className="absolute right-0 mt-3 w-48 bg-white rounded-lg shadow-xl z-20 ">
                     <div className="py-1">
                       {userMenuItems?.map((item) => (
                         <button
                           key={item.name}
                           onClick={item.onClick}
-                          className="block px-4 py-2 text-md font-medium text-gray-600 hover:bg-gray-300 w-full text-left"
+                          className="block px-4 py-1 text-md font-medium text-gray-600 hover:bg-gray-200 hover:text-blue-500 w-full text-left"
                         >
                           {item.name}
                         </button>
@@ -207,18 +229,20 @@ export default function Navbar() {
               : isUserMenuOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
                     <div className="py-1">
-                      {userMenuItems?.map(
-                        (item) =>
-                          item.name === "Logout" && (
-                            <button
-                              key={item.name}
-                              onClick={item.onClick}
-                              className="block px-4 py-2 text-md font-medium text-gray-600 hover:bg-gray-300 w-full text-left"
-                            >
-                              {item.name}
-                            </button>
-                          )
-                      )}
+                      {userMenuItems
+                        .filter(
+                          (item) =>
+                            item.name === "Logout" || item.name === "Profile"
+                        )
+                        .map((item) => (
+                          <button
+                            key={item.name}
+                            onClick={item.onClick}
+                            className="block px-4 py-2 text-md font-medium text-gray-600 hover:bg-gray-300 w-full text-left"
+                          >
+                            {item.name}
+                          </button>
+                        ))}
                     </div>
                   </div>
                 )}
@@ -252,7 +276,7 @@ export default function Navbar() {
                     </button>
                     {userData?.role === "Admin"
                       ? isUserMenuOpen && (
-                          <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
+                          <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 user-menu">
                             <div className="py-1">
                               {userMenuItems?.map((item) => (
                                 <button
@@ -270,23 +294,27 @@ export default function Navbar() {
                           </div>
                         )
                       : isUserMenuOpen && (
-                          <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
+                          <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 user-menu">
                             <div className="py-1">
-                              {userMenuItems?.map(
-                                (item) =>
-                                  item.name === "Logout" && (
-                                    <button
-                                      key={item.name}
-                                      onClick={() => {
-                                        item.onClick();
-                                        setIsMenuOpen(!isMenuOpen);
-                                      }}
-                                      className="block px-4 py-2 text-md font-medium text-gray-600 hover:bg-gray-300 w-full text-left"
-                                    >
-                                      {item.name}
-                                    </button>
-                                  )
-                              )}
+                            
+                              {userMenuItems
+                                .filter(
+                                  (item) =>
+                                    item.name === "Logout" ||
+                                    item.name === "Profile"
+                                )
+                                .map((item) => (
+                                  <button
+                                    key={item.name}
+                                    onClick={() => {
+                                      item.onClick();
+                                      setIsMenuOpen(!isMenuOpen);
+                                    }}
+                                    className="block px-4 py-2 text-md font-medium text-gray-600 hover:bg-gray-300 w-full text-left"
+                                  >
+                                    {item.name}
+                                  </button>
+                                ))}
                             </div>
                           </div>
                         )}

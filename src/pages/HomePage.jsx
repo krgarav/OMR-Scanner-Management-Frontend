@@ -7,7 +7,7 @@ function HomePage() {
   return (
     <>
     <div>
-    <Navbar />
+    {/* <Navbar /> */}
     {/* <Outlet /> */}
     </div>
     </>
