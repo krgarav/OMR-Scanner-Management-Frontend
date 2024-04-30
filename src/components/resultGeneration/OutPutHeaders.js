@@ -9,7 +9,6 @@ const OutPutHeaders = () => {
   const [selectAll, setSelectAll] = useState(false);
   const [headers, setHeaders] = useState([]);
   const outPutHeadersHandler = (data) => {
-    console.log(data);
     // headers.push(data);
     const findHeader = headers.includes(data);
 
@@ -29,12 +28,11 @@ const OutPutHeaders = () => {
     setSelectAll(false);
     setHeaders([]);
   };
-  console.log(headers);
   return (
     //  {/* outputheaders */}
     <>
       {" "}
-      <div className=" flex  h-[100%] mb-[5px] justify-center border-s-2 border-gray-400">
+      <div className=" flex  h-[100%] mb-[5px] justify-center min-[1103px]:border-s-2 border-gray-400">
         <div className="mx-2 h-auto  min-w-[250px] w-[20vw] max-[1103px]:w-[600px]">
           <div className="animate__animated animate__bounceInDown animate__delay-3s">
             {" "}

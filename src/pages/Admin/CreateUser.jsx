@@ -5,7 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { REACT_APP_IP } from "../../services/common";
 
 const CreateUser = () => {
-  const [formData, setFormData] = useState({
+  const [userData, setUserData] = useState({
     userName: "",
     mobile: "",
     email: "",
@@ -15,25 +15,33 @@ const CreateUser = () => {
       dataEntry: false,
       csvCompare: false,
       resultGenerator: false,
-      csvUploader: false,
     },
   });
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     if (type === "checkbox") {
-      setFormData({
-        ...formData,
+      setUserData({
+        ...userData,
         permissions: {
-          ...formData.permissions,
+          ...userData.permissions,
           [name]: checked,
         },
       });
     } else {
-      setFormData({
-        ...formData,
-        [name]: value,
-      });
+      if (name === "mobile") {
+        // Allow only numbers
+        const formattedValue = value.replace(/\D/g, "");
+        setUserData({
+          ...userData,
+          [name]: formattedValue,
+        });
+      } else {
+        setUserData({
+          ...userData,
+          [name]: value,
+        });
+      }
     }
   };
 
@@ -44,23 +52,23 @@ const CreateUser = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    const token = JSON.parse(localStorage.getItem("userData"));
     if (
-      !formData.role ||
-      !formData.permissions ||
-      !formData.userName ||
-      !formData.mobile ||
-      !formData.email ||
-      !formData.password
+      !userData.role ||
+      !userData.permissions ||
+      !userData.userName ||
+      !userData.mobile ||
+      !userData.email ||
+      !userData.password
     ) {
       return toast.error("plzz select role and permission");
     }
 
-    if (!validateMobile(formData.mobile)) {
-      return toast.error("Invalid mobile number:", formData.mobile);
+    if (!validateMobile(userData.mobile)) {
+      return toast.error("Invalid mobile number:", userData.mobile);
     }
 
-    const { permissions } = formData;
+    const { permissions } = userData;
     const isAnyPermissionTrue = Object.values(permissions).some(
       (permission) => permission === true
     );
@@ -69,12 +77,11 @@ const CreateUser = () => {
       return toast.error("Please select at least one permission");
     }
     try {
-      const response = await axios.post(
-        `http://${REACT_APP_IP}:4000/users/createuser`,
-        formData
-      );
-      console.log(response.data);
-      setFormData({
+      await axios.post(`http://${REACT_APP_IP}:4000/users/createuser`, {
+        userData: userData,
+        token: token,
+      });
+      setUserData({
         userName: "",
         mobile: "",
         email: "",
@@ -84,13 +91,12 @@ const CreateUser = () => {
           dataEntry: false,
           csvCompare: false,
           resultGenerator: false,
-          csvUploader: false,
         },
       });
       toast.success("User Created successfully");
     } catch (error) {
       console.error("Error creating user:", error);
-      toast.error("Email already exists");
+      toast.error("Something went wrong!");
     }
   };
 
@@ -114,7 +120,7 @@ const CreateUser = () => {
                 type="text"
                 autoComplete="userName"
                 required
-                value={formData?.userName}
+                value={userData?.userName}
                 placeholder="Enter Username"
                 onChange={handleChange}
                 className="mt-2  focus:ring-indigo-500 focus:border-indigo-500 block w-full px-4 py-2 shadow-md shadow-blue-100 sm:text-sm border-gray-300 rounded-md"
@@ -122,16 +128,17 @@ const CreateUser = () => {
             </div>
             <div className="w-full mt-4 sm:mt-0">
               <label htmlFor="mobile" className="block text-lg font-medium ">
-                Mobile  
+                Mobile
               </label>
               <input
                 id="mobile"
                 name="mobile"
-                type="number"
+                type="text"
                 autoComplete="mobile"
                 placeholder="Enter Mobile no."
+                maxLength={10}
                 required
-                value={formData?.mobile}
+                value={userData?.mobile}
                 onChange={handleChange}
                 className="mt-2  focus:ring-indigo-500 focus:border-indigo-500 block w-full px-4 py-2 shadow-md shadow-blue-100 sm:text-sm border-gray-300 rounded-md"
               />
@@ -148,47 +155,46 @@ const CreateUser = () => {
               autoComplete="email"
               placeholder="Enter Email ID"
               required
-              value={formData?.email}
+              value={userData?.email}
               onChange={handleChange}
               className="mt-2  px-4 py-2 shadow-md shadow-blue-100 focus:ring-indigo-500 focus:border-indigo-500 block w-full  sm:text-sm border-gray-300 rounded-md"
             />
           </div>
           <div className="flex flex-col sm:flex-row sm:space-x-10 w-full">
             <div className="w-full">
-            <label htmlFor="password" className="block text-lg font-medium">
-              Password
-            </label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              placeholder="Enter Password"
-              required
-              value={formData?.password}
-              onChange={handleChange}
-              className="mt-2 px-4 py-2 shadow-md shadow-blue-100 focus:ring-indigo-500 focus:border-indigo-500 block w-full  sm:text-sm border-gray-300 rounded-md"
-            />
+              <label htmlFor="password" className="block text-lg font-medium">
+                Password
+              </label>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                placeholder="Enter Password"
+                required
+                value={userData?.password}
+                onChange={handleChange}
+                className="mt-2 px-4 py-2 shadow-md shadow-blue-100 focus:ring-indigo-500 focus:border-indigo-500 block w-full  sm:text-sm border-gray-300 rounded-md"
+              />
             </div>
-          <div className="w-full mt-4  sm:mt-0">
-            <label className="block text-lg font-medium">Role</label>
-            <select
-              id="role"
-              name="role"
-              required
-              value={formData?.role}
-              onChange={handleChange}
-              className="mt-2 block w-full py-2 px-4 border  shadow-blue-100 bg-white rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            >
-              <option disabled value="">
-                Select role
-              </option>
-              <option value="Admin">Admin</option>
-              <option value="Moderator">Moderator</option>
-              <option value="Operator">Operator</option>
-            </select>
+            <div className="w-full mt-4  sm:mt-0">
+              <label className="block text-lg font-medium">Role</label>
+              <select
+                id="role"
+                name="role"
+                required
+                value={userData?.role}
+                onChange={handleChange}
+                className="mt-2 block w-full py-2 px-4 border  shadow-blue-100 bg-white rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              >
+                <option disabled value="">
+                  Select role
+                </option>
+                <option value="Admin">Admin</option>
+                <option value="Moderator">Moderator</option>
+                <option value="Operator">Operator</option>
+              </select>
+            </div>
           </div>
-          </div>
-
 
           <div>
             <label className="block text-lg   font-medium">Permissions</label>
@@ -199,7 +205,7 @@ const CreateUser = () => {
                   name="dataEntry"
                   type="checkbox"
                   className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
-                  checked={formData?.permissions?.dataEntry}
+                  checked={userData?.permissions?.dataEntry}
                   onChange={handleChange}
                 />
                 <label
@@ -215,7 +221,7 @@ const CreateUser = () => {
                   name="csvCompare"
                   type="checkbox"
                   className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
-                  checked={formData?.permissions?.csvCompare}
+                  checked={userData?.permissions?.csvCompare}
                   onChange={handleChange}
                 />
                 <label
@@ -225,29 +231,14 @@ const CreateUser = () => {
                   CSV Compare
                 </label>
               </div>
-              <div className="flex items-center">
-                <input
-                  id="csvUploader"
-                  name="csvUploader"
-                  type="checkbox"
-                  className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
-                  checked={formData?.permissions?.csvUploader}
-                  onChange={handleChange}
-                />
-                <label
-                  htmlFor="csvUploader"
-                  className="ml-2 block text-md text-gray-900 font-semibold"
-                >
-                  CSV Uploader
-                </label>
-              </div>
+
               <div className="flex items-center">
                 <input
                   id="resultGenerator"
                   name="resultGenerator"
                   type="checkbox"
                   className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
-                  checked={formData?.permissions?.resultGenerator}
+                  checked={userData?.permissions?.resultGenerator}
                   onChange={handleChange}
                 />
                 <label

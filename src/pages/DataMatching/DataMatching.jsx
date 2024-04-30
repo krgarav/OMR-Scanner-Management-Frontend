@@ -1,5 +1,4 @@
-import React, { useState, useContext, useEffect, useRef, useId } from "react";
-import { useParams, useLocation } from "react-router-dom";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import ImageNotFound from "../../components/ImageNotFound/ImageNotFound";
 import { toast } from "react-toastify";
@@ -8,106 +7,89 @@ import {
   onGetTemplateHandler,
   onGetVerifiedUserHandler,
 } from "../../services/common";
+import { REACT_APP_IP } from "../../services/common";
 
 const DataMatching = () => {
   const [popUp, setPopUp] = useState(true);
   const [image, setImage] = useState();
   const [templateHeaders, setTemplateHeaders] = useState();
   const [csvCurrentData, setCsvCurrentData] = useState([]);
+  const [allTasks, setAllTasks] = useState([]);
   const [imageName, setImageName] = useState("");
+  const [currentTaskData, setCurrentTaskData] = useState({});
   const [selectedCoordintes, setSelectedCoordinates] = useState(false);
-  const [userId, setUserId] = useState("");
+  const [imageNotFound, setImageNotFound] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(1);
   const [csvData, setCsvData] = useState([]);
   const imageContainerRef = useRef(null);
   const imageRef = useRef(null);
-  const { id } = useParams();
-  const location = useLocation();
-  const templateId = location.state;
+  const token = JSON.parse(localStorage.getItem("userData"));
 
   useEffect(() => {
-    const getAllUsers = async () => {
+    const fetchCurrentUser = async () => {
       try {
-        const response = await onGetVerifiedUserHandler();
-        setUserId(response.user.id);
-        console.log(response);
+        const verifiedUser = await onGetVerifiedUserHandler();
+        const tasks = await onGetTaskHandler(verifiedUser.user.id);
+        const templateData = await onGetTemplateHandler();
+        const updatedTasks = tasks.map((task) => {
+          const matchedTemplate = templateData.find(
+            (template) => template.id === parseInt(task.templeteId)
+          );
+          if (matchedTemplate) {
+            return {
+              ...task,
+              templateName: matchedTemplate.name,
+            };
+          }
+          return task;
+        });
+        setAllTasks(updatedTasks);
       } catch (error) {
         console.log(error);
       }
     };
-    getAllUsers();
+    fetchCurrentUser();
   }, []);
-
-  useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        const response = await onGetTaskHandler(userId);
-        console.log(response);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchTasks();
-  }, [userId]);
 
   useEffect(() => {
     const fetchTemplate = async () => {
       try {
         const response = await onGetTemplateHandler();
-        const templateData = response.find((data) => data.id == templateId);
+        const templateData = response.find(
+          (data) => data.id === parseInt(currentTaskData.templeteId)
+        );
         setTemplateHeaders(templateData);
       } catch (error) {
         console.log(error);
       }
     };
     fetchTemplate();
-  }, [templateId]);
+  }, [currentTaskData]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          `http://192.168.0.116:4000/get/csvdata/${id}`
-        );
-        setCsvData(response.data);
-        const headers = response.data[0];
-        const getKeyByValue = (object, value) => {
-          return Object.keys(object).find((key) => object[key] === value);
-        };
-        if (currentIndex === 0) {
-          setCurrentIndex(1);
-        }
-        if (currentIndex === 1) {
-          const objects = { ...response.data[currentIndex] };
-          setCsvCurrentData(objects);
-        }
-        const keyForImage = getKeyByValue(headers, "Image");
-        setImageName(keyForImage);
-      } catch (error) {
-        console.log(error);
-      }
+  const onImageHandler = async (direction, csvData) => {
+    const headers = csvData[0];
+    const getKeyByValue = (object, value) => {
+      return Object.keys(object).find((key) => object[key] === value);
     };
-    fetchData();
-  }, [id, currentIndex]);
 
-  const onImageHandler = async (direction) => {
+    const keyForImage = getKeyByValue(headers, "Image");
+    setImageName(keyForImage);
     try {
       let imageName1;
-      let newIndex;
+      let newIndex = currentIndex;
 
       if (direction === "initial") {
-        const objects = { ...csvData[currentIndex] };
-        imageName1 = objects[imageName];
+        const objects = csvData[newIndex];
+        imageName1 = objects[keyForImage];
         setCsvCurrentData(objects);
-        newIndex = currentIndex;
+        newIndex = newIndex + 1;
       } else {
-        newIndex = direction === "next" ? currentIndex + 1 : currentIndex - 1;
-
+        newIndex = direction === "next" ? newIndex + 1 : newIndex - 1;
+        console.log(newIndex);
         if (newIndex > 0 && newIndex < csvData.length) {
           setCurrentIndex(newIndex);
-
-          const objects = { ...csvData[newIndex] };
-          imageName1 = objects[imageName];
+          const objects = csvData[newIndex];
+          imageName1 = objects[keyForImage];
           setCsvCurrentData(objects);
         } else {
           toast.warning(
@@ -118,31 +100,45 @@ const DataMatching = () => {
           return;
         }
       }
-
-      const response = await axios.post(`http://192.168.0.116:4000/get/image`, {
-        imageName: imageName1,
-        id: templateId,
-      });
-
+      const response = await axios.post(
+        `http://${REACT_APP_IP}:4000/get/image`,
+        {
+          imageName: imageName1,
+          token: token,
+        }
+      );
       const url = response.data?.base64Image;
       setImage(url);
+      setImageNotFound(true);
       setPopUp(false);
     } catch (error) {
-      toast.error("An error occurred while processing the image.");
-      console.log(error.message);
+      toast.error("Image not found!.");
+      setImageNotFound(false);
     }
   };
 
   const onCsvUpdateHandler = async () => {
-    const updatedData = [...csvData];
-    updatedData[currentIndex] = csvCurrentData;
-    setCsvData(updatedData);
-
+    // const updatedData = [...csvData];
+    // updatedData[currentIndex] = csvCurrentData;
+    // setCsvData(updatedData);
+    // console.log(csvCurrentData);
+    // console.log(currentIndex);
     try {
       await axios.post(
-        `http://192.168.0.116:4000/updatecsvdata/${id}`,
-        updatedData
+        `http://${REACT_APP_IP}:4000/updatecsvdata/${parseInt(
+          currentTaskData?.fileId
+        )}`,
+        {
+          data: csvCurrentData,
+          index: currentIndex + Number(currentTaskData.min),
+        }
       );
+      setCsvData((prevCsvData) => {
+        const newCsvData = [...prevCsvData];
+        newCsvData[currentIndex] = csvCurrentData;
+        return newCsvData;
+      });
+
       toast.success("Data update successfully.");
     } catch (error) {
       toast.error(error.message);
@@ -150,6 +146,10 @@ const DataMatching = () => {
   };
 
   const changeCurrentCsvDataHandler = (key, value) => {
+    if (!imageNotFound) {
+      return;
+    }
+
     setCsvCurrentData((prevData) => ({
       ...prevData,
       [key]: value,
@@ -157,6 +157,14 @@ const DataMatching = () => {
   };
 
   const imageFocusHandler = (headerName) => {
+    if (!imageNotFound) {
+      return;
+    }
+
+    if (!image || !imageContainerRef || !imageRef) {
+      setPopUp(true);
+    }
+
     if (!csvData[0].hasOwnProperty(headerName)) {
       toast.error("Header not found: " + headerName);
       return;
@@ -173,8 +181,8 @@ const DataMatching = () => {
 
     const { coordinateX, coordinateY, width, height } = metaDataEntry;
 
-    const containerWidth = imageContainerRef.current.offsetWidth;
-    const containerHeight = imageContainerRef.current.offsetHeight;
+    const containerWidth = imageContainerRef?.current?.offsetWidth;
+    const containerHeight = imageContainerRef?.current?.offsetHeight;
 
     // Calculate the zoom level based on the container size and the selected area size
     const zoomLevel = Math.min(
@@ -201,36 +209,115 @@ const DataMatching = () => {
     setSelectedCoordinates(true);
   };
 
+  const onTaskStartHandler = async (taskData) => {
+    setCurrentTaskData(taskData);
+    try {
+      const response = await axios.post(
+        `http://${REACT_APP_IP}:4000/get/csvdata`,
+        {
+          taskData,
+          token,
+        }
+      );
+      setCsvData(response.data);
+
+      onImageHandler("initial", response.data);
+      setPopUp(false);
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
   return (
     <>
       {popUp && (
-        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-1/3 p-8 matchingMain  bg-white rounded-3xl shadow-2xl">
-          <p className="text-center text-xl text-red-500 mb-6">
-            Welcome to Your Application
-          </p>
-          <div className="text-center">
-            <h2 className="text-3xl font-bold">
-              Welcome to the OMR Data Entry Application
-            </h2>
-            <p className="mt-4 text-lg text-gray-700">
-              This application allows you to efficiently process OMR data from
-              image files containing CSV data of students.
-            </p>
-            <button
-              className="mt-8 inline-block rounded-full bg-pink-600 py-3 px-6 text-2xl font-bold text-white shadow-xl"
-              onClick={() => onImageHandler("initial")}
-            >
-              Begin Processing
-            </button>
+        <div className=" min-h-[100vh] flex justify-center templatemapping">
+          <div className=" mt-40">
+            {/* MAIN SECTION  */}
+            <section className="mx-auto w-full max-w-7xl  px-12 py-10 bg-white rounded-xl">
+              <div className="flex flex-col space-y-4  md:flex-row md:items-center md:justify-between md:space-y-0">
+                <div>
+                  <h2 className="text-3xl font-semibold">Assigned Tasks</h2>
+                </div>
+              </div>
+              <div className="mt-6 flex flex-col">
+                <div className="-mx-4 -my-2  sm:-mx-6 lg:-mx-8">
+                  <div className="inline-block  py-2 align-middle md:px-6 lg:px-8">
+                    <div className=" border border-gray-200 md:rounded-lg">
+                      <div className="divide-y divide-gray-200 ">
+                        <div className="bg-gray-50">
+                          <div className="flex justify-between items-center">
+                            <div className="px-8 py-3.5 text-left text-xl font-semibold text-gray-700">
+                              <span>Templates</span>
+                            </div>
+
+                            <div className="px-12 py-3.5 text-left  text-xl font-semibold text-gray-700">
+                              Min
+                            </div>
+
+                            <div className="px-12 py-3.5 text-left text-xl font-semibold text-gray-700">
+                              Max
+                            </div>
+                            <div className="px-16 py-3.5 text-left text-xl font-semibold text-gray-700">
+                              Start Task
+                            </div>
+                          </div>
+                        </div>
+                        <div className="divide-y divide-gray-200 bg-white overflow-y-auto max-h-[300px]">
+                          {allTasks?.map((taskData) => (
+                            <div
+                              key={taskData.id}
+                              className="flex justify-between items-center"
+                            >
+                              <div className="whitespace-nowrap px-4 py-4 ">
+                                <div className="flex items-center">
+                                  <div className="ml-4 w-full font-semibold">
+                                    <div className=" px-2">
+                                      {taskData.templateName}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="whitespace-nowrap flex justify-center itemCe px-2 py-2 border-2">
+                                <div className="flex">
+                                  <div className="w-full font-semibold">
+                                    <div className=" px-2">{taskData.min}</div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="whitespace-nowrap flex justify-center itemCe px-2 py-2 border-2">
+                                <div className="flex">
+                                  <div className="w-full font-semibold">
+                                    <div className=" px-2">{taskData.max}</div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="whitespace-nowrap px-4 py-4 text-right">
+                                <button
+                                  onClick={() => onTaskStartHandler(taskData)}
+                                  className="rounded border border-indigo-500 bg-indigo-500 px-10 py-1 font-semibold text-white"
+                                >
+                                  Start
+                                </button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
           </div>
         </div>
       )}
       {!popUp && (
         <div className=" flex flex-col lg:flex-row md:flex-col-reverse">
           {/* LEFT SECTION */}
-          <div className=" border-e mx-auto lg:w-3/12 order-lg-1 second">
+          <div className=" border-e lg:w-3/12 order-lg-1 second">
             <div className=" flex flex-col overflow-hidden w-[100%]">
-              <article className="p-3 shadow transition hover:shadow-lg overflow-auto h-[100vh] bg-gradient-to-r from-[rgb(255,195,36)] to-orange-500">
+              <article className="p-3 shadow transition pt-28 hover:shadow-lg overflow-auto h-[100vh] bg-gradient-to-r from-[rgb(255,195,36)] to-orange-500">
                 {csvCurrentData &&
                   Object.entries({ ...csvData[0] }).map(([key, value], i) => {
                     const templateData = templateHeaders?.templetedata.find(
@@ -244,7 +331,7 @@ const DataMatching = () => {
                           key={i}
                           className="w-5/6 lg:w-full px-3 py-1 flex justify-between items-center overflow-x font-bold"
                         >
-                          <label className="flex w-full gap-2 justify-between items-center overflow-hidden  rounded-md border-2 font-semibold  border-white px-3  py-2 shadow-sm focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600">
+                          <label className="flex w-full gap-2 justify-between items-center overflow-hidden  rounded-md border-2 font-semibold  border-white px-3  py-2 shadow-sm focus-within:ring-1 ">
                             <span className="text-md text-gray-700 font-bold">
                               {key?.toUpperCase()}
                             </span>
@@ -331,7 +418,7 @@ const DataMatching = () => {
             {/* View image */}
           </div>
           {/* RIGHT SECTION */}
-          <div className="w-full lg:w-9/12 order-1 order-lg-2 bg-gradient-to-r from-[rgb(255,195,36)] to-orange-300 matchingMain">
+          <div className="w-full lg:w-9/12 order-1 pt-32 order-lg-2 bg-gradient-to-r from-[rgb(255,195,36)] to-orange-300 matchingMain">
             {!image ? (
               <div className="flex justify-center items-center ">
                 <div className="mt-64">
@@ -396,13 +483,13 @@ const DataMatching = () => {
                   </button>
 
                   <button
-                    onClick={() => onImageHandler("prev")}
+                    onClick={() => onImageHandler("prev", csvData)}
                     className="block w-full rounded  px-4 py-3 border-[red]  border-2 hover:bg-red-500 hover:text-white  font-bold text-xl sm:w-auto"
                   >
                     Prev
                   </button>
                   <button
-                    onClick={() => onImageHandler("next")}
+                    onClick={() => onImageHandler("next", csvData)}
                     className="block w-full rounded  px-4 py-3 border-[red]  border-2 hover:bg-red-500 hover:text-white  font-bold text-xl sm:w-auto"
                   >
                     Next

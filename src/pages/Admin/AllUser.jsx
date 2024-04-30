@@ -15,6 +15,8 @@ export function AllUser() {
   const [open, setOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const cancelButtonRef = useRef(null);
+  const [updateSuccess, setUpdateSuccess] = useState(false);
+  const token = JSON.parse(localStorage.getItem("userData"));
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -28,12 +30,11 @@ export function AllUser() {
     };
 
     fetchUsers();
-  }, [selectedUser]);
-
-  console.log(users);
+  }, [updateSuccess]);
 
   const onModelHandler = async (user) => {
     setOpen(true);
+    setSelectedUser(user);
   };
 
   const handlePermissionChange = (e) => {
@@ -50,12 +51,13 @@ export function AllUser() {
   const onUpdateHandler = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(
+      await axios.post(
         `http://${REACT_APP_IP}:4000/users/updateuser/${selectedUser.id}`,
-        selectedUser
+        { token: token, selectedUser }
       );
       setOpen(false);
       setSelectedUser(null);
+      setUpdateSuccess(true);
       toast.success("User Updated Successfully");
     } catch (error) {
       console.error("Error updating user:", error);
@@ -65,8 +67,11 @@ export function AllUser() {
 
   const handleDeleteUser = async (userId) => {
     try {
-      await axios.delete(
-        `http://${REACT_APP_IP}:4000/users/deleteuser/${userId}`
+      await axios.post(
+        `http://${REACT_APP_IP}:4000/users/deleteuser/${userId}`,
+        {
+          token: token,
+        }
       );
       setUsers(users.filter((user) => user.id !== userId));
       toast.success("User Deleted Successfully");
@@ -217,7 +222,7 @@ export function AllUser() {
               <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
             </Transition.Child>
 
-            <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
+            <div className="fixed inset-0 z-10 w-full overflow-y-auto">
               <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
                 <Transition.Child
                   as={Fragment}
@@ -228,7 +233,7 @@ export function AllUser() {
                   leaveFrom="opacity-100 translate-y-0 sm:scale-100"
                   leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
                 >
-                  <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg lg:max-w-xl">
+                  <Dialog.Panel className="relative transform overflow-hidden rounded-lg mx-4 bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full  md:max-w-xl lg:max-w-2xl">
                     <div className="bg-gray-50 px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                       <div className="sm:flex sm:items-start">
                         <form
@@ -334,10 +339,10 @@ export function AllUser() {
                                   </select>
                                 </div>
                                 <div className="mb-5 ">
-                                  <label className="block text-lg mb-2 font-medium text-gray-700">
+                                  <label className="block text-left text-lg mb-2 font-medium text-gray-700">
                                     Permissions
                                   </label>
-                                  <div className="flex gap-6">
+                                  <div className="flex gap-6 flex-wrap">
                                     {selectedUser?.permissions &&
                                       Object.entries(
                                         selectedUser?.permissions

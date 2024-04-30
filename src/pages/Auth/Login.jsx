@@ -1,6 +1,5 @@
 import React, { useContext, useState } from "react";
 import { FaArrowRight } from "react-icons/fa6";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -13,8 +12,6 @@ export default function Login() {
     email: "",
     password: "",
   });
-
-  const navigate = useNavigate();
   const dataCtx = useContext(dataContext);
 
   const handleInput = (e) => {
@@ -28,11 +25,10 @@ export default function Login() {
         `http://${REACT_APP_IP}:4000/users/login`,
         values
       );
-      
+
       if (response.status === 200) {
         localStorage.setItem("userData", JSON.stringify(response.data.token));
         dataCtx.modifyIslogin(true);
-        navigate("/home");
         toast.success("Login Successfull");
       } else {
         console.error("Login failed:", response.data.error);
