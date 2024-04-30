@@ -53,9 +53,9 @@ export default function Navbar() {
       }
     };
     getUser();
-    console.log(userData)
+    console.log(userData);
   }, []);
-  useEffect(() => { 
+  useEffect(() => {
     if (userData && Object.keys(userData).length !== 0) {
       if (userData.role === "Admin") {
         const currentPath =
@@ -229,18 +229,20 @@ export default function Navbar() {
               : isUserMenuOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
                     <div className="py-1">
-                      {userMenuItems?.map(
-                        (item) =>
-                          item.name === "Logout" && (
-                            <button
-                              key={item.name}
-                              onClick={item.onClick}
-                              className="block px-4 py-2 text-md font-medium text-gray-600 hover:bg-gray-300 w-full text-left"
-                            >
-                              {item.name}
-                            </button>
-                          )
-                      )}
+                      {userMenuItems
+                        .filter(
+                          (item) =>
+                            item.name === "Logout" || item.name === "Profile"
+                        )
+                        .map((item) => (
+                          <button
+                            key={item.name}
+                            onClick={item.onClick}
+                            className="block px-4 py-2 text-md font-medium text-gray-600 hover:bg-gray-300 w-full text-left"
+                          >
+                            {item.name}
+                          </button>
+                        ))}
                     </div>
                   </div>
                 )}
@@ -294,21 +296,25 @@ export default function Navbar() {
                       : isUserMenuOpen && (
                           <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 user-menu">
                             <div className="py-1">
-                              {userMenuItems?.map(
-                                (item) =>
-                                  item.name === "Logout" && (
-                                    <button
-                                      key={item.name}
-                                      onClick={() => {
-                                        item.onClick();
-                                        setIsMenuOpen(!isMenuOpen);
-                                      }}
-                                      className="block px-4 py-2 text-md font-medium text-gray-600 hover:bg-gray-300 w-full text-left"
-                                    >
-                                      {item.name}
-                                    </button>
-                                  )
-                              )}
+                            
+                              {userMenuItems
+                                .filter(
+                                  (item) =>
+                                    item.name === "Logout" ||
+                                    item.name === "Profile"
+                                )
+                                .map((item) => (
+                                  <button
+                                    key={item.name}
+                                    onClick={() => {
+                                      item.onClick();
+                                      setIsMenuOpen(!isMenuOpen);
+                                    }}
+                                    className="block px-4 py-2 text-md font-medium text-gray-600 hover:bg-gray-300 w-full text-left"
+                                  >
+                                    {item.name}
+                                  </button>
+                                ))}
                             </div>
                           </div>
                         )}
