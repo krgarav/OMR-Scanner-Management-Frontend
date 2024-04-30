@@ -43,7 +43,7 @@ const DataMatching = () => {
           }
           return task;
         });
-        console.log(tasks)
+        console.log(tasks);
         setAllTasks(updatedTasks);
       } catch (error) {
         console.log(error);
