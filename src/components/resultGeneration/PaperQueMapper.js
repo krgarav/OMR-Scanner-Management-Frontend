@@ -21,8 +21,8 @@ const PaperQueMapper = () => {
               }}
             >
               <div className="bg-gradient-to-r from-cyan-500 to-blue-500 w-[100%] rounded-lg flex flex-col items-center py-4">
-                <div className="text-[1.2rem] font-bold text-yellow-400 mb-3">
-                  Start Question :
+                <div className="md:text-[1.2rem] text-[1.1rem] font-bold text-yellow-400 mb-3">
+                  Start Question 
                 </div>
                 <div
                   className={`border w-[90%] md:w-[80%] md:ms-2 flex flex-col items-center  py-1 text-white  cursor-pointer`}
@@ -36,7 +36,7 @@ const PaperQueMapper = () => {
                       className="font-semibold "
                       onClick={(event) => {
                         event.stopPropagation();
-                        setSelectedQueOpen(true); // open the dropdown after selecting the Question key
+                        setSelectedQueOpen(!selectedQueOpen); // open the dropdown after selecting the Question key
                       }}
                     >
                       click here to select
@@ -80,8 +80,8 @@ const PaperQueMapper = () => {
           <div className=" m-2 mt-5  animate__animated animate__backInDown animate__slower ">
             <div className=" w-[100%]   " onClick={() => {}}>
               <div className="bg-gradient-to-r from-cyan-500 to-blue-500 w-[100%] rounded-lg flex flex-col items-center py-4 ">
-                <div className="text-[1.2rem] font-bold  text-yellow-400 mb-3">
-                  Total question :
+                <div className="md:text-[1.2rem] text-[1.1rem] font-bold  text-yellow-400 mb-3">
+                  Total Questions
                 </div>
                 <input
                   className="text-center font-bold w-[80%]  cursor-pointer"

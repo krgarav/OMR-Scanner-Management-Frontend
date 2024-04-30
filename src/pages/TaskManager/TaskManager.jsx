@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import { useParams, useLocation, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import dataContext from "../../Store/DataContext";
 import {
@@ -21,9 +21,9 @@ const TemplateMapping = () => {
   const [taskValue, setTaskValue] = useState({ min: 1, max: null });
   const dataCtx = useContext(dataContext);
   const { id } = useParams();
-  const location = useLocation();
   const navigate = useNavigate();
-  const fileId = location.state;
+  const { fileId } = JSON.parse(localStorage.getItem("fileId"));
+  const token = JSON.parse(localStorage.getItem("userData"));
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -49,10 +49,6 @@ const TemplateMapping = () => {
     };
     fetchUsers();
   }, [selectedUser]);
-
-  if (!fileId) {
-    navigate("/csvuploader");
-  }
 
   const onTaskAssignedHandler = () => {
     if (
@@ -95,7 +91,12 @@ const TemplateMapping = () => {
     try {
       await axios.post(
         `http://${REACT_APP_IP}:4000/assign/user`,
-        assignedUsers
+        assignedUsers,
+        {
+          headers: {
+            token: token,
+          },
+        }
       );
       toast.success("Task assignment successful.");
       dataCtx.modifyIsLoading(false);

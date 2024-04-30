@@ -27,7 +27,7 @@ const GenerateResultCsv = (props) => {
       toast.error("please select mapped key");
       return;
     }
-    if (ctx.paperMarkings.start === null && !subjectWiseMarking>=0) {
+    if (ctx.paperMarkings.start === null && subjectWiseMarking.length == 0) {
       toast.error("please select start question");
       return;
     }
@@ -207,17 +207,16 @@ const GenerateResultCsv = (props) => {
   return (
     <div className="text-center mt-2 flex flex-row min-[1103px]:flex-col  justify-center">
       <div className="text-center mt-4 ">
-        <a
+        <button
           className="animate__animated animate__bounceInLeft animate__delay-4s group inline-block rounded-full bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 p-[2px] hover:text-white focus:outline-none focus:ring active:text-opacity-75 mx-4 shadow-md shadow-blue-300"
-          href="#"
           onClick={resultGenerator}
         >
-          <span className="block rounded-full bg-white px-8 py-3 text-sm font-bold group-hover:bg-transparent hover:text-white text-black">
+          <span className="block rounded-full bg-white px-8 py-3 text-md font-bold group-hover:bg-transparent hover:text-white text-black">
             Generate Result
           </span>
-        </a>
+        </button>
       </div>
-      <div className="text-center mt-4 ">
+      {/* <div className="text-center mt-4 ">
         <a
           className="animate__animated animate__bounceInLeft animate__delay-5s group inline-block rounded-full bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 p-[2px] hover:text-white focus:outline-none focus:ring active:text-opacity-75 mx-4 shadow-md shadow-blue-300"
           href="#"
@@ -226,7 +225,7 @@ const GenerateResultCsv = (props) => {
             cancel
           </span>
         </a>
-      </div>
+      </div> */}
     </div>
   );
 };

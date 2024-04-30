@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, Fragment } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import ImageNotFound from "../../components/ImageNotFound/ImageNotFound";
 import { MdDelete } from "react-icons/md";
 import { toast } from "react-toastify";
@@ -22,11 +22,11 @@ const ImageScanner = () => {
     name: "",
     other: "",
   });
+  const token = JSON.parse(localStorage.getItem("userData"));
   const imageRef = useRef(null);
-  const location = useLocation();
   const navigate = useNavigate();
 
-  const { imageURL } = location.state ? location.state : "";
+  const imageURL = JSON.parse(localStorage.getItem("image"));
 
   useEffect(() => {
     setImage(imageURL);
@@ -119,7 +119,15 @@ const ImageScanner = () => {
     };
 
     try {
-      await axios.post(`http://${REACT_APP_IP}:4000/add/templete`, data);
+      await axios.post(
+        `http://${REACT_APP_IP}:4000/add/templete`,
+        { data },
+        {
+          headers: {
+            token: token,
+          },
+        }
+      );
       toast.success("Template created successfully!");
       navigate("/imageuploader");
     } catch (error) {

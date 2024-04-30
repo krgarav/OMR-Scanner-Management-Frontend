@@ -17,6 +17,7 @@ const initialData = {
   csvFile: [],
   isLoading: false,
   csvDataWithImage: [],
+  userData: {},
 };
 
 const DataProvider = (props) => {
@@ -134,12 +135,19 @@ const DataProvider = (props) => {
       };
     });
   };
-
   const modifyIsLoadingHandler = (state) => {
     setDataState((item) => {
       return {
         ...item,
         isLoading: state,
+      };
+    });
+  };
+  const modifyAuthHandler = (state) => {
+    setDataState((item) => {
+      return {
+        ...item,
+        userData: state,
       };
     });
   };
@@ -160,7 +168,9 @@ const DataProvider = (props) => {
     csvFile: dataState.csvFile,
     csvDataWithImage: dataState.csvDataWithImage,
     isLoading: dataState.isLoading,
+    userData: dataState.userData,
 
+    modifyAuth: modifyAuthHandler,
     modifyIsLoading: modifyIsLoadingHandler,
     modifyIslogin: modifyIsloginHandler,
     addToCsvHeader: addToCsvHeaderHandler,

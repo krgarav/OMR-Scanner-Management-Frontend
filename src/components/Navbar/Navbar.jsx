@@ -15,7 +15,6 @@ const menuItems = [
   {
     name: "Csv Uploader",
     href: "csvuploader",
-    permission: "dataEntry",
   },
   {
     name: "Data Entry",
@@ -78,7 +77,10 @@ export default function Navbar() {
       }
     }
   }, [userData]);
+
   useEffect(() => {
+    console.log("lulu");
+
     localStorage.setItem("currentPath", location.pathname);
   }, [location.pathname]);
 

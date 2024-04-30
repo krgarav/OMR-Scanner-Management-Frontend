@@ -17,6 +17,7 @@ const CsvUploader = () => {
   const [imageName, setImageName] = useState("");
   const dataCtx = useContext(dataContext);
   const navigate = useNavigate();
+  const token = JSON.parse(localStorage.getItem("userData"));
 
   useEffect(() => {
     const fetchTemplate = async () => {
@@ -111,13 +112,15 @@ const CsvUploader = () => {
           {
             headers: {
               "Content-Type": "multipart/form-data",
+              token: token,
             },
           }
         );
         const fileId = response.data;
         toast.success("Files uploaded successfully!");
         dataCtx.modifyIsLoading(false);
-        navigate(`/csvuploader/templatemap/${selectedId}`, { state: fileId });
+        navigate(`/csvuploader/templatemap/${selectedId}`);
+        localStorage.setItem("fileId", JSON.stringify(fileId));
       } catch (error) {
         console.error("Error uploading files: ", error);
         toast.error(error.message);
@@ -171,6 +174,7 @@ const CsvUploader = () => {
               <div className="overflow-y-scroll h-[240px] px-2">
                 {filteredTemplates?.map((template) => (
                   <button
+                    key={template.id}
                     onClick={() => setSelectedId(template.id)}
                     className={`group flex items-center justify-between w-full mt-2 rounded-lg hover:bg-gray-300 bg-gray-100 px-4 py-2 text-gray-700 ${
                       selectedId === template.id

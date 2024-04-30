@@ -31,9 +31,8 @@ const ImageUploader = () => {
         reader.onload = () => {
           toast.success("Image selected successfully.");
           setImage(reader.result);
-          navigate("/imageuploader/scanner", {
-            state: { imageURL: reader.result },
-          });
+          navigate("/imageuploader/scanner");
+          localStorage.setItem("image", JSON.stringify(reader.result));
         };
 
         // Read the file as data URL regardless of the file type

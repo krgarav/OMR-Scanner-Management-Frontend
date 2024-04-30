@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useParams, useLocation, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { onGetTemplateHandler } from "../../services/common";
 import { REACT_APP_IP } from "../../services/common";
@@ -12,9 +12,9 @@ const TemplateMapping = () => {
   const [showModal, setShowModal] = useState(false);
   const { id } = useParams();
 
-  const location = useLocation();
   const navigate = useNavigate();
-  let fileId = location.state?.fileId;
+  let { fileId } = JSON.parse(localStorage.getItem("fileId"));
+  let token = JSON.parse(localStorage.getItem("userData"));
 
   useEffect(() => {
     const fetchTemplate = async () => {
@@ -34,7 +34,12 @@ const TemplateMapping = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `http://${REACT_APP_IP}:4000/get/headerdata/${fileId}`
+          `http://${REACT_APP_IP}:4000/get/headerdata/${fileId}`,
+          {
+            headers: {
+              token: token,
+            },
+          }
         );
         setCsvHeaders(response.data);
       } catch (error) {
@@ -42,7 +47,7 @@ const TemplateMapping = () => {
       }
     };
     fetchData();
-  }, [fileId]);
+  }, [fileId, token]);
 
   const handleCsvHeaderChange = (csvHeader, index) => {
     const updatedAssociations = { ...selectedAssociations };
@@ -82,15 +87,25 @@ const TemplateMapping = () => {
       toast.error("Please select all the field properly.");
       return;
     }
-    const newObj = {
+    const mappedData = {
       ...selectedAssociations,
       fileId: fileId,
     };
 
+    console.log(mappedData);
+
     try {
-      await axios.post(`http://${REACT_APP_IP}:4000/data`, newObj);
+      await axios.post(
+        `http://${REACT_APP_IP}:4000/data`,
+        { mappedData },
+        {
+          headers: {
+            token: token,
+          },
+        }
+      );
       toast.success("Mapping successfully done.");
-      navigate(`/csvuploader/taskAssign/${id}`, { state: fileId });
+      navigate(`/csvuploader/taskAssign/${id}`);
     } catch (error) {
       toast.error(error.message);
     }

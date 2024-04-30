@@ -1,5 +1,4 @@
-import React, { useState, useContext, useEffect, useRef, useId } from "react";
-import { useParams, useLocation } from "react-router-dom";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import ImageNotFound from "../../components/ImageNotFound/ImageNotFound";
 import { toast } from "react-toastify";
@@ -8,6 +7,7 @@ import {
   onGetTemplateHandler,
   onGetVerifiedUserHandler,
 } from "../../services/common";
+import { REACT_APP_IP } from "../../services/common";
 
 const DataMatching = () => {
   const [popUp, setPopUp] = useState(true);
@@ -15,18 +15,15 @@ const DataMatching = () => {
   const [templateHeaders, setTemplateHeaders] = useState();
   const [csvCurrentData, setCsvCurrentData] = useState([]);
   const [allTasks, setAllTasks] = useState([]);
-  const [allTemplateData, setAllTemplateData] = useState([]);
-  const [templateId, setTemplateId] = useState("");
   const [imageName, setImageName] = useState("");
+  const [currentTaskData, setCurrentTaskData] = useState({});
   const [selectedCoordintes, setSelectedCoordinates] = useState(false);
-  const [userId, setUserId] = useState("");
+  const [imageNotFound, setImageNotFound] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(1);
   const [csvData, setCsvData] = useState([]);
   const imageContainerRef = useRef(null);
   const imageRef = useRef(null);
-  const { id } = useParams();
-  const location = useLocation();
-  // const templateId = location.state;
+  const token = JSON.parse(localStorage.getItem("userData"));
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
@@ -34,8 +31,20 @@ const DataMatching = () => {
         const verifiedUser = await onGetVerifiedUserHandler();
         const tasks = await onGetTaskHandler(verifiedUser.user.id);
         const templateData = await onGetTemplateHandler();
-        console.log(tasks);
-        setAllTasks(tasks);
+        const updatedTasks = tasks.map((task) => {
+          const matchedTemplate = templateData.find(
+            (template) => template.id === parseInt(task.templeteId)
+          );
+          if (matchedTemplate) {
+            return {
+              ...task,
+              templateName: matchedTemplate.name,
+            };
+          }
+          return task;
+        });
+        console.log(tasks)
+        setAllTasks(updatedTasks);
       } catch (error) {
         console.log(error);
       }
@@ -47,60 +56,41 @@ const DataMatching = () => {
     const fetchTemplate = async () => {
       try {
         const response = await onGetTemplateHandler();
-        const templateData = response.find((data) => data.id == templateId);
+        const templateData = response.find(
+          (data) => data.id === parseInt(currentTaskData.templeteId)
+        );
         setTemplateHeaders(templateData);
       } catch (error) {
         console.log(error);
       }
     };
     fetchTemplate();
-  }, [templateId]);
+  }, [currentTaskData]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          `http://192.168.0.116:4000/get/csvdata/${id}`
-        );
-        setCsvData(response.data);
-        const headers = response.data[0];
-        const getKeyByValue = (object, value) => {
-          return Object.keys(object).find((key) => object[key] === value);
-        };
-        if (currentIndex === 0) {
-          setCurrentIndex(1);
-        }
-        if (currentIndex === 1) {
-          const objects = { ...response.data[currentIndex] };
-          setCsvCurrentData(objects);
-        }
-        const keyForImage = getKeyByValue(headers, "Image");
-        setImageName(keyForImage);
-      } catch (error) {
-        // console.log(error);
-      }
+  const onImageHandler = async (direction, csvData) => {
+    const headers = csvData[0];
+    const getKeyByValue = (object, value) => {
+      return Object.keys(object).find((key) => object[key] === value);
     };
-    fetchData();
-  }, [id, currentIndex]);
 
-  const onImageHandler = async (direction) => {
+    const keyForImage = getKeyByValue(headers, "Image");
+    setImageName(keyForImage);
     try {
       let imageName1;
-      let newIndex;
+      let newIndex = currentIndex;
 
       if (direction === "initial") {
-        const objects = { ...csvData[currentIndex] };
-        imageName1 = objects[imageName];
+        const objects = csvData[newIndex];
+        imageName1 = objects[keyForImage];
         setCsvCurrentData(objects);
-        newIndex = currentIndex;
+        newIndex = newIndex + 1;
       } else {
-        newIndex = direction === "next" ? currentIndex + 1 : currentIndex - 1;
-
+        newIndex = direction === "next" ? newIndex + 1 : newIndex - 1;
+        console.log(newIndex);
         if (newIndex > 0 && newIndex < csvData.length) {
           setCurrentIndex(newIndex);
-
-          const objects = { ...csvData[newIndex] };
-          imageName1 = objects[imageName];
+          const objects = csvData[newIndex];
+          imageName1 = objects[keyForImage];
           setCsvCurrentData(objects);
         } else {
           toast.warning(
@@ -111,31 +101,52 @@ const DataMatching = () => {
           return;
         }
       }
-
-      const response = await axios.post(`http://192.168.0.116:4000/get/image`, {
-        imageName: imageName1,
-        id: templateId,
-      });
-
+      const response = await axios.post(
+        `http://${REACT_APP_IP}:4000/get/image`,
+        { imageName: imageName1 },
+        {
+          headers: {
+            token: token,
+          },
+        }
+      );
       const url = response.data?.base64Image;
       setImage(url);
+      setImageNotFound(true);
       setPopUp(false);
     } catch (error) {
-      toast.error("An error occurred while processing the image.");
-      console.log(error.message);
+      toast.error("Image not found!.");
+      setImageNotFound(false);
     }
   };
 
   const onCsvUpdateHandler = async () => {
-    const updatedData = [...csvData];
-    updatedData[currentIndex] = csvCurrentData;
-    setCsvData(updatedData);
-
+    // const updatedData = [...csvData];
+    // updatedData[currentIndex] = csvCurrentData;
+    // setCsvData(updatedData);
+    // console.log(csvCurrentData);
+    // console.log(currentIndex);
     try {
       await axios.post(
-        `http://192.168.0.116:4000/updatecsvdata/${id}`,
-        updatedData
+        `http://${REACT_APP_IP}:4000/updatecsvdata/${parseInt(
+          currentTaskData?.fileId
+        )}`,
+        {
+          data: csvCurrentData,
+          index: currentIndex + Number(currentTaskData.min),
+        },
+        {
+          headers: {
+            token: token,
+          },
+        }
       );
+      setCsvData((prevCsvData) => {
+        const newCsvData = [...prevCsvData];
+        newCsvData[currentIndex] = csvCurrentData;
+        return newCsvData;
+      });
+
       toast.success("Data update successfully.");
     } catch (error) {
       toast.error(error.message);
@@ -143,6 +154,10 @@ const DataMatching = () => {
   };
 
   const changeCurrentCsvDataHandler = (key, value) => {
+    if (!imageNotFound) {
+      return;
+    }
+
     setCsvCurrentData((prevData) => ({
       ...prevData,
       [key]: value,
@@ -150,6 +165,14 @@ const DataMatching = () => {
   };
 
   const imageFocusHandler = (headerName) => {
+    if (!imageNotFound) {
+      return;
+    }
+
+    if (!image || !imageContainerRef || !imageRef) {
+      setPopUp(true);
+    }
+
     if (!csvData[0].hasOwnProperty(headerName)) {
       toast.error("Header not found: " + headerName);
       return;
@@ -166,8 +189,8 @@ const DataMatching = () => {
 
     const { coordinateX, coordinateY, width, height } = metaDataEntry;
 
-    const containerWidth = imageContainerRef.current.offsetWidth;
-    const containerHeight = imageContainerRef.current.offsetHeight;
+    const containerWidth = imageContainerRef?.current?.offsetWidth;
+    const containerHeight = imageContainerRef?.current?.offsetHeight;
 
     // Calculate the zoom level based on the container size and the selected area size
     const zoomLevel = Math.min(
@@ -194,6 +217,27 @@ const DataMatching = () => {
     setSelectedCoordinates(true);
   };
 
+  const onTaskStartHandler = async (taskData) => {
+    setCurrentTaskData(taskData);
+    try {
+      const response = await axios.post(
+        `http://${REACT_APP_IP}:4000/get/csvdata`,
+        { taskData },
+        {
+          headers: {
+            token: token,
+          },
+        }
+      );
+      setCsvData(response.data);
+
+      onImageHandler("initial", response.data);
+      setPopUp(false);
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
   return (
     <>
       {popUp && (
@@ -212,64 +256,62 @@ const DataMatching = () => {
                     <div className=" border border-gray-200 md:rounded-lg">
                       <div className="divide-y divide-gray-200 ">
                         <div className="bg-gray-50">
-                          <tr>
-                            <th
-                              scope="col"
-                              className="px-8 py-3.5 text-left text-xl font-semibold text-gray-700"
-                            >
+                          <div className="flex justify-between items-center">
+                            <div className="px-8 py-3.5 text-left text-xl font-semibold text-gray-700">
                               <span>Templates</span>
-                            </th>
+                            </div>
 
-                            <th
-                              scope="col"
-                              className="px-12 py-3.5 text-left  text-xl font-semibold text-gray-700"
-                            >
+                            <div className="px-12 py-3.5 text-left  text-xl font-semibold text-gray-700">
                               Min
-                            </th>
+                            </div>
 
-                            <th
-                              scope="col"
-                              className="px-12 py-3.5 text-left text-xl font-semibold text-gray-700"
-                            >
+                            <div className="px-12 py-3.5 text-left text-xl font-semibold text-gray-700">
                               Max
-                            </th>
-                          </tr>
+                            </div>
+                            <div className="px-16 py-3.5 text-left text-xl font-semibold text-gray-700">
+                              Start Task
+                            </div>
+                          </div>
                         </div>
                         <div className="divide-y divide-gray-200 bg-white overflow-y-auto max-h-[300px]">
-                          <tr>
-                            <td className="whitespace-nowrap px-4 py-4 ">
-                              <div className="flex items-center">
-                                <div className="ml-4 w-full font-semibold">
-                                  <div className=" px-2">Template</div>
-                                </div>
-                              </div>
-                            </td>
-
-                            <td className="whitespace-nowrap px-12 py-4">
-                              <div className="text-2xl text-gray-900 ">
-                                <div className="h-10 w-16 rounded border-gray-400 border-2 p-0 text-center text-gray-600 [-moz-appearance:_textfield] focus:outline-none [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none">
-                                  1
-                                </div>
-                              </div>
-                            </td>
-                            <td className="whitespace-nowrap px-12 py-4">
-                              <div className="text-2xl text-gray-900">
-                                <div className="text-2xl text-gray-900">
-                                  <div className="h-10 w-16 rounded border-gray-400 border-2 p-0 text-center text-gray-600 [-moz-appearance:_textfield] focus:outline-none [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none">
-                                    100
+                          {allTasks?.map((taskData) => (
+                            <div
+                              key={taskData.id}
+                              className="flex justify-between items-center"
+                            >
+                              <div className="whitespace-nowrap px-4 py-4 ">
+                                <div className="flex items-center">
+                                  <div className="ml-4 w-full font-semibold">
+                                    <div className=" px-2">
+                                      {taskData.templateName}
+                                    </div>
                                   </div>
                                 </div>
                               </div>
-                            </td>
-                            <td className="whitespace-nowrap px-4 py-4 text-right">
-                              <button
-                                // onClick={onTaskAssignedHandler}
-                                className="rounded border border-indigo-500 bg-indigo-500 px-10 py-1 font-semibold text-white"
-                              >
-                                Start
-                              </button>
-                            </td>
-                          </tr>
+                              <div className="whitespace-nowrap flex justify-center itemCe px-2 py-2 border-2">
+                                <div className="flex">
+                                  <div className="w-full font-semibold">
+                                    <div className=" px-2">{taskData.min}</div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="whitespace-nowrap flex justify-center itemCe px-2 py-2 border-2">
+                                <div className="flex">
+                                  <div className="w-full font-semibold">
+                                    <div className=" px-2">{taskData.max}</div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="whitespace-nowrap px-4 py-4 text-right">
+                                <button
+                                  onClick={() => onTaskStartHandler(taskData)}
+                                  className="rounded border border-indigo-500 bg-indigo-500 px-10 py-1 font-semibold text-white"
+                                >
+                                  Start
+                                </button>
+                              </div>
+                            </div>
+                          ))}
                         </div>
                       </div>
                     </div>
@@ -283,9 +325,9 @@ const DataMatching = () => {
       {!popUp && (
         <div className=" flex flex-col lg:flex-row md:flex-col-reverse">
           {/* LEFT SECTION */}
-          <div className=" border-e mx-auto lg:w-3/12 order-lg-1 second">
+          <div className=" border-e lg:w-3/12 order-lg-1 second">
             <div className=" flex flex-col overflow-hidden w-[100%]">
-              <article className="p-3 shadow transition hover:shadow-lg overflow-auto h-[100vh] bg-gradient-to-r from-[rgb(255,195,36)] to-orange-500">
+              <article className="p-3 shadow transition pt-28 hover:shadow-lg overflow-auto h-[100vh] bg-gradient-to-r from-[rgb(255,195,36)] to-orange-500">
                 {csvCurrentData &&
                   Object.entries({ ...csvData[0] }).map(([key, value], i) => {
                     const templateData = templateHeaders?.templetedata.find(
@@ -299,7 +341,7 @@ const DataMatching = () => {
                           key={i}
                           className="w-5/6 lg:w-full px-3 py-1 flex justify-between items-center overflow-x font-bold"
                         >
-                          <label className="flex w-full gap-2 justify-between items-center overflow-hidden  rounded-md border-2 font-semibold  border-white px-3  py-2 shadow-sm focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600">
+                          <label className="flex w-full gap-2 justify-between items-center overflow-hidden  rounded-md border-2 font-semibold  border-white px-3  py-2 shadow-sm focus-within:ring-1 ">
                             <span className="text-md text-gray-700 font-bold">
                               {key?.toUpperCase()}
                             </span>
@@ -386,7 +428,7 @@ const DataMatching = () => {
             {/* View image */}
           </div>
           {/* RIGHT SECTION */}
-          <div className="w-full lg:w-9/12 order-1 order-lg-2 bg-gradient-to-r from-[rgb(255,195,36)] to-orange-300 matchingMain">
+          <div className="w-full lg:w-9/12 order-1 pt-32 order-lg-2 bg-gradient-to-r from-[rgb(255,195,36)] to-orange-300 matchingMain">
             {!image ? (
               <div className="flex justify-center items-center ">
                 <div className="mt-64">
@@ -451,13 +493,13 @@ const DataMatching = () => {
                   </button>
 
                   <button
-                    onClick={() => onImageHandler("prev")}
+                    onClick={() => onImageHandler("prev", csvData)}
                     className="block w-full rounded  px-4 py-3 border-[red]  border-2 hover:bg-red-500 hover:text-white  font-bold text-xl sm:w-auto"
                   >
                     Prev
                   </button>
                   <button
-                    onClick={() => onImageHandler("next")}
+                    onClick={() => onImageHandler("next", csvData)}
                     className="block w-full rounded  px-4 py-3 border-[red]  border-2 hover:bg-red-500 hover:text-white  font-bold text-xl sm:w-auto"
                   >
                     Next
