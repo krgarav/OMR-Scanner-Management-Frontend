@@ -43,6 +43,7 @@ const DataMatching = () => {
           }
           return task;
         });
+        console.log(tasks)
         setAllTasks(updatedTasks);
       } catch (error) {
         console.log(error);
@@ -102,9 +103,11 @@ const DataMatching = () => {
       }
       const response = await axios.post(
         `http://${REACT_APP_IP}:4000/get/image`,
+        { imageName: imageName1 },
         {
-          imageName: imageName1,
-          token: token,
+          headers: {
+            token: token,
+          },
         }
       );
       const url = response.data?.base64Image;
@@ -131,6 +134,11 @@ const DataMatching = () => {
         {
           data: csvCurrentData,
           index: currentIndex + Number(currentTaskData.min),
+        },
+        {
+          headers: {
+            token: token,
+          },
         }
       );
       setCsvData((prevCsvData) => {
@@ -214,9 +222,11 @@ const DataMatching = () => {
     try {
       const response = await axios.post(
         `http://${REACT_APP_IP}:4000/get/csvdata`,
+        { taskData },
         {
-          taskData,
-          token,
+          headers: {
+            token: token,
+          },
         }
       );
       setCsvData(response.data);

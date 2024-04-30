@@ -4,9 +4,7 @@ import ResultGenerationContext from "../../Store/ResultGenerationContext";
 
 const UploadStatus = () => {
   const ctx = useContext(ResultGenerationContext);
-  const selectedKEyOptionOpen = () => {
-    // setSelectedKeyOpen(true);
-  };
+
   const uploadFiles = ctx.uploadFiles;
   return (
     <>

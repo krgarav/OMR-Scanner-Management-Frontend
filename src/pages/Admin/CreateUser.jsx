@@ -77,10 +77,15 @@ const CreateUser = () => {
       return toast.error("Please select at least one permission");
     }
     try {
-      await axios.post(`http://${REACT_APP_IP}:4000/users/createuser`, {
-        userData: userData,
-        token: token,
-      });
+      await axios.post(
+        `http://${REACT_APP_IP}:4000/users/createuser`,
+        { userData: userData },
+        {
+          headers: {
+            token: token,
+          },
+        }
+      );
       setUserData({
         userName: "",
         mobile: "",

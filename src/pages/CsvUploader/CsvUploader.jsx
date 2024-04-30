@@ -103,7 +103,6 @@ const CsvUploader = () => {
     const formData = new FormData();
     formData.append("csvFile", csvFile);
     formData.append("zipFile", imageFolder);
-    formData.append("token", token);
 
     if (selectedId) {
       try {
@@ -113,6 +112,7 @@ const CsvUploader = () => {
           {
             headers: {
               "Content-Type": "multipart/form-data",
+              token: token,
             },
           }
         );

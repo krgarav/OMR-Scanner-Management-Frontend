@@ -77,7 +77,10 @@ export default function Navbar() {
       }
     }
   }, [userData]);
+
   useEffect(() => {
+    console.log("lulu");
+
     localStorage.setItem("currentPath", location.pathname);
   }, [location.pathname]);
 

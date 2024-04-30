@@ -4,7 +4,7 @@ import Fab from "@mui/material/Fab";
 import CompareArrowsIcon from "@mui/icons-material/CompareArrows";
 import OptimisedList from "../../UI/OptimisedList";
 import Button from "@mui/material/Button";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect } from "react";
 import dataContext from "../../Store/DataContext";
 import axios from "axios";
 import { useNavigate } from "react-router";
@@ -14,9 +14,11 @@ import { REACT_APP_IP } from "../../services/common";
 const CsvHomepage = () => {
   const navigate = useNavigate();
   const dataCtx = useContext(dataContext);
-useEffect(()=>{
-  dataCtx.addToCsvHeader([])
-},[])
+  const token = JSON.parse(localStorage.getItem("userData"));
+
+  useEffect(() => {
+    dataCtx.addToCsvHeader([]);
+  }, []);
   useEffect(() => {
     document.body.style.userSelect = "none";
     return () => {
@@ -72,6 +74,7 @@ useEffect(()=>{
           {
             headers: {
               "Content-Type": "multipart/form-data",
+              token: token,
             },
           }
         );

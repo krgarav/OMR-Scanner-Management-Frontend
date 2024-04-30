@@ -53,7 +53,12 @@ export function AllUser() {
     try {
       await axios.post(
         `http://${REACT_APP_IP}:4000/users/updateuser/${selectedUser.id}`,
-        { token: token, selectedUser }
+        { selectedUser },
+        {
+          headers: {
+            token: token,
+          },
+        }
       );
       setOpen(false);
       setSelectedUser(null);
@@ -69,8 +74,11 @@ export function AllUser() {
     try {
       await axios.post(
         `http://${REACT_APP_IP}:4000/users/deleteuser/${userId}`,
+        {},
         {
-          token: token,
+          headers : {
+            token : token
+          }
         }
       );
       setUsers(users.filter((user) => user.id !== userId));

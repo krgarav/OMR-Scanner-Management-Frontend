@@ -119,10 +119,15 @@ const ImageScanner = () => {
     };
 
     try {
-      await axios.post(`http://${REACT_APP_IP}:4000/add/templete`, {
-        data,
-        token,
-      });
+      await axios.post(
+        `http://${REACT_APP_IP}:4000/add/templete`,
+        { data },
+        {
+          headers: {
+            token: token,
+          },
+        }
+      );
       toast.success("Template created successfully!");
       navigate("/imageuploader");
     } catch (error) {

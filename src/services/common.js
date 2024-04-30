@@ -10,8 +10,11 @@ export const onGetTemplateHandler = async () => {
   try {
     const response = await axios.post(
       `http://${REACT_APP_IP}:4000/get/templetes`,
+      {},
       {
-        token: token,
+        headers: {
+          token: token,
+        },
       }
     );
     return response.data;
@@ -24,7 +27,12 @@ export const onGetAllUsersHandler = async () => {
   try {
     const response = await axios.post(
       `http://${REACT_APP_IP}:4000/users/getallusers`,
-      { token: token }
+      {},
+      {
+        headers: {
+          token: token,
+        },
+      }
     );
     return response.data;
   } catch (error) {
@@ -36,7 +44,12 @@ export const onGetVerifiedUserHandler = async () => {
   try {
     const response = await axios.post(
       `http://${REACT_APP_IP}:4000/users/getuser`,
-      { token: token }
+      {},
+      {
+        headers: {
+          token: token,
+        },
+      }
     );
 
     return response.data;
@@ -46,7 +59,29 @@ export const onGetVerifiedUserHandler = async () => {
 export const onGetAllTasksHandler = async () => {
   try {
     const response = await axios.get(
-      `http://${REACT_APP_IP}:4000/get/alltasks`
+      `http://${REACT_APP_IP}:4000/get/alltasks`,
+      {
+        headers: {
+          token: token,
+        },
+      }
+    );
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    // toast.error(error.message);
+  }
+};
+
+export const onGetTaskHandler = async (id) => {
+  try {
+    const response = await axios.get(
+      `http://${REACT_APP_IP}:4000/get/task/${id}`,
+      {
+        headers: {
+          token: token,
+        },
+      }
     );
     return response.data;
   } catch (error) {
@@ -54,13 +89,3 @@ export const onGetAllTasksHandler = async () => {
   }
 };
 
-export const onGetTaskHandler = async (id) => {
-  try {
-    const response = await axios.get(
-      `http://${REACT_APP_IP}:4000/get/task/${id}`
-    );
-    return response.data;
-  } catch (error) {
-    toast.error(error.message);
-  }
-};

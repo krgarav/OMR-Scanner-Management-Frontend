@@ -13,8 +13,9 @@ import { toast } from "react-toastify";
 import ResultGenerationContext from "../../Store/ResultGenerationContext";
 import { REACT_APP_IP } from "../../services/common";
 const UploadDataFile = () => {
-  const [csvFile, setCsvFile] = useState(null);
+  
   const ctx = useContext(ResultGenerationContext);
+  const token = JSON.parse(localStorage.getItem("userData"));
 
   const [uploadFiles, setUploadFiles] = useState([]);
 
@@ -25,7 +26,11 @@ const UploadDataFile = () => {
     const formData = new FormData();
     formData.append("dataFile", e.target.files[0]);
     axios
-      .post(`http://${REACT_APP_IP}:4000/upload/data`, formData)
+      .post(`http://${REACT_APP_IP}:4000/upload/data`, formData, {
+        headers: {
+          token: token,
+        },
+      })
       .then((res) => {
         setUploadFiles((prev) => {
           return [...prev, e.target.files[0].name];
@@ -45,7 +50,11 @@ const UploadDataFile = () => {
     formData.append("keyFile", e.target.files[0]);
 
     axios
-      .post(`http://${REACT_APP_IP}:4000/upload/key`, formData)
+      .post(`http://${REACT_APP_IP}:4000/upload/key`, formData, {
+        headers: {
+          token: token,
+        },
+      })
       .then((res) => {
         setUploadFiles((prev) => {
           return [...prev, e.target.files[0].name];

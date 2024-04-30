@@ -22,7 +22,8 @@ const TemplateMapping = () => {
   const dataCtx = useContext(dataContext);
   const { id } = useParams();
   const navigate = useNavigate();
-  const fileId = JSON.parse(localStorage.getItem("fileId"));
+  const { fileId } = JSON.parse(localStorage.getItem("fileId"));
+  const token = JSON.parse(localStorage.getItem("userData"));
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -90,7 +91,12 @@ const TemplateMapping = () => {
     try {
       await axios.post(
         `http://${REACT_APP_IP}:4000/assign/user`,
-        assignedUsers
+        assignedUsers,
+        {
+          headers: {
+            token: token,
+          },
+        }
       );
       toast.success("Task assignment successful.");
       dataCtx.modifyIsLoading(false);

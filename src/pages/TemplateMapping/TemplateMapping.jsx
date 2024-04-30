@@ -13,7 +13,7 @@ const TemplateMapping = () => {
   const { id } = useParams();
 
   const navigate = useNavigate();
-  let fileId = JSON.parse(localStorage.getItem("fileId"));
+  let { fileId } = JSON.parse(localStorage.getItem("fileId"));
   let token = JSON.parse(localStorage.getItem("userData"));
 
   useEffect(() => {
@@ -34,7 +34,12 @@ const TemplateMapping = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `http://${REACT_APP_IP}:4000/get/headerdata/${fileId}`
+          `http://${REACT_APP_IP}:4000/get/headerdata/${fileId}`,
+          {
+            headers: {
+              token: token,
+            },
+          }
         );
         setCsvHeaders(response.data);
       } catch (error) {
@@ -42,7 +47,7 @@ const TemplateMapping = () => {
       }
     };
     fetchData();
-  }, [fileId]);
+  }, [fileId, token]);
 
   const handleCsvHeaderChange = (csvHeader, index) => {
     const updatedAssociations = { ...selectedAssociations };
@@ -87,11 +92,18 @@ const TemplateMapping = () => {
       fileId: fileId,
     };
 
+    console.log(mappedData);
+
     try {
-      await axios.post(`http://${REACT_APP_IP}:4000/data`, {
-        mappedData,
-        token,
-      });
+      await axios.post(
+        `http://${REACT_APP_IP}:4000/data`,
+        { mappedData },
+        {
+          headers: {
+            token: token,
+          },
+        }
+      );
       toast.success("Mapping successfully done.");
       navigate(`/csvuploader/taskAssign/${id}`);
     } catch (error) {
