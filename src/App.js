@@ -19,6 +19,7 @@ import TaskManager from "./pages/TaskManager/TaskManager";
 import DataMatching from "./pages/DataMatching/DataMatching";
 import { onGetVerifiedUserHandler } from "./services/common";
 import Navbar from "./components/Navbar/Navbar";
+import Profile from "./pages/Auth/Profile";
 
 function App() {
   const datactx = useContext(dataContext);
@@ -45,6 +46,7 @@ function App() {
       <Routes>
         {datactx.isLogin && (
           <>
+            <Route path="/profile" element={<Profile />} />
             {/* <Route path="/home" element={""} /> */}
             {role === "Admin" && (
               <>

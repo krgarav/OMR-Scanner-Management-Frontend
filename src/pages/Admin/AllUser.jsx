@@ -14,7 +14,7 @@ import {
 
 export function AllUser() {
   const [users, setUsers] = useState([]);
-  const [currentUser, setCurrentUser] = useState([]);
+  // const [currentUser, setCurrentUser] = useState([]);
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -26,9 +26,9 @@ export function AllUser() {
     const fetchUsers = async () => {
       try {
         const response = await onGetAllUsersHandler();
-        const curentUser = await onGetVerifiedUserHandler();
+        // const curentUser = await onGetVerifiedUserHandler();
         const { users } = response;
-        setCurrentUser(curentUser.user)
+        // setCurrentUser(curentUser.user)
         setUsers(users);
       } catch (error) {
         console.error("Error fetching users:", error);
@@ -77,6 +77,10 @@ export function AllUser() {
 
   const handleDeleteUser = async (userId) => {
     try {
+      const confirmed = window.confirm("Are you sure you want to delete this user?");
+      if (!confirmed) {
+        return;
+      }
       await axios.post(
         `http://${REACT_APP_IP}:4000/users/deleteuser/${userId}`,
         {},
@@ -97,7 +101,6 @@ export function AllUser() {
   const closeModal = () => {
     setOpen(false);
   };
-console.log(currentUser.email )
   return (
     <div className="pt-48">
       <section className="mx-auto w-full max-w-7xl  px-12 py-10 bg-white rounded-xl">
@@ -156,9 +159,7 @@ console.log(currentUser.email )
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200 bg-white ">
-                    {users
-                      .filter((user) => user.email != currentUser.email)
-                      .map((user, index) => (
+                    {users?.map((user, index) => (
                         <tr key={index}>
                           <td className="whitespace-nowrap px-4 py-4">
                             <div className="flex items-center">
