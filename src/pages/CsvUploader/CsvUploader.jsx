@@ -133,8 +133,8 @@ const CsvUploader = () => {
       {dataCtx.isLoading ? (
         <Loader />
       ) : (
-        <div className="csvuploader">
-          <div className="xl:flex justify-center items-center  gap-5 mb-5 pt-60 pb-20 mx-5">
+        <div className="csvuploader xl:h-[100vh]">
+          <div className="xl:flex justify-center items-center pt-[10%] gap-5 mb-5 mx-5">
             <div
               className="mx-auto max-w-xl  h-[50%] bg-white px-8 py-4 mt-5 text-center shadow-lg"
               style={{ borderRadius: "20px" }}
@@ -274,7 +274,7 @@ const CsvUploader = () => {
               </p>
             </div>
           </div>
-          <div className="flex justify-center pb-32">
+          <div className="flex justify-center pb-10">
             <button
               type="submit"
               onClick={onSaveFilesHandler}
