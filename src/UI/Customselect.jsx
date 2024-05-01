@@ -6,7 +6,6 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { useContext } from "react";
 import dataContext from "../Store/DataContext";
-import debounce from "lodash/debounce";
 
 const Customselect = (props) => {
   const [selectValue, setSelectValue] = useState("");
@@ -70,7 +69,7 @@ const Customselect = (props) => {
         sx={{
           "& .MuiSelect-select": {
             backdropFilter: "blur(5px)",
-            fontWeight:"500"
+            fontWeight: "500",
           },
         }}
         MenuProps={{

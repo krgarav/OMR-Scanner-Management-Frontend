@@ -19,14 +19,30 @@ const TableCol = (props) => {
   const [resultObj, setResultObj] = useState([]);
   const inputRef = useRef();
   const dataCtx = useContext(dataContext);
-  console.log(dataCtx.imageMappedData)
-  
+
   useEffect(() => {
     inputRef.current.value = props.data.corrected;
-  }, [dataCtx.imageMappedData,props.data]);
+  }, [dataCtx.imageMappedData, props.data]);
   useEffect(() => {
     setResultObj(props.data);
   }, [props.data]);
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.altKey && event.key === "s") {
+        const btn = document.getElementById("saveBtn");
+        btn.click();
+      }
+    };
+
+    // Attach the event listener when the component mounts
+    window.addEventListener("keydown", handleKeyDown);
+
+    // Clean up the event listener when the component unmounts
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
 
   const rows = [
     createData(
@@ -38,7 +54,8 @@ const TableCol = (props) => {
   ];
   const saveHandler = () => {
     const csvFile = dataCtx.csvFile;
-
+    console.log(csvFile);
+    console.log(inputRef.current.value);
     if (inputRef.current) {
       for (let i = 0; i < csvFile.length; i++) {
         if (
@@ -58,16 +75,70 @@ const TableCol = (props) => {
       dataCtx.setImageMappedData(mappedData);
       dataCtx.setCsvFile(csvFile);
     }
-    toast.success("Saved the corrected file", {
-      position: "bottom-left",
-      autoClose: 1000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "dark",
-    });
+    if (
+      typeof resultObj.FILE_1_DATA === "string" ||
+      typeof resultObj.FILE_2_DATA === "string"
+    ) {
+      if (!isNaN(inputRef.current.value)) {
+        var result = window.confirm("Please check the string");
+        if (result) {
+          toast.success("Saved file successfully", {
+            position: "bottom-left",
+            autoClose: 1000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+          });
+        } else {
+          toast.warning("File Not Saved", {
+            position: "bottom-left",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+          });
+        }
+
+        return;
+      } else {
+        toast.success("Saved file successfully", {
+          position: "bottom-left",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+      }
+    } else if (
+      typeof resultObj.FILE_1_DATA === "number" ||
+      typeof resultObj.FILE_2_DATA === "number"
+    ) {
+      console.log("called");
+      if (isNaN(inputRef.current.value)) {
+        alert("Please check the string");
+      }
+    } else {
+      console.log("called");
+      toast.success("Saved file successfully", {
+        position: "bottom-left",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+    }
   };
 
   return (
@@ -110,6 +181,7 @@ const TableCol = (props) => {
                   variant="outlined"
                   color="success"
                   onClick={saveHandler}
+                  id="saveBtn"
                 >
                   SAVE
                 </Button>
