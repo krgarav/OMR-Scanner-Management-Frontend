@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import dataContext from "../../Store/DataContext";
 import classes from "./Correction.module.css";
-import { Button } from "@mui/material";
+import { Button, Tooltip } from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import Table from "../../UI/Table";
@@ -9,7 +9,8 @@ import { useNavigate } from "react-router";
 import DownloadIcon from "@mui/icons-material/Download";
 import { useLocation } from "react-router";
 import { toast } from "react-toastify";
-
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
+import InfoRoundedIcon from "@mui/icons-material/InfoRounded";
 const Correction = () => {
   const [currIndex, setCurrIndex] = useState(0);
   const dataCtx = useContext(dataContext);
@@ -17,6 +18,35 @@ const Correction = () => {
   const location = useLocation();
   const lengthOfResult = location.state?.length;
   const navigate = useNavigate();
+
+  // const toggleZoom = (e) => {
+  //   console.log(e.currentTarget.style.cursor);
+  //   if (e.ctrlKey) {
+  //     setZoomLevel(1); // Zoom out
+  //   } else {
+  //     setZoomLevel(2); // Zoom in
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   const handleKeyDown = (e) => {
+  //     if (e.key === "Control") {
+  //       document.querySelector(".zoomable-image").style.cursor = "zoom-out";
+  //     }
+  //   };
+
+  //   const handleKeyUp = () => {
+  //     document.querySelector(".zoomable-image").style.cursor = "zoom-in";
+  //   };
+
+  //   document.addEventListener("keydown", handleKeyDown);
+  //   document.addEventListener("keyup", handleKeyUp);
+
+  //   return () => {
+  //     document.removeEventListener("keydown", handleKeyDown);
+  //     document.removeEventListener("keyup", handleKeyUp);
+  //   };
+  // }, []);
 
   useEffect(() => {
     if (dataCtx.imageMappedData.length === 0) {
@@ -26,42 +56,47 @@ const Correction = () => {
 
   useEffect(() => {
     const confirmExit = (e) => {
-      // Cancel the event
-      e.preventDefault();
-      // Chrome requires returnValue to be set
-      e.returnValue = "";
-
-      // Optionally, display a confirmation dialog
+      // Display a confirmation message
       const confirmationMessage =
         "Are you sure you want to leave this page? Please download corrected CSV before closing this page.";
       e.returnValue = confirmationMessage;
       return confirmationMessage;
     };
-
+  
     // Add event listener when the component mounts
     window.addEventListener("beforeunload", confirmExit);
-
+  
     // Remove event listener when the component unmounts
     return () => {
       window.removeEventListener("beforeunload", confirmExit);
     };
   }, []); // Empty dependency array to run effect only once on mount
+  
   useEffect(() => {
-    const handleBackButton = (event) => {
-      const confirmationMessage =
-        "Are you sure you want to leave this page? Please download corrected CSV before closing this page.";
-      event.returnValue = confirmationMessage; // For Chrome
-      return confirmationMessage; // For other browsers
+    console.log("called");
+    // window.confirm("Hello")
+
+    const handlePopstate = (e) => {
+      console.log("treig")
+      // Display a confirmation message
+      window.confirm()
+      const confirmationMessage = "Are you sure you want to leave this page?";
+      if (!window.confirm(confirmationMessage)) {
+        // Prevent navigation if the user cancels
+        window.history.pushState(null, "", window.location.href);
+      }
     };
-
-    // Add event listener for popstate when the component mounts
-    window.addEventListener("popstate", handleBackButton);
-
+  
+    // Add event listener when the component mounts
+    window.addEventListener("popstate", handlePopstate);
+  
     // Remove event listener when the component unmounts
     return () => {
-      window.removeEventListener("popstate", handleBackButton);
+      window.removeEventListener("popstate", handlePopstate);
     };
-  }, []);
+  }, [location]); // Empty dependency array to run effect only once on mount
+   // Empty dependency array to run effect only once on mount
+  
   useEffect(() => {
     document.body.style.userSelect = "none";
     return () => {
@@ -133,19 +168,32 @@ const Correction = () => {
       >
         {state.length !== 0 && (
           <div className="w-full pt-20">
-            <div className={` ${classes.imgdiv}`}>
+            <div className={`flex justify-center w-full ${classes.imgdiv}`}>
               <h1
-                className={`text-center font-bold lg:text-3xl md:text-2xl sm:text-xl ${classes.imgHead}`}
+                className={`font-bold lg:text-2xl md:text-xl sm:text-lg ${classes.imgHead}`}
               >
                 Image Name : {state[currIndex].img.imgName}
               </h1>
+              <Tooltip
+                title="Use mouse scroll wheel to zoom in and zoom out"
+                className="cursor-pointer float-right ml-3"
+                arrow
+              >
+                <InfoRoundedIcon />
+              </Tooltip>
             </div>
-
-            <img
-              src={state[currIndex].img.imgUrl}
-              className={`w-full  object-contain p-5 ${classes.imgContainer}`}
-              alt="omr sheet"
-            />
+            <div className="overflow-hidden flex justify-center pt-2 ">
+              <TransformWrapper defaultScale={1}>
+                <TransformComponent>
+                  <img
+                    // key={state[currIndex].img.imgUrl}
+                    src={state[currIndex].img.imgUrl}
+                    className={`w-full object-contain p-1 ${classes.imgContainer} zoomable-image   rounded`}
+                    alt="omr sheet"
+                  />
+                </TransformComponent>
+              </TransformWrapper>
+            </div>
           </div>
         )}
         {state.length !== 0 && (
