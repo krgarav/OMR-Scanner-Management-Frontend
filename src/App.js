@@ -46,10 +46,10 @@ function App() {
       <Routes>
         {datactx.isLogin && (
           <>
-            <Route path="/profile" element={<Profile />} />
             {/* <Route path="/home" element={""} /> */}
             {role === "Admin" && (
               <>
+                <Route path="/profile" element={<Profile />} />
                 <Route path="/create-user" element={<CreateUser />} />
                 <Route path="/all-user" element={<AllUser />} />
                 <Route path="/imageuploader" element={<ImageUploader />} />
@@ -74,6 +74,8 @@ function App() {
               permissions.csvCompare && (
                 <>
                   <Route path="/comparecsv" element={<CsvHomepage />} />
+                  <Route path="/profile" element={<Profile />} />
+
                   <Route
                     path="/comparecsv/correct_compare_csv"
                     element={<Correction />}
@@ -85,21 +87,27 @@ function App() {
               role === "Moderator" ||
               role === "Operator") &&
               permissions.dataEntry && (
-                <Route path="/datamatching" element={<DataMatching />} />
+                <>
+                  <Route path="/datamatching" element={<DataMatching />} />
+                  <Route path="/profile" element={<Profile />} />
+                </>
               )}
 
             {(role === "Admin" ||
               role === "Moderator" ||
               role === "Operator") &&
               permissions.resultGenerator && (
-                <Route
-                  path="/resultGeneration"
-                  element={
-                    <ResultGenerationProvider>
-                      <HomePageTest />
-                    </ResultGenerationProvider>
-                  }
-                />
+                <>
+                  <Route
+                    path="/resultGeneration"
+                    element={
+                      <ResultGenerationProvider>
+                        <HomePageTest />
+                      </ResultGenerationProvider>
+                    }
+                  />
+                  <Route path="/profile" element={<Profile />} />
+                </>
               )}
 
             <Route

@@ -139,50 +139,49 @@ const ImageScanner = () => {
   return (
     <div className="flex scannerbg border-1 pt-16 ">
       {/* LEFT SECTION  */}
-      <div className="flex">
-        <div className="flex flex-1 flex-col justify-between border-e bg-teal-50">
+      <div className="flex w-[25%]">
+        <div className="flex flex-1  flex-col justify-between border-e bg-teal-50">
           <div className="px-4 py-6">
-            <ul className="space-y-1">
-              <li
+            <div className="space-y-1">
+              <div
                 style={{ marginTop: "40px" }}
                 className="block w-full rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium  mb-5"
               >
                 <div className="overflow-x-auto">
-                  <table className="my-3 table-auto border-collapse border border-gray-400 min-w-full divide-y-2 divide-gray-200 bg-white text-sm rounded-lg">
-                    <thead className="ltr:text-left rtl:text-right text-gray-600">
-                      <tr>
-                        <th className="text-center whitespace-nowrap py-2">
+                  <div className="my-3 table-auto  border-collapse border border-gray-400 min-w-full divide-y-2 divide-gray-200 bg-white text-sm rounded-lg">
+                    <div className="ltr:text-left rtl:text-right flex justify-around text-gray-600">
+                        <div className="text-center whitespace-nowrap py-2">
                           Name
-                        </th>
-                        <th className="text-center whitespace-nowrap py-2">
+                        </div>
+                        <div className="text-center whitespace-nowrap py-2">
                           Remove
-                        </th>
-                      </tr>
-                    </thead>
+                        </div>
+                    
+                    </div>
 
-                    <tbody className="divide-y divide-gray-200">
+                    <div className="divide-y divide-gray-200">
                       {selectedCoordinates &&
                         selectedCoordinates?.map((data) => (
-                          <tr key={data.id} className="odd:bg-gray-50">
-                            <td className="whitespace-nowrap px-4 py-2 text-center font-semibold text-md text-gray-900">
+                          <div key={data.id} className="odd:bg-gray-50 flex justify-around">
+                            <div className="whitespace-nowrap px-4 py-2 text-center font-semibold text-md text-gray-900 text-ellipsis w-[50%] overflow-x-hidden">
                               {data.attribute}
-                            </td>
-                            <td className="whitespace-nowrap px-4 py-2 text-center font-semibold text-md text-gray-900">
+                            </div>
+                            <div className="whitespace-nowrap px-4 py-2 text-center font-semibold text-md text-gray-900">
                               <MdDelete
                                 onClick={() => onRemoveSelectedHandler(data.id)}
                                 className="mx-auto text-red-500 text-xl"
                               />
-                            </td>
-                          </tr>
+                            </div>
+                          </div>
                         ))}
-                    </tbody>
-                  </table>
+                    </div>
+                  </div>
                 </div>
-              </li>
+              </div>
               <div>
                 {/* Form Field Area */}
 
-                <div className=" min-w-[350px] bg-gradient-to-b from-white to-gray-100 rounded-3xl px-4 pt-1 pb-4 border-1 border-gray shadow-md mb-10">
+                <div className=" bg-gradient-to-b from-white to-gray-100 rounded-3xl px-4 pt-1 pb-4 border-1 border-gray shadow-md mb-10">
                   <form onSubmit={onSubmitHandler}>
                     <input
                       required
@@ -218,14 +217,14 @@ const ImageScanner = () => {
                   </form>
                 </div>
               </div>
-            </ul>
+            </div>
           </div>
         </div>
       </div>
 
       {/* RIGHT SECTION  */}
       {!image ? (
-        <div className="flex w-full h-[100vh] justify-center items-center ">
+        <div className="flex w--[75%] h-[100vh] justify-center items-center ">
           <div className="">
             <ImageNotFound />
 
@@ -239,16 +238,17 @@ const ImageScanner = () => {
           </div>
         </div>
       ) : (
-        <div className="w-[70%] pb-2 ">
+        <div className=" pb-2 w-[75%] ">
           <div className="mx-auto max-w-screen-xl px-2 lg:pt-2 sm:px-6 lg:px-8">
-            <ul className="mt-2 flex justify-center pt-6 py-4">
-              <li className="w-[65%]">
+            <div className="mt-2 flex justify-center pt-6 py-4">
+              <div className="">
                 {image && (
                   <div
                     style={{
                       position: "relative",
                       border: "1px solid purple",
                     }}
+                    className="w-full"
                   >
                     <img
                       ref={imageRef}
@@ -423,8 +423,8 @@ const ImageScanner = () => {
                     </>
                   </div>
                 )}
-              </li>
-            </ul>
+              </div>
+            </div>
           </div>
         </div>
       )}
