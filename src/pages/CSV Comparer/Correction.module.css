@@ -11,6 +11,7 @@
   background-size: cover; /* This will make the background image cover the entire container */
   background-position: center;
   padding-bottom: 10px;
+  padding-left: 10px;
 }
 
 .imgHead {

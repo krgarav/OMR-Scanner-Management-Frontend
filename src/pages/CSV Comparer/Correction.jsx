@@ -102,9 +102,10 @@ const Correction = () => {
   }, []);
   useEffect(() => {
     const handleKeyDown = (event) => {
-      if (event.shiftKey && event.key === "N") {
+      console.log(event.key);
+      if (event.key === "ArrowRight") {
         nextHandler();
-      } else if (event.shiftKey && event.key === "P") {
+      } else if (event.key === "ArrowLeft") {
         prevHandler();
       }
     };
@@ -146,15 +147,9 @@ const Correction = () => {
     return csvHeader + csvData;
   };
   const downloadHandler = () => {
-    const jsonObj = dataCtx.csvFile; // Assuming dataCtx.csvFile is a JSON object
-
-    // Convert JSON to CSV
+    const jsonObj = dataCtx.csvFile;
     const csvData = convertToCsv(jsonObj);
-
-    // Create a Blob object
     const blob = new Blob([csvData], { type: "text/csv" });
-
-    // Create a download link
     const link = document.createElement("a");
     link.href = window.URL.createObjectURL(blob);
     const date = new Date().toJSON();
@@ -175,7 +170,7 @@ const Correction = () => {
   return (
     <>
       <div
-        className={`flex lg:flex-row md:flex-col justify-between animate-slide-left-to-right ${classes.correction} `}
+        className={`flex xs:flex-col md:flex-col lg:flex-row justify-between animate-slide-left-to-right ${classes.correction} `}
       >
         {state.length !== 0 && (
           <div className="w-full pt-20">

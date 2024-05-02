@@ -52,29 +52,43 @@ const TableCol = (props) => {
       resultObj.FILE_2_DATA
     ),
   ];
-  const saveHandler = () => {
+  const save = () => {
     const csvFile = dataCtx.csvFile;
-    console.log(csvFile);
-    console.log(inputRef.current.value);
-    if (inputRef.current) {
-      for (let i = 0; i < csvFile.length; i++) {
-        if (
-          csvFile[i][dataCtx.primaryKey].trim() === resultObj.PRIMARY.trim()
-        ) {
-          csvFile[i][resultObj.COLUMN_NAME] = inputRef.current.value;
-        }
+    for (let i = 0; i < csvFile.length; i++) {
+      if (csvFile[i][dataCtx.primaryKey].trim() === resultObj.PRIMARY.trim()) {
+        csvFile[i][resultObj.COLUMN_NAME] = inputRef.current.value;
       }
-      const mappedData = [...dataCtx.imageMappedData];
-      for (let j = 0; j < mappedData.length; j++) {
-        console.log(resultObj.PRIMARY.trim());
-        if (mappedData[j].data.PRIMARY.trim() === resultObj.PRIMARY.trim()) {
-          mappedData[j].data.corrected = inputRef.current.value;
-        }
-      }
-
-      dataCtx.setImageMappedData(mappedData);
-      dataCtx.setCsvFile(csvFile);
     }
+    const mappedData = [...dataCtx.imageMappedData];
+    for (let j = 0; j < mappedData.length; j++) {
+      if (mappedData[j].data.PRIMARY.trim() === resultObj.PRIMARY.trim()) {
+        mappedData[j].data.corrected = inputRef.current.value;
+      }
+    }
+    dataCtx.setImageMappedData(mappedData);
+    dataCtx.setCsvFile(csvFile);
+  };
+  const saveHandler = () => {
+    // const csvFile = dataCtx.csvFile;
+    // console.log(csvFile);
+    // console.log(inputRef.current.value);
+    // if (inputRef.current) {
+    //   for (let i = 0; i < csvFile.length; i++) {
+    //     if (
+    //       csvFile[i][dataCtx.primaryKey].trim() === resultObj.PRIMARY.trim()
+    //     ) {
+    //       csvFile[i][resultObj.COLUMN_NAME] = inputRef.current.value;
+    //     }
+    //   }
+    //   const mappedData = [...dataCtx.imageMappedData];
+    //   for (let j = 0; j < mappedData.length; j++) {
+    //     if (mappedData[j].data.PRIMARY.trim() === resultObj.PRIMARY.trim()) {
+    //       mappedData[j].data.corrected = inputRef.current.value;
+    //     }
+    //   }
+    //   dataCtx.setImageMappedData(mappedData);
+    //   dataCtx.setCsvFile(csvFile);
+    // }
     if (
       typeof resultObj.FILE_1_DATA === "string" ||
       typeof resultObj.FILE_2_DATA === "string"
@@ -82,6 +96,7 @@ const TableCol = (props) => {
       if (!isNaN(inputRef.current.value)) {
         var result = window.confirm("Please check the string");
         if (result) {
+          save();
           toast.success("Saved file successfully", {
             position: "bottom-left",
             autoClose: 1000,
@@ -104,9 +119,9 @@ const TableCol = (props) => {
             theme: "dark",
           });
         }
-
         return;
       } else {
+        save();
         toast.success("Saved file successfully", {
           position: "bottom-left",
           autoClose: 1000,
@@ -122,12 +137,11 @@ const TableCol = (props) => {
       typeof resultObj.FILE_1_DATA === "number" ||
       typeof resultObj.FILE_2_DATA === "number"
     ) {
-      console.log("called");
       if (isNaN(inputRef.current.value)) {
         alert("Please check the string");
       }
     } else {
-      console.log("called");
+      save();
       toast.success("Saved file successfully", {
         position: "bottom-left",
         autoClose: 1000,
