@@ -59,7 +59,7 @@ const CsvHomepage = () => {
         // Append file data to FormData
         formData.append("firstInputCsvFile", firstInputCsvFiles);
         formData.append("secondInputCsvFile", secondInputCsvFiles);
-        formData.append("zipImageFile", dataCtx.zipImageFile);
+        formData.append("zipImageFile", dataCtx.uploadZipImage);
 
         // Append other parameters to FormData
         formData.append("firstInputFileName", firstInputFileName);
@@ -124,7 +124,7 @@ const CsvHomepage = () => {
           }
         }
         dataCtx.setImageMappedData(objArr);
-        // navigate("/comparecsv/correct_compare_csv", { state: objArr });
+        navigate("/comparecsv/correct_compare_csv", { state: objArr });
       } catch (err) {
         alert("Error Occured : ", err);
         console.log(err);

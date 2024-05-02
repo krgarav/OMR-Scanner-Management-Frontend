@@ -18,6 +18,7 @@ const initialData = {
   isLoading: false,
   csvDataWithImage: [],
   userData: {},
+  uploadZipImage: [],
 };
 
 const DataProvider = (props) => {
@@ -151,6 +152,14 @@ const DataProvider = (props) => {
       };
     });
   };
+  const setUploadZipImageHandler =(state)=>{
+    setDataState((item) => {
+      return {
+        ...item,
+        uploadZipImage: state,
+      };
+    });
+  }
 
   const dataContext = {
     isLogin: dataState.isLogin,
@@ -169,6 +178,7 @@ const DataProvider = (props) => {
     csvDataWithImage: dataState.csvDataWithImage,
     isLoading: dataState.isLoading,
     userData: dataState.userData,
+    uploadZipImage : dataState.uploadZipImage,
 
     modifyAuth: modifyAuthHandler,
     modifyIsLoading: modifyIsLoadingHandler,
@@ -186,6 +196,7 @@ const DataProvider = (props) => {
     setImageMappedData: setImageMappedDataHandler,
     setCsvFile: setCsvFileHandler,
     setCsvDataWithImage: setCsvDataWithImageHandler,
+    setUploadZipImage : setUploadZipImageHandler
   };
 
   return (

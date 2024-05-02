@@ -39,9 +39,10 @@ const Input = (props) => {
           (async function () {
             const images = await extractImagesFromZip(file);
             console.log(file);
-            datactx.addZipImageFile(file);
+            datactx.setUploadZipImage(file)
+            datactx.addZipImageFile(images);
           })();
-
+          break;
         default:
           break;
       }

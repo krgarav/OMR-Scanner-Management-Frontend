@@ -16,6 +16,7 @@ const dataContext = React.createContext({
   csvFile: [],
   csvDataWithImage: [],
   userData : {},
+  uploadZipImage: [],
 
   modifyUserData: () => {},
   modifyIsLoading: () => {},
@@ -33,6 +34,7 @@ const dataContext = React.createContext({
   setImageMappedData: () => {},
   setCsvFile: () => {},
   setCsvDataWithImage: () => {},
+  setUploadZipImage : ()=>{}
 });
 
 export default dataContext;
