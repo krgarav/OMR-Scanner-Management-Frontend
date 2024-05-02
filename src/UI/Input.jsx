@@ -15,6 +15,7 @@ const Input = (props) => {
       switch (props.state) {
         case "first":
           datactx.addFirstInputFileName(file.name);
+         
           datactx.addFirstInputCsvFile(file);
           break;
         case "second":
@@ -37,7 +38,8 @@ const Input = (props) => {
         case "third":
           (async function () {
             const images = await extractImagesFromZip(file);
-            datactx.addZipImageFile(images);
+            console.log(file);
+            datactx.addZipImageFile(file);
           })();
 
         default:

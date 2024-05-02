@@ -69,26 +69,7 @@ const TableCol = (props) => {
     dataCtx.setCsvFile(csvFile);
   };
   const saveHandler = () => {
-    // const csvFile = dataCtx.csvFile;
-    // console.log(csvFile);
-    // console.log(inputRef.current.value);
-    // if (inputRef.current) {
-    //   for (let i = 0; i < csvFile.length; i++) {
-    //     if (
-    //       csvFile[i][dataCtx.primaryKey].trim() === resultObj.PRIMARY.trim()
-    //     ) {
-    //       csvFile[i][resultObj.COLUMN_NAME] = inputRef.current.value;
-    //     }
-    //   }
-    //   const mappedData = [...dataCtx.imageMappedData];
-    //   for (let j = 0; j < mappedData.length; j++) {
-    //     if (mappedData[j].data.PRIMARY.trim() === resultObj.PRIMARY.trim()) {
-    //       mappedData[j].data.corrected = inputRef.current.value;
-    //     }
-    //   }
-    //   dataCtx.setImageMappedData(mappedData);
-    //   dataCtx.setCsvFile(csvFile);
-    // }
+   
     if (
       typeof resultObj.FILE_1_DATA === "string" ||
       typeof resultObj.FILE_2_DATA === "string"

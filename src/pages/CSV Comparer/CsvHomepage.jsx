@@ -10,7 +10,6 @@ import axios from "axios";
 import { useNavigate } from "react-router";
 import classes from "./CSVHompage.module.css";
 import { REACT_APP_IP } from "../../services/common";
-
 const CsvHomepage = () => {
   const navigate = useNavigate();
   const dataCtx = useContext(dataContext);
@@ -60,6 +59,7 @@ const CsvHomepage = () => {
         // Append file data to FormData
         formData.append("firstInputCsvFile", firstInputCsvFiles);
         formData.append("secondInputCsvFile", secondInputCsvFiles);
+        formData.append("zipImageFile", dataCtx.zipImageFile);
 
         // Append other parameters to FormData
         formData.append("firstInputFileName", firstInputFileName);
@@ -124,7 +124,7 @@ const CsvHomepage = () => {
           }
         }
         dataCtx.setImageMappedData(objArr);
-        navigate("/comparecsv/correct_compare_csv", { state: objArr });
+        // navigate("/comparecsv/correct_compare_csv", { state: objArr });
       } catch (err) {
         alert("Error Occured : ", err);
         console.log(err);

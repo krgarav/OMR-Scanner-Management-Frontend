@@ -19,35 +19,6 @@ const Correction = () => {
   const lengthOfResult = location.state?.length;
   const navigate = useNavigate();
 
-  // const toggleZoom = (e) => {
-  //   console.log(e.currentTarget.style.cursor);
-  //   if (e.ctrlKey) {
-  //     setZoomLevel(1); // Zoom out
-  //   } else {
-  //     setZoomLevel(2); // Zoom in
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   const handleKeyDown = (e) => {
-  //     if (e.key === "Control") {
-  //       document.querySelector(".zoomable-image").style.cursor = "zoom-out";
-  //     }
-  //   };
-
-  //   const handleKeyUp = () => {
-  //     document.querySelector(".zoomable-image").style.cursor = "zoom-in";
-  //   };
-
-  //   document.addEventListener("keydown", handleKeyDown);
-  //   document.addEventListener("keyup", handleKeyUp);
-
-  //   return () => {
-  //     document.removeEventListener("keydown", handleKeyDown);
-  //     document.removeEventListener("keyup", handleKeyUp);
-  //   };
-  // }, []);
-
   useEffect(() => {
     if (dataCtx.imageMappedData.length === 0) {
       navigate("/comparecsv", { replace: true });
