@@ -14,11 +14,6 @@ const Input = (props) => {
 
       switch (props.state) {
         case "first":
-          datactx.addFirstInputFileName(file.name);
-         
-          datactx.addFirstInputCsvFile(file);
-          break;
-        case "second":
           if (file) {
             Papa.parse(file, {
               complete: (result) => {
@@ -32,6 +27,11 @@ const Input = (props) => {
               header: true,
             });
           }
+          datactx.addFirstInputFileName(file.name);
+
+          datactx.addFirstInputCsvFile(file);
+          break;
+        case "second":
           datactx.addSecondInputFileName(file.name);
           datactx.addSecondInputCsvFile(file);
           break;
