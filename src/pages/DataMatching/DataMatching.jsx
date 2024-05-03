@@ -21,6 +21,7 @@ const DataMatching = () => {
   const [imageNotFound, setImageNotFound] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(1);
   const [csvData, setCsvData] = useState([]);
+  const [compareTask, setCompareTask] = useState([]);
   const imageContainerRef = useRef(null);
   const imageRef = useRef(null);
   const token = JSON.parse(localStorage.getItem("userData"));
@@ -31,7 +32,15 @@ const DataMatching = () => {
         const verifiedUser = await onGetVerifiedUserHandler();
         const tasks = await onGetTaskHandler(verifiedUser.user.id);
         const templateData = await onGetTemplateHandler();
-        const updatedTasks = tasks.map((task) => {
+        const uploadTask = tasks.filter((task) => {
+          return task.moduleType !== "CSV Compare";
+        });
+        const comTask = tasks.filter((task) => {
+          return task.moduleType === "CSV Compare";
+        });
+        console.log(uploadTask);
+
+        const updatedTasks = uploadTask.map((task) => {
           const matchedTemplate = templateData.find(
             (template) => template.id === parseInt(task.templeteId)
           );
@@ -43,8 +52,11 @@ const DataMatching = () => {
           }
           return task;
         });
-        console.log(tasks);
+        // console.log(tasks.moduleType);
+
         setAllTasks(updatedTasks);
+
+        setCompareTask(comTask);
       } catch (error) {
         console.log(error);
       }
@@ -238,11 +250,15 @@ const DataMatching = () => {
     }
   };
 
+  const onCompareTaskStartHandler = (taskdata)=>{
+    console.log(taskdata);
+  }
+
   return (
     <>
       {popUp && (
         <div className=" min-h-[100vh] flex justify-center templatemapping">
-          <div className=" mt-40">
+          <div className=" mt-40 flex flex-col gap-10">
             {/* MAIN SECTION  */}
             <section className="mx-auto w-full max-w-7xl  px-12 py-10 bg-white rounded-xl">
               <div className="flex flex-col space-y-4  md:flex-row md:items-center md:justify-between md:space-y-0">
@@ -305,6 +321,84 @@ const DataMatching = () => {
                               <div className="whitespace-nowrap px-4 py-4 text-right">
                                 <button
                                   onClick={() => onTaskStartHandler(taskData)}
+                                  className="rounded border border-indigo-500 bg-indigo-500 px-10 py-1 font-semibold text-white"
+                                >
+                                  Start
+                                </button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <section className="mx-auto w-full max-w-7xl  px-12 py-10 bg-white rounded-xl">
+              <div className="flex flex-col space-y-4  md:flex-row md:items-center md:justify-between md:space-y-0">
+                <div>
+                  <h2 className="text-3xl ">
+             
+                    <strong>Assigned Tasks </strong>: <em> CSV Compare</em>
+                  </h2>
+                </div>
+              </div>
+              <div className="mt-6 flex flex-col">
+                <div className="-mx-4 -my-2  sm:-mx-6 lg:-mx-8">
+                  <div className="inline-block  py-2 align-middle md:px-6 lg:px-8">
+                    <div className=" border border-gray-200 md:rounded-lg">
+                      <div className="divide-y divide-gray-200 ">
+                        <div className="bg-gray-50">
+                          <div className="flex justify-between items-center">
+                            <div className="px-8 py-3.5 text-left text-xl font-semibold text-gray-700">
+                              <span>Templates</span>
+                            </div>
+
+                            <div className="px-12 py-3.5 text-left  text-xl font-semibold text-gray-700">
+                              Min
+                            </div>
+
+                            <div className="px-12 py-3.5 text-left text-xl font-semibold text-gray-700">
+                              Max
+                            </div>
+                            <div className="px-16 py-3.5 text-left text-xl font-semibold text-gray-700">
+                              Start Task
+                            </div>
+                          </div>
+                        </div>
+                        <div className="divide-y divide-gray-200 bg-white overflow-y-auto max-h-[300px]">
+                          {compareTask?.map((taskData) => (
+                            <div
+                              key={taskData.id}
+                              className="flex justify-between items-center"
+                            >
+                              <div className="whitespace-nowrap px-4 py-4 ">
+                                <div className="flex items-center">
+                                  <div className="ml-4 w-full font-semibold">
+                                    <div className=" px-2">
+                                      {taskData.templateName}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="whitespace-nowrap flex justify-center itemCe px-2 py-2 border-2">
+                                <div className="flex">
+                                  <div className="w-full font-semibold">
+                                    <div className=" px-2">{taskData.min}</div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="whitespace-nowrap flex justify-center itemCe px-2 py-2 border-2">
+                                <div className="flex">
+                                  <div className="w-full font-semibold">
+                                    <div className=" px-2">{taskData.max}</div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="whitespace-nowrap px-4 py-4 text-right">
+                                <button
+                                  onClick={() => onCompareTaskStartHandler(taskData)}
                                   className="rounded border border-indigo-500 bg-indigo-500 px-10 py-1 font-semibold text-white"
                                 >
                                   Start

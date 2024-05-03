@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import dataContext from "../../Store/DataContext";
 import {
@@ -19,11 +19,10 @@ const Assignee = () => {
   });
   const [taskValue, setTaskValue] = useState({ min: 1, max: null });
   const dataCtx = useContext(dataContext);
-  const { id } = useParams();
   const navigate = useNavigate();
-  const { fileId } = JSON.parse(localStorage.getItem("fileId"));
   const token = JSON.parse(localStorage.getItem("userData"));
-
+  const location = useLocation();
+  console.log(location.state);
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -59,22 +58,21 @@ const Assignee = () => {
       return;
     }
 
-    if (!fileId) {
-      toast.warning("File Id not present!");
-      return;
-    }
     if (!selectedUser.userName || !selectedUser.userId) {
-      toast.warning("Please select the file id or username!");
+      toast.warning("Please select the assignee!");
       return;
     }
 
     const newAssignedTask = {
-      fileId: fileId,
-      templeteId: id,
       userId: selectedUser.userId,
       min: taskValue.min,
       max: taskValue.max,
       userName: selectedUser.userName,
+      templeteId: 0,
+      fileId: 0,
+      correctedFilePath: location.state.correctedFilePath,
+      errorFilePath: location.state.errorFilePath,
+      moduleType: "CSV Compare",
     };
     setAssignedUsers([...assignedUsers, newAssignedTask]);
 
@@ -99,7 +97,7 @@ const Assignee = () => {
       );
       toast.success("Task assignment successful.");
       dataCtx.modifyIsLoading(false);
-      navigate(`/csvuploader`);
+      navigate(`/comparecsv`, { replace: true });
     } catch (error) {
       console.error("Error uploading files: ", error);
       toast.error("Error submitting task. Please try again.");
@@ -119,7 +117,11 @@ const Assignee = () => {
               <div className="flex items-start sm:gap-8">
                 <div className="flex gap-3">
                   <h1 className="rounded border border-indigo-500 bg-indigo-500 px-3 py-2 font-medium text-white">
-                    Total Data - 5000
+                    Total Data - {location.state.data.length}
+                  </h1>
+                  <h1 className="rounded border border-indigo-500 bg-indigo-500 px-3 py-2 font-medium text-white">
+                    Remaining Data -{" "}
+                    {location.state.data.length - taskValue.min}
                   </h1>
                 </div>
               </div>
@@ -249,7 +251,7 @@ const Assignee = () => {
               className="font-medium text-white bg-gradient-to-r from-purple-600 to-indigo-700 rounded-xl
                shadow-md cursor-pointer select-none text-xl px-12 py-2 hover:shadow-xl active:shadow-md"
             >
-              <span>Save</span>
+              <span>Preview Assigned Operators</span>
             </label>
 
             {showModal && (

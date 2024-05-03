@@ -20,6 +20,7 @@ import DataMatching from "./pages/DataMatching/DataMatching";
 import { onGetVerifiedUserHandler } from "./services/common";
 import Navbar from "./components/Navbar/Navbar";
 import Profile from "./pages/Auth/Profile";
+import Assignee from "./pages/CSV Comparer/Assignee";
 
 function App() {
   const datactx = useContext(dataContext);
@@ -75,7 +76,10 @@ function App() {
                 <>
                   <Route path="/comparecsv" element={<CsvHomepage />} />
                   <Route path="/profile" element={<Profile />} />
-
+                  <Route
+                    path="/comparecsv/assign_operator"
+                    element={<Assignee />}
+                  />
                   <Route
                     path="/comparecsv/correct_compare_csv"
                     element={<Correction />}

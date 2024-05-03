@@ -81,6 +81,11 @@ const CsvHomepage = () => {
         );
         console.log(response.data.data);
         dataCtx.setCsvFile(response.data.data);
+        // const obj = {
+        //   correctedFilePath: response.data.correctedFilePath,
+        //   errofilePath: response.data.errorFilePath,
+
+        // };
         const modifiedRes = response.data.data.map((item) => {
           return { ...item, corrected: "" };
         });
@@ -124,7 +129,9 @@ const CsvHomepage = () => {
           }
         }
         dataCtx.setImageMappedData(objArr);
-        navigate("/comparecsv/correct_compare_csv", { state: objArr });
+        console.log(response.data)
+        // navigate("/comparecsv/correct_compare_csv", { state: objArr });
+        navigate("/comparecsv/assign_operator", { state: response.data });
       } catch (err) {
         alert("Error Occured : ", err);
         console.log(err);
