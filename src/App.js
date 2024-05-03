@@ -81,7 +81,7 @@ function App() {
                     element={<Assignee />}
                   />
                   <Route
-                    path="/comparecsv/correct_compare_csv"
+                    path="/correct_compare_csv"
                     element={<Correction />}
                   />
                 </>

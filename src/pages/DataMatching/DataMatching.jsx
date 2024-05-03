@@ -8,6 +8,7 @@ import {
   onGetVerifiedUserHandler,
 } from "../../services/common";
 import { REACT_APP_IP } from "../../services/common";
+import { useNavigate } from "react-router-dom";
 
 const DataMatching = () => {
   const [popUp, setPopUp] = useState(true);
@@ -25,7 +26,7 @@ const DataMatching = () => {
   const imageContainerRef = useRef(null);
   const imageRef = useRef(null);
   const token = JSON.parse(localStorage.getItem("userData"));
-
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchCurrentUser = async () => {
       try {
@@ -250,9 +251,17 @@ const DataMatching = () => {
     }
   };
 
-  const onCompareTaskStartHandler = (taskdata)=>{
+  const onCompareTaskStartHandler = (taskdata) => {
     console.log(taskdata);
-  }
+    const req = async () => {
+      const response = await axios.get(
+        `http://${REACT_APP_IP}:4000/compareAssigned/${taskdata.id}`
+      );
+      console.log(response);
+    };
+    req();
+    // navigate("/correct_compare_csv");
+  };
 
   return (
     <>
@@ -339,7 +348,6 @@ const DataMatching = () => {
               <div className="flex flex-col space-y-4  md:flex-row md:items-center md:justify-between md:space-y-0">
                 <div>
                   <h2 className="text-3xl ">
-             
                     <strong>Assigned Tasks </strong>: <em> CSV Compare</em>
                   </h2>
                 </div>
@@ -398,7 +406,9 @@ const DataMatching = () => {
                               </div>
                               <div className="whitespace-nowrap px-4 py-4 text-right">
                                 <button
-                                  onClick={() => onCompareTaskStartHandler(taskData)}
+                                  onClick={() =>
+                                    onCompareTaskStartHandler(taskData)
+                                  }
                                   className="rounded border border-indigo-500 bg-indigo-500 px-10 py-1 font-semibold text-white"
                                 >
                                   Start
