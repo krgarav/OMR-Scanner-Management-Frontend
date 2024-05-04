@@ -16,24 +16,24 @@ import axios from "axios";
 const Correction = () => {
   const [currIndex, setCurrIndex] = useState(1);
   const [tableData, setTableData] = useState({});
-  const state = 1;
+  const [minimum, setMinimum] = useState();
+  const [maximum, setMaximum] = useState(0);
   const location = useLocation();
-  const lengthOfResult = location.state?.length;
+  const [taskId, setTaskId] = useState(
+    location.state !== null
+      ? location.state.id
+      : JSON.parse(localStorage.getItem("taskdata")).id
+  );
+  const state = 1;
+
   const navigate = useNavigate();
   const taskdata = location.state;
-  // const { min, max, currentIndex,id } = taskdata;
-  const { imageURL, data, min, max } = tableData;
-  // useEffect(() => {
-  //   if (dataCtx.imageMappedData.length === 0) {
-  //     navigate("/comparecsv", { replace: true });
-  //   }
-  // }, []);
+  const { imageURL, data } = tableData;
 
-  console.log(tableData);
   useEffect(() => {
     const req = async () => {
       const response = await axios.get(
-        `http://${REACT_APP_IP}:4000/compareAssigned/${1}`,
+        `http://${REACT_APP_IP}:4000/compareAssigned/${taskId}`,
         {
           headers: {
             currIndex,
@@ -44,25 +44,42 @@ const Correction = () => {
       setTableData(response.data);
     };
     req();
+  }, [currIndex]);
+  useEffect(() => {
+    const req = async () => {
+      const response = await axios.get(
+        `http://${REACT_APP_IP}:4000/compareAssigned/${taskId}`,
+        {
+          headers: {
+            currIndex,
+          },
+        }
+      );
+      setTableData(response.data);
+      setMaximum(parseInt(response.data.max));
+      setMinimum(parseInt(response.data.min));
+      setCurrIndex(parseInt(response.data.currentIndex));
+    };
+    req();
   }, []);
 
-  useEffect(() => {
-    const confirmExit = (e) => {
-      // Display a confirmation message
-      const confirmationMessage =
-        "Are you sure you want to leave this page? Please download corrected CSV before closing this page.";
-      e.returnValue = confirmationMessage;
-      return confirmationMessage;
-    };
+  // useEffect(() => {
+  //   const confirmExit = (e) => {
+  //     // Display a confirmation message
+  //     const confirmationMessage =
+  //       "Are you sure you want to leave this page? Please download corrected CSV before closing this page.";
+  //     e.returnValue = confirmationMessage;
+  //     return confirmationMessage;
+  //   };
 
-    // Add event listener when the component mounts
-    window.addEventListener("beforeunload", confirmExit);
+  //   // Add event listener when the component mounts
+  //   window.addEventListener("beforeunload", confirmExit);
 
-    // Remove event listener when the component unmounts
-    return () => {
-      window.removeEventListener("beforeunload", confirmExit);
-    };
-  }, []); // Empty dependency array to run effect only once on mount
+  //   // Remove event listener when the component unmounts
+  //   return () => {
+  //     window.removeEventListener("beforeunload", confirmExit);
+  //   };
+  // }, []); // Empty dependency array to run effect only once on mount
 
   useEffect(() => {
     const handlePopstate = (e) => {
@@ -94,11 +111,12 @@ const Correction = () => {
   }, []);
   useEffect(() => {
     const handleKeyDown = (event) => {
-      console.log(event.key);
       if (event.key === "ArrowRight") {
-        nextHandler();
+        const btn = document.getElementById("nextBtn");
+        btn.click();
       } else if (event.key === "ArrowLeft") {
-        prevHandler();
+        const btn = document.getElementById("prevBtn");
+        btn.click();
       }
     };
 
@@ -111,17 +129,17 @@ const Correction = () => {
 
   const prevHandler = () => {
     setCurrIndex((prev) => {
-      if (prev === min) {
+      if (prev == minimum) {
         return prev;
       } else {
         return prev - 1;
       }
     });
   };
-
+  console.log(currIndex, maximum);
   const nextHandler = () => {
     setCurrIndex((prev) => {
-      if (prev === max) {
+      if (prev == maximum) {
         return prev;
       } else {
         return prev + 1;
@@ -196,10 +214,10 @@ const Correction = () => {
         {state.length !== 0 && (
           <div className="w-full pt-20 pr-5">
             <h1 className="text-center text-3xl font-bold m-5">
-              {min} of {max}
+              {currIndex} of {maximum}
             </h1>
             <div className="pt-5 pl-4 pr-4 pb-3 h-2/3  bg-opacity-15 bg-black rounded mb-5 mr-5">
-              {data && <Table data={data} />}
+              {data && <Table data={data} index={currIndex} />}
             </div>
 
             <div className="flex justify-around">
@@ -207,6 +225,7 @@ const Correction = () => {
                 variant="contained"
                 startIcon={<ArrowBackIosIcon />}
                 onClick={prevHandler}
+                id="prevBtn"
               >
                 PREV
               </Button>
@@ -222,6 +241,7 @@ const Correction = () => {
                 variant="contained"
                 endIcon={<ArrowForwardIosIcon />}
                 onClick={nextHandler}
+                id="nextBtn"
               >
                 NEXT
               </Button>

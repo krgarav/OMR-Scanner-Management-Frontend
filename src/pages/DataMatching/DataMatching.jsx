@@ -253,9 +253,9 @@ const DataMatching = () => {
 
   const onCompareTaskStartHandler = (taskdata) => {
     console.log(taskdata);
-   
-    navigate("/correct_compare_csv", { state: taskdata });
 
+    localStorage.setItem("taskdata", JSON.stringify(taskdata));
+    navigate("/correct_compare_csv", { state: taskdata });
   };
 
   return (
