@@ -129,7 +129,7 @@ const CsvHomepage = () => {
           }
         }
         dataCtx.setImageMappedData(objArr);
-        console.log(response.data)
+        console.log(response.data);
         // navigate("/comparecsv/correct_compare_csv", { state: objArr });
         navigate("/comparecsv/assign_operator", { state: response.data });
       } catch (err) {

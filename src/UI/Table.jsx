@@ -19,13 +19,13 @@ const TableCol = (props) => {
   const [resultObj, setResultObj] = useState([]);
   const inputRef = useRef();
   const dataCtx = useContext(dataContext);
-
-  useEffect(() => {
-    inputRef.current.value = props.data.corrected;
-  }, [dataCtx.imageMappedData, props.data]);
-  useEffect(() => {
-    setResultObj(props.data);
-  }, [props.data]);
+  const { data } = props;
+  // useEffect(() => {
+  //   inputRef.current.value = props.data.corrected;
+  // }, [dataCtx.imageMappedData, props.data]);
+  // useEffect(() => {
+  //   setResultObj(props.data);
+  // }, [props.data]);
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -46,10 +46,10 @@ const TableCol = (props) => {
 
   const rows = [
     createData(
-      resultObj.PRIMARY,
-      resultObj.COLUMN_NAME,
-      resultObj.FILE_1_DATA,
-      resultObj.FILE_2_DATA
+      data.PRIMARY,
+      data.COLUMN_NAME,
+      data.FILE_1_DATA,
+      data.FILE_2_DATA
     ),
   ];
   const save = () => {
@@ -69,7 +69,6 @@ const TableCol = (props) => {
     dataCtx.setCsvFile(csvFile);
   };
   const saveHandler = () => {
-   
     if (
       typeof resultObj.FILE_1_DATA === "string" ||
       typeof resultObj.FILE_2_DATA === "string"
@@ -156,7 +155,7 @@ const TableCol = (props) => {
           {rows.map((row, index) => (
             <TableRow key={index}>
               <TableCell component="th" scope="row">
-                {dataCtx.primaryKey} : {row.name}
+                {row.name}
               </TableCell>
               <TableCell align="right">{row.calories}</TableCell>
               <TableCell align="right">{row.fat}</TableCell>
@@ -167,7 +166,7 @@ const TableCol = (props) => {
                   placeholder="Enter correct answer"
                   className="border p-3 w-2/3"
                   ref={inputRef}
-                  defaultValue={props.data.corrected}
+                  // defaultValue={props.data.corrected}
                 />
               </TableCell>
               <TableCell align="right">

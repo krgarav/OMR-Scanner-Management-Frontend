@@ -11,18 +11,34 @@ import { useLocation } from "react-router";
 import { toast } from "react-toastify";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import InfoRoundedIcon from "@mui/icons-material/InfoRounded";
+import { REACT_APP_IP } from "../../services/common";
+import axios from "axios";
 const Correction = () => {
   const [currIndex, setCurrIndex] = useState(0);
-  const dataCtx = useContext(dataContext);
-  const state = dataCtx.imageMappedData;
+  const [tableData, setTableData] = useState({});
+  const state = 1;
   const location = useLocation();
   const lengthOfResult = location.state?.length;
   const navigate = useNavigate();
-
+  const taskdata = location.state;
+  // const { min, max, currentIndex,id } = taskdata;
+  const { imageURL, data,min,max } = tableData;
+  // useEffect(() => {
+  //   if (dataCtx.imageMappedData.length === 0) {
+  //     navigate("/comparecsv", { replace: true });
+  //   }
+  // }, []);
+ 
+  console.log(tableData)
   useEffect(() => {
-    if (dataCtx.imageMappedData.length === 0) {
-      navigate("/comparecsv", { replace: true });
-    }
+    const req = async () => {
+      const response = await axios.get(
+        `http://${REACT_APP_IP}:4000/compareAssigned/${1}`
+      );
+      console.log(response.data)
+      setTableData(response.data);
+    };
+    req();
   }, []);
 
   useEffect(() => {
@@ -107,36 +123,36 @@ const Correction = () => {
       }
     });
   };
-  const convertToCsv = (jsonData) => {
-    const headers = Object.keys(jsonData[0]);
-    const csvHeader = headers.join(",") + "\n";
-    const csvData = jsonData
-      .map((obj) => {
-        return headers.map((key) => obj[key]).join(",");
-      })
-      .join("\n");
-    return csvHeader + csvData;
-  };
-  const downloadHandler = () => {
-    const jsonObj = dataCtx.csvFile;
-    const csvData = convertToCsv(jsonObj);
-    const blob = new Blob([csvData], { type: "text/csv" });
-    const link = document.createElement("a");
-    link.href = window.URL.createObjectURL(blob);
-    const date = new Date().toJSON();
-    link.download = `data_${date}.csv`;
-    link.click();
-    toast.success("Downloaded the corrected csv file", {
-      position: "bottom-left",
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "dark",
-    });
-  };
+  // const convertToCsv = (jsonData) => {
+  //   const headers = Object.keys(jsonData[0]);
+  //   const csvHeader = headers.join(",") + "\n";
+  //   const csvData = jsonData
+  //     .map((obj) => {
+  //       return headers.map((key) => obj[key]).join(",");
+  //     })
+  //     .join("\n");
+  //   return csvHeader + csvData;
+  // };
+  // const downloadHandler = () => {
+  //   const jsonObj = dataCtx.csvFile;
+  //   const csvData = convertToCsv(jsonObj);
+  //   const blob = new Blob([csvData], { type: "text/csv" });
+  //   const link = document.createElement("a");
+  //   link.href = window.URL.createObjectURL(blob);
+  //   const date = new Date().toJSON();
+  //   link.download = `data_${date}.csv`;
+  //   link.click();
+  //   toast.success("Downloaded the corrected csv file", {
+  //     position: "bottom-left",
+  //     autoClose: 2000,
+  //     hideProgressBar: false,
+  //     closeOnClick: true,
+  //     pauseOnHover: true,
+  //     draggable: true,
+  //     progress: undefined,
+  //     theme: "dark",
+  //   });
+  // };
 
   return (
     <>
@@ -149,7 +165,8 @@ const Correction = () => {
               <h1
                 className={`font-bold lg:text-2xl md:text-xl sm:text-lg ${classes.imgHead}`}
               >
-                Image Name : {state[currIndex].img.imgName}
+                
+                 Image Name :   { data&& data["IMAGE_NAME"]} 
               </h1>
               <Tooltip
                 title="Use mouse scroll wheel to zoom in and zoom out"
@@ -163,8 +180,7 @@ const Correction = () => {
               <TransformWrapper defaultScale={1}>
                 <TransformComponent>
                   <img
-                    // key={state[currIndex].img.imgUrl}
-                    src={state[currIndex].img.imgUrl}
+                    src={imageURL}
                     className={`w-full object-contain p-1 ${classes.imgContainer} zoomable-image   rounded`}
                     alt="omr sheet"
                   />
@@ -176,10 +192,10 @@ const Correction = () => {
         {state.length !== 0 && (
           <div className="w-full pt-20 pr-5">
             <h1 className="text-center text-3xl font-bold m-5">
-              {currIndex + 1} of {state.length}
+              {min} of {max}
             </h1>
             <div className="pt-5 pl-4 pr-4 pb-3 h-2/3  bg-opacity-15 bg-black rounded mb-5 mr-5">
-              <Table data={state[currIndex].data} />
+               {data&& <Table data={data} /> } 
             </div>
 
             <div className="flex justify-around">
@@ -190,14 +206,14 @@ const Correction = () => {
               >
                 PREV
               </Button>
-              <Button
+              {/* <Button
                 variant="contained"
                 endIcon={<DownloadIcon />}
                 onClick={downloadHandler}
                 color="secondary"
               >
                 DOWNLOAD CORRECTED CSV
-              </Button>
+              </Button> */}
               <Button
                 variant="contained"
                 endIcon={<ArrowForwardIosIcon />}

@@ -253,14 +253,9 @@ const DataMatching = () => {
 
   const onCompareTaskStartHandler = (taskdata) => {
     console.log(taskdata);
-    const req = async () => {
-      const response = await axios.get(
-        `http://${REACT_APP_IP}:4000/compareAssigned/${taskdata.id}`
-      );
-      console.log(response);
-    };
-    req();
-    // navigate("/correct_compare_csv");
+   
+    navigate("/correct_compare_csv", { state: taskdata });
+
   };
 
   return (

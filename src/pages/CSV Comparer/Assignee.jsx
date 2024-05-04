@@ -72,6 +72,7 @@ const Assignee = () => {
       fileId: 0,
       correctedFilePath: location.state.correctedFilePath,
       errorFilePath: location.state.errorFilePath,
+      imageDirectoryPath: location.state.imageDirectoryName,
       moduleType: "CSV Compare",
     };
     setAssignedUsers([...assignedUsers, newAssignedTask]);
