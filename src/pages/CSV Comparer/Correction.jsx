@@ -14,7 +14,7 @@ import InfoRoundedIcon from "@mui/icons-material/InfoRounded";
 import { REACT_APP_IP } from "../../services/common";
 import axios from "axios";
 const Correction = () => {
-  const [currIndex, setCurrIndex] = useState(0);
+  const [currIndex, setCurrIndex] = useState(1);
   const [tableData, setTableData] = useState({});
   const state = 1;
   const location = useLocation();
@@ -22,20 +22,25 @@ const Correction = () => {
   const navigate = useNavigate();
   const taskdata = location.state;
   // const { min, max, currentIndex,id } = taskdata;
-  const { imageURL, data,min,max } = tableData;
+  const { imageURL, data, min, max } = tableData;
   // useEffect(() => {
   //   if (dataCtx.imageMappedData.length === 0) {
   //     navigate("/comparecsv", { replace: true });
   //   }
   // }, []);
- 
-  console.log(tableData)
+
+  console.log(tableData);
   useEffect(() => {
     const req = async () => {
       const response = await axios.get(
-        `http://${REACT_APP_IP}:4000/compareAssigned/${1}`
+        `http://${REACT_APP_IP}:4000/compareAssigned/${1}`,
+        {
+          headers: {
+            currIndex,
+          },
+        }
       );
-      console.log(response.data)
+
       setTableData(response.data);
     };
     req();
@@ -106,7 +111,7 @@ const Correction = () => {
 
   const prevHandler = () => {
     setCurrIndex((prev) => {
-      if (prev === 0) {
+      if (prev === min) {
         return prev;
       } else {
         return prev - 1;
@@ -116,7 +121,7 @@ const Correction = () => {
 
   const nextHandler = () => {
     setCurrIndex((prev) => {
-      if (prev === lengthOfResult - 1) {
+      if (prev === max) {
         return prev;
       } else {
         return prev + 1;
@@ -165,8 +170,7 @@ const Correction = () => {
               <h1
                 className={`font-bold lg:text-2xl md:text-xl sm:text-lg ${classes.imgHead}`}
               >
-                
-                 Image Name :   { data&& data["IMAGE_NAME"]} 
+                Image Name : {data && data["IMAGE_NAME"]}
               </h1>
               <Tooltip
                 title="Use mouse scroll wheel to zoom in and zoom out"
@@ -195,7 +199,7 @@ const Correction = () => {
               {min} of {max}
             </h1>
             <div className="pt-5 pl-4 pr-4 pb-3 h-2/3  bg-opacity-15 bg-black rounded mb-5 mr-5">
-               {data&& <Table data={data} /> } 
+              {data && <Table data={data} />}
             </div>
 
             <div className="flex justify-around">
