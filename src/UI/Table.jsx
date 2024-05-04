@@ -69,12 +69,20 @@ const TableCol = (props) => {
     dataCtx.setCsvFile(csvFile);
   };
   const saveHandler = () => {
+    const capitalStrArr = ["A", "B", "C", "D"];
+    const smallStrArr = ["a", "b", "c", "d"];
+    const numArr = [1, 2, 3, 4];
+    const isUpperCase1 = /^[A-Z]+$/.test(resultObj.FILE_1_DATA);
+    const isUpperCase2 = /^[A-Z]+$/.test(resultObj.FILE_2_DATA);
+    const isLowererCase1 = /^[a-z]+$/.test(resultObj.FILE_1_DATA);
+    const isLowererCase2 = /^[a-z]+$/.test(resultObj.FILE_2_DATA);
+
     if (
       typeof resultObj.FILE_1_DATA === "string" ||
       typeof resultObj.FILE_2_DATA === "string"
     ) {
       if (!isNaN(inputRef.current.value)) {
-        var result = window.confirm("Please check the string");
+        var result = window.confirm("Please check the input type");
         if (result) {
           save();
           toast.success("Saved file successfully", {
@@ -100,18 +108,92 @@ const TableCol = (props) => {
           });
         }
         return;
-      } else {
-        save();
-        toast.success("Saved file successfully", {
-          position: "bottom-left",
-          autoClose: 1000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-        });
+      } else if (isUpperCase1 || isUpperCase2) {
+        if (!capitalStrArr.includes(inputRef.current.value)) {
+          var result = window.confirm(
+            "Answer out of bound, Do you still want to save ?"
+          );
+          if (result) {
+            save();
+            toast.success("Saved file successfully", {
+              position: "bottom-left",
+              autoClose: 1000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark",
+            });
+          } else {
+            toast.warning("File Not Saved", {
+              position: "bottom-left",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark",
+            });
+          }
+          return;
+        } else {
+          save();
+          toast.success("Saved file successfully", {
+            position: "bottom-left",
+            autoClose: 1000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+          });
+        }
+      } else if (isLowererCase1 || isLowererCase2) {
+        if (!capitalStrArr.includes(inputRef.current.value)) {
+          var result = window.confirm(
+            "Answer out of bound, Do you still want to save ?"
+          );
+          if (result) {
+            save();
+            toast.success("Saved file successfully", {
+              position: "bottom-left",
+              autoClose: 1000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark",
+            });
+          } else {
+            toast.warning("File Not Saved", {
+              position: "bottom-left",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark",
+            });
+          }
+          return;
+        } else {
+          save();
+          toast.success("Saved file successfully", {
+            position: "bottom-left",
+            autoClose: 1000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+          });
+        }
       }
     } else if (
       typeof resultObj.FILE_1_DATA === "number" ||
