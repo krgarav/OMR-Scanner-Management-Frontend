@@ -39,7 +39,7 @@ const DataMatching = () => {
         const comTask = tasks.filter((task) => {
           return task.moduleType === "CSV Compare";
         });
-        console.log(uploadTask);
+       
 
         const updatedTasks = uploadTask.map((task) => {
           const matchedTemplate = templateData.find(
@@ -128,7 +128,7 @@ const DataMatching = () => {
       setImageNotFound(true);
       setPopUp(false);
     } catch (error) {
-      toast.error("Image not found!.");
+      toast.error("Image not found!.",error);
       setImageNotFound(false);
     }
   };

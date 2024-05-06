@@ -15,7 +15,7 @@
 }
 
 .imgHead {
-  padding: 5px;
+  padding-top: 5px;
   border: 1px solid white;
   background-color: aliceblue;
   border-radius: 10px;
@@ -25,7 +25,7 @@
   /* margin-top: 10px; */
 }
 .imgContainer {
-  height: 83dvh;
+  height: 80dvh;
 }
 @keyframes slideLeftToRight {
   0% {

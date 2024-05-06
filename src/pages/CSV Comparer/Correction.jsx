@@ -25,7 +25,6 @@ const Correction = () => {
       : JSON.parse(localStorage.getItem("taskdata")).id
   );
   const state = 1;
-
   const navigate = useNavigate();
   const taskdata = location.state;
   const { imageURL, data } = tableData;
@@ -136,8 +135,9 @@ const Correction = () => {
       }
     });
   };
-  console.log(currIndex, maximum);
+
   const nextHandler = () => {
+    console.log(currIndex, maximum);
     setCurrIndex((prev) => {
       if (prev == maximum) {
         return prev;
@@ -180,11 +180,11 @@ const Correction = () => {
   return (
     <>
       <div
-        className={`flex xs:flex-col md:flex-col lg:flex-row justify-between animate-slide-left-to-right ${classes.correction} `}
+        className={`flex xs:flex-col md:flex-col lg:flex-row  animate-slide-left-to-right ${classes.correction} `}
       >
         {state.length !== 0 && (
-          <div className="w-full pt-20">
-            <div className={`flex justify-center w-full ${classes.imgdiv}`}>
+          <div className="w-1/3 pt-20">
+            <div className={`flex justify-center  ${classes.imgdiv}`}>
               <h1
                 className={`font-bold lg:text-2xl md:text-xl sm:text-lg ${classes.imgHead}`}
               >
@@ -203,7 +203,7 @@ const Correction = () => {
                 <TransformComponent>
                   <img
                     src={imageURL}
-                    className={`w-full object-contain p-1 ${classes.imgContainer} zoomable-image   rounded`}
+                    className={`object-contain  ${classes.imgContainer} zoomable-image rounded`}
                     alt="omr sheet"
                   />
                 </TransformComponent>
@@ -212,11 +212,11 @@ const Correction = () => {
           </div>
         )}
         {state.length !== 0 && (
-          <div className="w-full pt-20 pr-5">
+          <div className="w-2/3 pt-20 pr-5">
             <h1 className="text-center text-3xl font-bold m-5">
               {currIndex} of {maximum}
             </h1>
-            <div className="pt-5 pl-4 pr-4 pb-3 h-2/3  bg-opacity-15 bg-black rounded mb-5 mr-5">
+            <div className="pt-5 pl-4 pr-4 pb-3 h-2/3  bg-opacity-15 bg-black rounded mb-5 ">
               {data && <Table data={data} index={currIndex} />}
             </div>
 
