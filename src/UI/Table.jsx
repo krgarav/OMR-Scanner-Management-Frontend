@@ -10,6 +10,8 @@ import { Button } from "@mui/material";
 import SaveIcon from "@mui/icons-material/Save";
 import dataContext from "../Store/DataContext";
 import { toast } from "react-toastify";
+import { REACT_APP_IP } from "../services/common";
+import axios from "axios";
 
 function createData(name, calories, fat, carbs, protein) {
   return { name, calories, fat, carbs, protein };
@@ -19,10 +21,29 @@ const TableCol = (props) => {
   const [resultObj, setResultObj] = useState([]);
   const inputRef = useRef();
   const dataCtx = useContext(dataContext);
-  const { data } = props;
-  // useEffect(() => {
-  //   inputRef.current.value = props.data.corrected;
-  // }, [dataCtx.imageMappedData, props.data]);
+  const { PRIMARY, COLUMN_NAME, FILE_1_DATA, FILE_2_DATA, CORRECTED } =
+    props.data;
+  const token = JSON.parse(localStorage.getItem("userData"));
+  useEffect(() => {
+    const parsedData = JSON.parse(CORRECTED);
+
+    // if (parsedData.length > 0) {
+    let found = false;
+
+    for (let i = 0; i < parsedData.length; i++) {
+      for (let [key, value] of Object.entries(parsedData[i])) {
+        if (key === COLUMN_NAME) {
+          found = true;
+          inputRef.current.value = value;
+          break; // No need to continue loop if match is found
+        }
+      }
+    }
+    if (!found) {
+      inputRef.current.value = "";
+    }
+    // inputRef.current.value = props.data.corrected;
+  }, [props.data]);
   // useEffect(() => {
   //   setResultObj(props.data);
   // }, [props.data]);
@@ -44,29 +65,43 @@ const TableCol = (props) => {
     };
   }, []);
 
-  const rows = [
-    createData(
-      data.PRIMARY,
-      data.COLUMN_NAME,
-      data.FILE_1_DATA,
-      data.FILE_2_DATA
-    ),
-  ];
+  const rows = [createData(PRIMARY, COLUMN_NAME, FILE_1_DATA, FILE_2_DATA)];
   const save = () => {
-    const csvFile = dataCtx.csvFile;
-    for (let i = 0; i < csvFile.length; i++) {
-      if (csvFile[i][dataCtx.primaryKey].trim() === resultObj.PRIMARY.trim()) {
-        csvFile[i][resultObj.COLUMN_NAME] = inputRef.current.value;
-      }
-    }
-    const mappedData = [...dataCtx.imageMappedData];
-    for (let j = 0; j < mappedData.length; j++) {
-      if (mappedData[j].data.PRIMARY.trim() === resultObj.PRIMARY.trim()) {
-        mappedData[j].data.corrected = inputRef.current.value;
-      }
-    }
-    dataCtx.setImageMappedData(mappedData);
-    dataCtx.setCsvFile(csvFile);
+    // const csvFile = dataCtx.csvFile;
+    // for (let i = 0; i < csvFile.length; i++) {
+    //   if (csvFile[i][dataCtx.primaryKey].trim() === resultObj.PRIMARY.trim()) {
+    //     csvFile[i][resultObj.COLUMN_NAME] = inputRef.current.value;
+    //   }
+    // }
+    // const mappedData = [...dataCtx.imageMappedData];
+    // for (let j = 0; j < mappedData.length; j++) {
+    //   if (mappedData[j].data.PRIMARY.trim() === resultObj.PRIMARY.trim()) {
+    //     mappedData[j].data.corrected = inputRef.current.value;
+    //   }
+    // }
+    // dataCtx.setImageMappedData(mappedData);
+    // dataCtx.setCsvFile(csvFile);
+    const { index, taskId, data } = props;
+    const { COLUMN_NAME } = data;
+    const req = async () => {
+      const response = await axios.post(
+        `http://${REACT_APP_IP}:4000/saveAnswer/${taskId}`,
+
+        {
+          currentIndexValue: index,
+          column_name: COLUMN_NAME,
+          corrected_value: inputRef.current.value,
+        },
+        {
+          headers: {
+            token: token,
+          },
+        }
+      );
+      console.log(response);
+    };
+    req();
+    // console.log(props);
   };
   const saveHandler = () => {
     const capitalStrArr = ["A", "B", "C", "D"];

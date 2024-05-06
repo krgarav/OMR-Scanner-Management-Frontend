@@ -25,6 +25,7 @@ const Correction = () => {
       : JSON.parse(localStorage.getItem("taskdata")).id
   );
   const state = 1;
+  const token = JSON.parse(localStorage.getItem("userData"));
 
   const navigate = useNavigate();
   const taskdata = location.state;
@@ -36,6 +37,7 @@ const Correction = () => {
         `http://${REACT_APP_IP}:4000/compareAssigned/${taskId}`,
         {
           headers: {
+            token: token,
             currIndex,
           },
         }
@@ -51,6 +53,7 @@ const Correction = () => {
         `http://${REACT_APP_IP}:4000/compareAssigned/${taskId}`,
         {
           headers: {
+            token: token,
             currIndex,
           },
         }
@@ -63,23 +66,23 @@ const Correction = () => {
     req();
   }, []);
 
-  // useEffect(() => {
-  //   const confirmExit = (e) => {
-  //     // Display a confirmation message
-  //     const confirmationMessage =
-  //       "Are you sure you want to leave this page? Please download corrected CSV before closing this page.";
-  //     e.returnValue = confirmationMessage;
-  //     return confirmationMessage;
-  //   };
+  useEffect(() => {
+    const confirmExit = (e) => {
+      // Display a confirmation message
+      const confirmationMessage =
+        "Are you sure you want to leave this page? Please download corrected CSV before closing this page.";
+      e.returnValue = confirmationMessage;
+      return confirmationMessage;
+    };
 
-  //   // Add event listener when the component mounts
-  //   window.addEventListener("beforeunload", confirmExit);
+    // Add event listener when the component mounts
+    window.addEventListener("beforeunload", confirmExit);
 
-  //   // Remove event listener when the component unmounts
-  //   return () => {
-  //     window.removeEventListener("beforeunload", confirmExit);
-  //   };
-  // }, []); // Empty dependency array to run effect only once on mount
+    // Remove event listener when the component unmounts
+    return () => {
+      window.removeEventListener("beforeunload", confirmExit);
+    };
+  }, []); // Empty dependency array to run effect only once on mount
 
   useEffect(() => {
     const handlePopstate = (e) => {
@@ -136,7 +139,7 @@ const Correction = () => {
       }
     });
   };
-  console.log(currIndex, maximum);
+
   const nextHandler = () => {
     setCurrIndex((prev) => {
       if (prev == maximum) {
@@ -156,26 +159,27 @@ const Correction = () => {
   //     .join("\n");
   //   return csvHeader + csvData;
   // };
-  // const downloadHandler = () => {
-  //   const jsonObj = dataCtx.csvFile;
-  //   const csvData = convertToCsv(jsonObj);
-  //   const blob = new Blob([csvData], { type: "text/csv" });
-  //   const link = document.createElement("a");
-  //   link.href = window.URL.createObjectURL(blob);
-  //   const date = new Date().toJSON();
-  //   link.download = `data_${date}.csv`;
-  //   link.click();
-  //   toast.success("Downloaded the corrected csv file", {
-  //     position: "bottom-left",
-  //     autoClose: 2000,
-  //     hideProgressBar: false,
-  //     closeOnClick: true,
-  //     pauseOnHover: true,
-  //     draggable: true,
-  //     progress: undefined,
-  //     theme: "dark",
-  //   });
-  // };
+  const downloadHandler = () => {
+    // const jsonObj = dataCtx.csvFile;
+    // const csvData = convertToCsv(jsonObj);
+    // const blob = new Blob([csvData], { type: "text/csv" });
+    // const link = document.createElement("a");
+    // link.href = window.URL.createObjectURL(blob);
+    // const date = new Date().toJSON();
+    // link.download = `data_${date}.csv`;
+    // link.click();
+    // toast.success("Downloaded the corrected csv file", {
+    //   position: "bottom-left",
+    //   autoClose: 2000,
+    //   hideProgressBar: false,
+    //   closeOnClick: true,
+    //   pauseOnHover: true,
+    //   draggable: true,
+    //   progress: undefined,
+    //   theme: "dark",
+    // });
+    const result = window.confirm("Are you sure to submit the assigned task ?");
+  };
 
   return (
     <>
@@ -217,7 +221,7 @@ const Correction = () => {
               {currIndex} of {maximum}
             </h1>
             <div className="pt-5 pl-4 pr-4 pb-3 h-2/3  bg-opacity-15 bg-black rounded mb-5 mr-5">
-              {data && <Table data={data} index={currIndex} />}
+              {data && <Table data={data} index={currIndex} taskId={taskId} />}
             </div>
 
             <div className="flex justify-around">
@@ -229,14 +233,14 @@ const Correction = () => {
               >
                 PREV
               </Button>
-              {/* <Button
+              <Button
                 variant="contained"
                 endIcon={<DownloadIcon />}
                 onClick={downloadHandler}
                 color="secondary"
               >
-                DOWNLOAD CORRECTED CSV
-              </Button> */}
+                SUBMIT TASK
+              </Button>
               <Button
                 variant="contained"
                 endIcon={<ArrowForwardIosIcon />}
