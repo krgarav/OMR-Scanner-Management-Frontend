@@ -10,6 +10,7 @@ import axios from "axios";
 import { useNavigate } from "react-router";
 import classes from "./CSVHompage.module.css";
 import { REACT_APP_IP } from "../../services/common";
+import TextField from "@mui/material/TextField";
 const CsvHomepage = () => {
   const navigate = useNavigate();
   const dataCtx = useContext(dataContext);
@@ -168,8 +169,8 @@ const CsvHomepage = () => {
             </div>
           </div>
 
-          <div className="flex justify-between ">
-            <div className="bg-opacity-60 border pl-2 pb-2  bg-slate-100 rounded lg:w-1/3  ">
+          <div className="flex justify-between gap-10">
+            <div className="bg-opacity-60 border pl-2 pb-2  bg-slate-100 rounded w-1/2  ">
               <div className="flex flex-row pt-2 pb-2 justify-between self-center ">
                 <p className="text-sm font-semibold align-bottom self-center ">
                   Select Key For Skipping Comparison
@@ -178,9 +179,27 @@ const CsvHomepage = () => {
               </div>
               <OptimisedList />
             </div>
-            <div></div>
-
-            <div className="flex self-end">
+            <div className="flex flex-col w-1/2 bg-opacity-60 border pb-2 pt-3 px-2  bg-slate-100 rounded">
+              <label>Required for assigning the task</label>
+              <br />
+              <TextField
+                id="outlined-basic"
+                label="Enter template Name"
+                variant="outlined"
+                onChange={(event) => {
+                  // setTemplateName(event.target.value);
+                }}
+              />
+            </div>
+          </div>
+          <div className="flex justify-center m-10 gap-10">
+            <div >
+              <Fab variant="extended" color="primary" onClick={compareHandler}>
+                <CompareArrowsIcon sx={{ mr: 1 }} />
+                Find mult and blank
+              </Fab>
+            </div>
+            <div >
               <Fab variant="extended" color="primary" onClick={compareHandler}>
                 <CompareArrowsIcon sx={{ mr: 1 }} />
                 Compare And Match

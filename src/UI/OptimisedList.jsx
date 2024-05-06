@@ -142,7 +142,7 @@ const OptimisedList = () => {
       sx={{
         width: "100%",
         minHeight: "30dvh",
-        maxHeight: "40dvh",
+        maxHeight: "30dvh",
         overflowY: "scroll",
         display: "flex",
         flexDirection: "column",
