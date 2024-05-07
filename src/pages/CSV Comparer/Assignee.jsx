@@ -24,7 +24,7 @@ const Assignee = () => {
   const navigate = useNavigate();
   const token = JSON.parse(localStorage.getItem("userData"));
   const location = useLocation();
-  // const [templateName, setTemplateName] = useState("");
+  const [templateName, setTemplateName] = useState("");
   const state = location.state;
 
   useEffect(() => {
@@ -103,6 +103,7 @@ const Assignee = () => {
       errorFilePath: location.state.errorFilePath,
       imageDirectoryPath: location.state.imageDirectoryName,
       moduleType: "CSV Compare",
+      // templateName: templateName
     };
     setAssignedUsers([...assignedUsers, newAssignedTask]);
 
@@ -117,8 +118,8 @@ const Assignee = () => {
   const onTaskSubmitHandler = async () => {
     try {
       await axios.post(
-        `http://${REACT_APP_IP}:4000/assign/user`,
-        assignedUsers,
+        `http://${REACT_APP_IP}:4000/assign`,
+        {assignedUsers : assignedUsers,templateName:templateName},
         {
           headers: {
             token: token,
@@ -273,7 +274,7 @@ const Assignee = () => {
                             <input
                               type="text"
                               readOnly
-                              value="{templateName}"
+                              value={templateName}
                               placeholder="Empty Name"
                               id="Line3Qty"
                               className="h-10 w-auto rounded border-gray-400 bg-gray-200 p-0 text-center text-gray-600 [-moz-appearance:_textfield] focus:outline-none [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none"
@@ -298,14 +299,15 @@ const Assignee = () => {
           <br />
           {/* MODEL SECTION  */}
           <div className="flex flex-row justify-between">
-            {/* <div class="max-w-md mx-auto bg-white rounded-md p-6 shadow-md">
-              <label class="block mb-2">Template Name</label>
+            <div className=" bg-white rounded-md p-6 shadow-md">
+              <label className="block mb-2">Template Name</label>
               <input
                 type="text"
                 placeholder="Enter template name"
-                class="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-400"
+                className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-400"
+                onChange={(e)=>{setTemplateName(e.target.value)}}
               />
-            </div> */}
+            </div> 
 
            
             <div className=" mt-10">

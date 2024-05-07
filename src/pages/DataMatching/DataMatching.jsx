@@ -39,7 +39,18 @@ const DataMatching = () => {
         const comTask = tasks.filter((task) => {
           return task.moduleType === "CSV Compare";
         });
-       
+        const updatedCompareTasks = comTask.map((task) => {
+          const matchedTemplate = templateData.find(
+            (template) => template.id === parseInt(task.templeteId)
+          );
+          if (matchedTemplate) {
+            return {
+              ...task,
+              templateName: matchedTemplate.name,
+            };
+          }
+          return task;
+        }); 
 
         const updatedTasks = uploadTask.map((task) => {
           const matchedTemplate = templateData.find(
@@ -57,7 +68,7 @@ const DataMatching = () => {
 
         setAllTasks(updatedTasks);
 
-        setCompareTask(comTask);
+        setCompareTask(updatedCompareTasks);
       } catch (error) {
         console.log(error);
       }
