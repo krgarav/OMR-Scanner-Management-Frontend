@@ -2,8 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { onGetTemplateHandler } from "../../services/common";
-import { REACT_APP_IP } from "../../services/common";
+import { onGetTemplateHandler, REACT_APP_IP } from "../../services/common";
 
 const TemplateMapping = () => {
   const [csvHeaders, setCsvHeaders] = useState([]);
@@ -13,7 +12,7 @@ const TemplateMapping = () => {
   const { id } = useParams();
 
   const navigate = useNavigate();
-  let { fileId } = JSON.parse(localStorage.getItem("fileId"));
+  let { fileId } = JSON.parse(localStorage.getItem("fileId")) || "";
   let token = JSON.parse(localStorage.getItem("userData"));
 
   useEffect(() => {
@@ -62,11 +61,30 @@ const TemplateMapping = () => {
 
     setSelectedAssociations(updatedAssociations);
   };
-
   const handleTemplateHeaderChange = (csvHeader, templateHeader) => {
     const updatedAssociations = { ...selectedAssociations };
-    updatedAssociations[csvHeader] = templateHeader;
 
+    if (templateHeader.includes("--")) {
+      const [min, max] = templateHeader.split("--");
+      const newMin = parseInt(min);
+      const newMax = parseInt(max);
+
+      console.log(min, max);
+
+      // Loop through all headers
+      Object.keys(selectedAssociations).forEach((header) => {
+        const questionNumber = parseInt(header.replace(/\D/g, ""));
+        if (questionNumber >= newMin && questionNumber <= newMax) {
+          updatedAssociations[header] = templateHeader;
+        }
+      });
+    } else if (templateHeader === "UserFieldName") {
+      updatedAssociations[csvHeader] = "";
+    } else {
+      updatedAssociations[csvHeader] = templateHeader;
+    }
+
+    // Ensure all headers are included in updatedAssociations
     csvHeaders.forEach((header) => {
       if (!(header in updatedAssociations)) {
         updatedAssociations[header] = "";
@@ -75,6 +93,8 @@ const TemplateMapping = () => {
 
     setSelectedAssociations(updatedAssociations);
   };
+
+  console.log(selectedAssociations);
 
   const onMapSubmitHandler = async () => {
     const mappedvalues = Object.values(selectedAssociations);
@@ -111,6 +131,8 @@ const TemplateMapping = () => {
     }
   };
 
+  console.log(selectedAssociations);
+
   return (
     <div className="py-12 min-h-[100vh] overflow-y overflow-x-auto flex justify-center templatemapping">
       <div className="w-[700px] mt-20">
@@ -144,9 +166,9 @@ const TemplateMapping = () => {
                 onChange={(e) =>
                   handleTemplateHeaderChange(csvHeader, e.target.value)
                 }
-                value={selectedAssociations[csvHeader] || "User Field Name"}
+                value={selectedAssociations[csvHeader] || "UserFieldName"}
               >
-                <option disabled>User Field Name</option>
+                <option>UserFieldName</option>
                 {templateHeaders &&
                   templateHeaders?.templetedata?.map((template, idx) => (
                     <option key={idx} value={template.attribute}>

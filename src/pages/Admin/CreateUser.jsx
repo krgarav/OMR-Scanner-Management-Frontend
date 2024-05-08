@@ -13,7 +13,6 @@ const CreateUser = () => {
     role: "",
     permissions: {
       dataEntry: false,
-      csvCompare: false,
       resultGenerator: false,
     },
   });
@@ -94,7 +93,6 @@ const CreateUser = () => {
         role: "",
         permissions: {
           dataEntry: false,
-          csvCompare: false,
           resultGenerator: false,
         },
       });
@@ -220,7 +218,7 @@ const CreateUser = () => {
                   Data Entry
                 </label>
               </div>
-              <div className="flex items-center">
+              {/* <div className="flex items-center">
                 <input
                   id="csvCompare"
                   name="csvCompare"
@@ -235,7 +233,7 @@ const CreateUser = () => {
                 >
                   CSV Compare
                 </label>
-              </div>
+              </div> */}
 
               <div className="flex items-center">
                 <input

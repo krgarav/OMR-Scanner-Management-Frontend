@@ -26,6 +26,10 @@ const Assignee = () => {
   const location = useLocation();
   const [templateName, setTemplateName] = useState("");
   const state = location.state;
+  useEffect(() => {
+    const input = document.getElementById("templateInputName");
+    input.focus();
+  }, []);
 
   useEffect(() => {
     if (!state) {
@@ -77,6 +81,7 @@ const Assignee = () => {
   }, [selectedUser]);
 
   const onTaskAssignedHandler = () => {
+    const input = document.getElementById("templateInputName");
     if (
       !taskValue.max ||
       taskValue.max <= 0 ||
@@ -84,6 +89,12 @@ const Assignee = () => {
       taskValue.max > state.data.length
     ) {
       toast.warning("Please check your input values.");
+      return;
+    }
+
+    if (!input.value) {
+      input.focus()
+      toast.warning("Template name cannot be empty.");
       return;
     }
 
@@ -103,7 +114,6 @@ const Assignee = () => {
       errorFilePath: location.state.errorFilePath,
       imageDirectoryPath: location.state.imageDirectoryName,
       moduleType: "CSV Compare",
-      // templateName: templateName
     };
     setAssignedUsers([...assignedUsers, newAssignedTask]);
 
@@ -119,7 +129,7 @@ const Assignee = () => {
     try {
       await axios.post(
         `http://${REACT_APP_IP}:4000/assign`,
-        {assignedUsers : assignedUsers,templateName:templateName},
+        { assignedUsers: assignedUsers, templateName: templateName },
         {
           headers: {
             token: token,
@@ -261,9 +271,6 @@ const Assignee = () => {
                                   ...taskValue,
                                   max: e.target.value,
                                 });
-                                // if(e.target.value> state.data.length){
-
-                                // }
                               }}
                               className="h-10 w-16 rounded border-gray-400 bg-gray-200 p-0 text-center text-gray-600 [-moz-appearance:_textfield] focus:outline-none [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none"
                             />
@@ -303,13 +310,15 @@ const Assignee = () => {
               <label className="block mb-2">Template Name</label>
               <input
                 type="text"
+                id="templateInputName"
                 placeholder="Enter template name"
                 className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-400"
-                onChange={(e)=>{setTemplateName(e.target.value)}}
+                onChange={(e) => {
+                  setTemplateName(e.target.value);
+                }}
               />
-            </div> 
+            </div>
 
-           
             <div className=" mt-10">
               <label
                 onClick={() => setShowModal(true)}

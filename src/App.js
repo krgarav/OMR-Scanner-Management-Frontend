@@ -50,6 +50,11 @@ function App() {
             {/* <Route path="/home" element={""} /> */}
             {role === "Admin" && (
               <>
+                <Route path="/comparecsv" element={<CsvHomepage />} />
+                <Route
+                  path="/comparecsv/assign_operator"
+                  element={<Assignee />}
+                />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/create-user" element={<CreateUser />} />
                 <Route path="/all-user" element={<AllUser />} />
@@ -69,23 +74,18 @@ function App() {
                 />
               </>
             )}
-            {(role === "Admin" ||
+            {/* {(role === "Admin" ||
               role === "Moderator" ||
               role === "Operator") &&
-              permissions.csvCompare && (
+              permissions && (
                 <>
-                  <Route path="/comparecsv" element={<CsvHomepage />} />
                   <Route path="/profile" element={<Profile />} />
                   <Route
-                    path="/comparecsv/assign_operator"
-                    element={<Assignee />}
-                  />
-                  <Route
-                    path="/correct_compare_csv"
+                    path="datamatching/correct_compare_csv"
                     element={<Correction />}
                   />
                 </>
-              )}
+              )} */}
 
             {(role === "Admin" ||
               role === "Moderator" ||
@@ -94,6 +94,10 @@ function App() {
                 <>
                   <Route path="/datamatching" element={<DataMatching />} />
                   <Route path="/profile" element={<Profile />} />
+                  <Route
+                    path="datamatching/correct_compare_csv"
+                    element={<Correction />}
+                  />
                 </>
               )}
 

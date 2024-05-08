@@ -11,7 +11,6 @@ const Input = (props) => {
     if (file) {
       const formData = new FormData();
       formData.append("file", file);
-
       switch (props.state) {
         case "first":
           if (file) {
@@ -28,7 +27,6 @@ const Input = (props) => {
             });
           }
           datactx.addFirstInputFileName(file.name);
-
           datactx.addFirstInputCsvFile(file);
           break;
         case "second":
@@ -37,10 +35,9 @@ const Input = (props) => {
           break;
         case "third":
           (async function () {
-            const images = await extractImagesFromZip(file);
-            console.log(file);
-            datactx.setUploadZipImage(file)
-            datactx.addZipImageFile(images);
+            // const images = await extractImagesFromZip(file);
+            datactx.setUploadZipImage(file);
+            // datactx.addZipImageFile(images);
           })();
           break;
         default:

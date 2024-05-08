@@ -17,15 +17,15 @@ const menuItems = [
     href: "csvuploader",
   },
   {
+    name: "CSV Compare",
+    href: "comparecsv",
+  },
+  {
     name: "Data Entry",
     permission: "dataEntry",
     href: "datamatching",
   },
-  {
-    name: "CSV Compare",
-    permission: "csvCompare",
-    href: "comparecsv",
-  },
+
   {
     name: "Result Generator",
     permission: "resultGenerator",
@@ -296,7 +296,6 @@ export default function Navbar() {
                       : isUserMenuOpen && (
                           <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 user-menu">
                             <div className="py-1">
-                            
                               {userMenuItems
                                 .filter(
                                   (item) =>

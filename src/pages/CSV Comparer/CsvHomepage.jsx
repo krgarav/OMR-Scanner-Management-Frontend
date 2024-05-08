@@ -1,20 +1,23 @@
 import Customselect from "../../UI/Customselect";
 import Input from "../../UI/Input";
-import Fab from "@mui/material/Fab";
+import { Fab, CircularProgress } from "@mui/material";
 import CompareArrowsIcon from "@mui/icons-material/CompareArrows";
 import OptimisedList from "../../UI/OptimisedList";
 import Button from "@mui/material/Button";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import dataContext from "../../Store/DataContext";
 import axios from "axios";
 import { useNavigate } from "react-router";
 import classes from "./CSVHompage.module.css";
 import { REACT_APP_IP } from "../../services/common";
-import TextField from "@mui/material/TextField";
-const CsvHomepage = () => {
-  const navigate = useNavigate();
-  const dataCtx = useContext(dataContext);
+import LoadingButton from "@mui/lab/LoadingButton";
+import ModalWithLoadingBar from "../../UI/Modal";
 
+const CsvHomepage = () => {
+  const [loading, setLoading] = useState(false);
+  const dataCtx = useContext(dataContext);
+  const navigate = useNavigate();
+  const [progress, setProgress] = useState(0);
   const token = JSON.parse(localStorage.getItem("userData"));
 
   useEffect(() => {
@@ -29,33 +32,45 @@ const CsvHomepage = () => {
   }, []);
   const compareHandler = () => {
     const {
-      primaryKey,
-      skippingKey,
-      firstInputFileName,
-      secondInputFileName,
-      firstInputCsvFiles,
-      secondInputCsvFiles,
-      imageColName,
-      zipImageFile,
+      primaryKey = "",
+      skippingKey = "",
+      firstInputFileName = "",
+      secondInputFileName = "",
+      firstInputCsvFiles = [],
+      secondInputCsvFiles = [],
+      imageColName = "",
+      uploadZipImage = [],
     } = dataCtx;
+
     if (firstInputCsvFiles.length === 0) {
       alert("Choose first CSV file");
       return;
-    } else if (secondInputCsvFiles.length === 0) {
+    }
+
+    if (secondInputCsvFiles.length === 0) {
       alert("Choose second CSV file");
       return;
-    } else if (zipImageFile.length === 0) {
+    }
+
+    if (uploadZipImage.length === 0) {
       alert("Please select image zip file");
-    } else if (primaryKey === "") {
+      return;
+    }
+
+    if (primaryKey === "") {
       alert("Please select primary key");
       return;
-    } else if (imageColName === "") {
+    }
+
+    if (imageColName === "") {
       alert("Please select image column name");
+      return;
     }
 
     const sendRequest = async () => {
       // Create a FormData object
       try {
+        setLoading(true);
         const formData = new FormData();
         // Append file data to FormData
         formData.append("firstInputCsvFile", firstInputCsvFiles);
@@ -78,15 +93,18 @@ const CsvHomepage = () => {
               "Content-Type": "multipart/form-data",
               token: token,
             },
+            onUploadProgress: (progressEvent) => {
+              // Calculate percentage completed
+              const percentage = Math.round(
+                (progressEvent.loaded * 100) / progressEvent.total
+              );
+              // Update state with percentage completed
+              setProgress(percentage);
+            },
           }
         );
-        console.log(response.data.data);
-        dataCtx.setCsvFile(response.data.data);
-        // const obj = {
-        //   correctedFilePath: response.data.correctedFilePath,
-        //   errofilePath: response.data.errorFilePath,
 
-        // };
+        dataCtx.setCsvFile(response.data.data);
         const modifiedRes = response.data.data.map((item) => {
           return { ...item, corrected: "" };
         });
@@ -111,27 +129,26 @@ const CsvHomepage = () => {
         // URL.revokeObjectURL(url);
         // Handle response
 
-        const imgFile = dataCtx.zipImageFile;
-        const allRes = response.data.data;
-        const objArr = [];
+        // const imgFile = dataCtx.zipImageFile;
+        // const allRes = response.data.data;
+        // const objArr = [];
 
-        for (let i = 0; i < allRes.length; i++) {
-          for (let j = 0; j < imgFile.length; j++) {
-            if (
-              allRes[i]["IMAGE_NAME"].replace(/^0+/, "") ===
-              imgFile[j].imgName.replace(/^0+/, "")
-            ) {
-              const obj = {
-                data: { ...allRes[i], corrected: "" },
-                img: imgFile[j],
-              };
-              objArr.push(obj);
-            }
-          }
-        }
-        dataCtx.setImageMappedData(objArr);
-        console.log(response.data);
-        // navigate("/comparecsv/correct_compare_csv", { state: objArr });
+        // for (let i = 0; i < allRes.length; i++) {
+        //   for (let j = 0; j < imgFile.length; j++) {
+        //     if (
+        //       allRes[i]["IMAGE_NAME"].replace(/^0+/, "") ===
+        //       imgFile[j].imgName.replace(/^0+/, "")
+        //     ) {
+        //       const obj = {
+        //         data: { ...allRes[i], corrected: "" },
+        //         img: imgFile[j],
+        //       };
+        //       objArr.push(obj);
+        //     }
+        //   }
+        // }
+        // dataCtx.setImageMappedData(objArr);
+        setLoading(false);
         navigate("/comparecsv/assign_operator", { state: response.data });
       } catch (err) {
         alert("Error Occured : ", err);
@@ -140,13 +157,14 @@ const CsvHomepage = () => {
     };
     sendRequest();
   };
+  // console.log("jljhlijhi");
   return (
     <>
       <main
         className={`flex flex-col gap-5 bg-white rounded-md ${classes.homepage}`}
       >
         <div
-          className={`border-dashed pt-24 px-5 rounded-md  ${classes.innerBox}`}
+          className={`flex flex-col border-dashed pt-24 px-5 rounded-md xl:w-5/6 justify-center self-center ${classes.innerBox}`}
         >
           <h1 className="text-center mb-6 text-black-300 text-2xl font-bold">
             MATCH AND COMPARE DATA
@@ -170,7 +188,7 @@ const CsvHomepage = () => {
           </div>
 
           <div className="flex justify-between gap-10">
-            <div className="bg-opacity-60 border pl-2 pb-2  bg-slate-100 rounded w-1/2  ">
+            <div className="bg-opacity-60 border pl-2 pb-2  bg-slate-100 rounded w-1/3 ">
               <div className="flex flex-row pt-2 pb-2 justify-between self-center ">
                 <p className="text-sm font-semibold align-bottom self-center ">
                   Select Key For Skipping Comparison
@@ -179,7 +197,7 @@ const CsvHomepage = () => {
               </div>
               <OptimisedList />
             </div>
-            <div className="flex flex-col w-1/2 bg-opacity-60 border pb-2 pt-3 px-2  bg-slate-100 rounded">
+            {/* <div className="flex flex-col w-1/2 bg-opacity-60 border pb-2 pt-3 px-2  bg-slate-100 rounded">
               <label>Required for assigning the task</label>
               <br />
               <TextField
@@ -190,9 +208,44 @@ const CsvHomepage = () => {
                   // setTemplateName(event.target.value);
                 }}
               />
+            </div> */}
+            <div className="flex self-end">
+              {/* Conditional rendering based on loading state */}
+              {/* {loading ? (
+                <CircularProgress size={24} sx={{ marginRight: "8px" }} /> // Display loading spinner
+              ) : (
+                <Fab
+                  variant="extended"
+                  color="primary"
+                  onClick={compareHandler}
+                >
+                  <CompareArrowsIcon sx={{ marginRight: "8px" }} />
+                  Compare And Match
+                </Fab>
+              )} */}
+              <LoadingButton
+                color="primary"
+                // onClick={handleClick}
+                onClick={compareHandler}
+                loading={loading}
+                loadingPosition="start"
+                startIcon={
+                  <CompareArrowsIcon size={24} sx={{ marginRight: "8px" }} />
+                }
+                variant="contained"
+                // size={24}
+                // sx={{ marginRight: "8px" }}
+              >
+                Compare And Match
+              </LoadingButton>
             </div>
           </div>
-          <div className="flex justify-center m-10 gap-10">
+          <ModalWithLoadingBar
+            isOpen={loading}
+            onClose={() => {}}
+            progress={progress}
+          />
+          {/* <div className="flex justify-center m-10 gap-10">
             <div >
               <Fab variant="extended" color="primary" onClick={compareHandler}>
                 <CompareArrowsIcon sx={{ mr: 1 }} />
@@ -205,7 +258,7 @@ const CsvHomepage = () => {
                 Compare And Match
               </Fab>
             </div>
-          </div>
+          </div> */}
         </div>
       </main>
     </>

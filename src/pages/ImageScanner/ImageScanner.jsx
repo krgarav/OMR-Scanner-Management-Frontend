@@ -22,6 +22,10 @@ const ImageScanner = () => {
     name: "",
     other: "",
   });
+  const [questionRange, setQuestionRange] = useState({
+    min: "",
+    max: "",
+  });
   const token = JSON.parse(localStorage.getItem("userData"));
   const imageRef = useRef(null);
   const navigate = useNavigate();
@@ -78,24 +82,54 @@ const ImageScanner = () => {
       return;
     }
 
-    if (!inputField) {
-      toast.error("Please ensure to add the coordinate name.");
-      return;
+    if (fieldType === "questionsField") {
+      if (!questionRange || !questionRange.min || !questionRange.max) {
+        toast.warning("Please ensure all fields are properly filled out.");
+        return;
+      }
+
+      if (Number(questionRange.min) > Number(questionRange.max)) {
+        toast.warning(
+          "Please ensure the minimum value is always less than the maximum value."
+        );
+        return;
+      }
+    } else {
+      if (fieldType === "formField" && inputField.includes("-")) {
+        toast.error("Please refrain from using hyphens (-) in this field.");
+        return;
+      }
+
+      if (!inputField) {
+        toast.error("Please ensure to add the coordinate name.");
+        return;
+      }
     }
 
     const newObj = {
       ...selection,
       fieldType,
       id: Math.random().toString(),
-      attribute: inputField,
+      attribute:
+        fieldType === "formField"
+          ? inputField
+          : questionRange.min + "--" + questionRange.max,
     };
 
     setSelectedCoordinates((prev) => [...prev, newObj]);
     setInputField("");
     setFieldType("");
     setOpen(false);
+    setQuestionRange({
+      min: "",
+      max: "",
+    });
     toast.success("Coordinate successfully added.");
   };
+
+  console.log(questionRange);
+
+  console.log(selectedCoordinates);
 
   const onRemoveSelectedHandler = (id) => {
     const newArray = selectedCoordinates.filter((data) => data.id !== id);
@@ -150,19 +184,21 @@ const ImageScanner = () => {
                 <div className="overflow-x-auto">
                   <div className="my-3 table-auto  border-collapse border border-gray-400 min-w-full divide-y-2 divide-gray-200 bg-white text-sm rounded-lg">
                     <div className="ltr:text-left rtl:text-right flex justify-around text-gray-600">
-                        <div className="text-center whitespace-nowrap py-2">
-                          Name
-                        </div>
-                        <div className="text-center whitespace-nowrap py-2">
-                          Remove
-                        </div>
-                    
+                      <div className="text-center whitespace-nowrap py-2">
+                        Name
+                      </div>
+                      <div className="text-center whitespace-nowrap py-2">
+                        Remove
+                      </div>
                     </div>
 
                     <div className="divide-y divide-gray-200">
                       {selectedCoordinates &&
                         selectedCoordinates?.map((data) => (
-                          <div key={data.id} className="odd:bg-gray-50 flex justify-around">
+                          <div
+                            key={data.id}
+                            className="odd:bg-gray-50 flex justify-around"
+                          >
                             <div className="whitespace-nowrap px-4 py-2 text-center font-semibold text-md text-gray-900 text-ellipsis w-[50%] overflow-x-hidden">
                               {data.attribute}
                             </div>
@@ -247,16 +283,17 @@ const ImageScanner = () => {
                     style={{
                       position: "relative",
                       border: "1px solid purple",
+                      height: "50rem",
                     }}
-                    className="w-full"
+                    className="w-full overflow-y-auto"
                   >
                     <img
                       ref={imageRef}
                       src={image}
                       alt="Selected"
                       style={{
-                        width: "50rem",
-                        height: "50rem",
+                        width: "48rem",
+                        // height: "50rem",
                         cursor: "crosshair",
                       }}
                       onMouseDown={handleMouseDown}
@@ -394,17 +431,56 @@ const ImageScanner = () => {
                                     </div>
                                   </div>
                                   <div className=" px-4 pb-8 sm:flex sm:px-6 justify-between">
-                                    <input
-                                      required
-                                      className="input w-[72%] font-semibold bg-white text-lg focus:border-1 rounded-xl px-3 py-2 shadow-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
-                                      type="text"
-                                      name="field"
-                                      placeholder="Field.."
-                                      value={inputField}
-                                      onChange={(e) =>
-                                        setInputField(e.target.value)
-                                      }
-                                    />
+                                    {fieldType === "formField" ||
+                                    fieldType === "" ? (
+                                      <input
+                                        required
+                                        className="input w-[72%] border-2 font-semibold bg-white text-lg focus:border-1 rounded-xl px-3 py-2 shadow-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+                                        type="text"
+                                        name="field"
+                                        placeholder="Field.."
+                                        value={inputField}
+                                        onChange={(e) =>
+                                          setInputField(e.target.value)
+                                        }
+                                      />
+                                    ) : (
+                                      <div className="flex gap-5">
+                                        <div className="flex items-center gap-4">
+                                          <span className="font-bold">
+                                            Start
+                                          </span>
+                                          <input
+                                            type="number"
+                                            id="Quantity"
+                                            value={questionRange.min}
+                                            onChange={(e) =>
+                                              setQuestionRange({
+                                                ...questionRange,
+                                                min: e.target.value,
+                                              })
+                                            }
+                                            className="h-10 w-16 rounded  border-2  border-gray-200 text-center [-moz-appearance:_textfield] sm:text-sm [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none"
+                                          />
+                                        </div>
+                                        <div className="flex items-center gap-4">
+                                          <span className="font-bold">End</span>
+                                          <input
+                                            type="number"
+                                            id="Quantity"
+                                            value={questionRange.max}
+                                            onChange={(e) =>
+                                              setQuestionRange({
+                                                ...questionRange,
+                                                max: e.target.value,
+                                              })
+                                            }
+                                            className="h-10 w-16 rounded  border-2  border-gray-200 text-center [-moz-appearance:_textfield] sm:text-sm [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none"
+                                          />
+                                        </div>
+                                      </div>
+                                    )}
+
                                     <button
                                       type="button"
                                       data-bs-dismiss="modal"
