@@ -16,7 +16,7 @@ const CreateUser = () => {
       resultGenerator: false,
       comparecsv: false,
       csvuploader: false,
-      createmplate: false,
+      createTemplate: false,
     },
   });
 
@@ -208,8 +208,7 @@ const CreateUser = () => {
           <div>
             <label className="block text-lg font-medium">Permissions</label>
             <div className="flex flex-wrap justify-start gap-x-14 w-full mt-2">
-
-            <div className="flex items-center w-full sm:w-auto">
+              <div className="flex items-center w-full sm:w-auto">
                 <input
                   id="csvuploader"
                   name="csvuploader"
@@ -262,23 +261,20 @@ const CreateUser = () => {
 
               <div className="flex items-center w-full sm:w-auto">
                 <input
-                  id="csvCompare"
-                  name="csvCompare"
+                  id="comparecsv"
+                  name="comparecsv"
                   type="checkbox"
                   className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
-                  checked={userData?.permissions?.csvCompare}
+                  checked={userData?.permissions?.comparecsv}
                   onChange={handleChange}
                 />
                 <label
-                  htmlFor="csvCompare"
+                  htmlFor="comparecsv"
                   className="ml-2 block text-md text-gray-900 font-semibold"
                 >
                   CSV Compare
                 </label>
               </div>
-
-             
-             
 
               <div className="flex items-center w-full sm:w-auto">
                 <input
@@ -296,7 +292,6 @@ const CreateUser = () => {
                   Result Generator
                 </label>
               </div>
-             
             </div>
           </div>
           <div className="pt-1">
