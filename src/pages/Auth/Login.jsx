@@ -28,8 +28,9 @@ export default function Login() {
 
       if (response.status === 200) {
         localStorage.setItem("userData", JSON.stringify(response.data.token));
-        window.location.reload();
         dataCtx.modifyIslogin(true);
+        dataCtx.modifyLoginData(response.data);
+        console.log(response.data,"logonadta")
         toast.success("Login Successfull");
       } else {
         console.error("Login failed:", response.data.error);

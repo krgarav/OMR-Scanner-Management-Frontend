@@ -152,6 +152,14 @@ const DataProvider = (props) => {
       };
     });
   };
+  const modifyLoginDataHandler = (state) => {
+    setDataState((item) => {
+      return {
+        ...item,
+        userData: state,
+      };
+    });
+  };
   const setUploadZipImageHandler =(state)=>{
     setDataState((item) => {
       return {
@@ -163,6 +171,7 @@ const DataProvider = (props) => {
 
   const dataContext = {
     isLogin: dataState.isLogin,
+    loginData: dataState.loginData,
     csvHeader: dataState.csvHeader,
     primaryKey: dataState.primaryKey,
     skippingKey: dataState.skippingKey,
@@ -181,6 +190,7 @@ const DataProvider = (props) => {
     uploadZipImage : dataState.uploadZipImage,
 
     modifyAuth: modifyAuthHandler,
+    modifyLoginData: modifyLoginDataHandler,
     modifyIsLoading: modifyIsLoadingHandler,
     modifyIslogin: modifyIsloginHandler,
     addToCsvHeader: addToCsvHeaderHandler,

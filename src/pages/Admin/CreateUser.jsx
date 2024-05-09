@@ -14,6 +14,9 @@ const CreateUser = () => {
     permissions: {
       dataEntry: false,
       resultGenerator: false,
+      comparecsv: false,
+      csvuploader: false,
+      createmplate: false,
     },
   });
 
@@ -94,6 +97,9 @@ const CreateUser = () => {
         permissions: {
           dataEntry: false,
           resultGenerator: false,
+          comparecsv: false,
+          csvuploader: false,
+          createTemplate: false,
         },
       });
       toast.success("User Created successfully");
@@ -200,9 +206,44 @@ const CreateUser = () => {
           </div>
 
           <div>
-            <label className="block text-lg   font-medium">Permissions</label>
-            <div className="flex flex-wrap justify-between gap-4 w-full mt-2 ">
-              <div className="flex items-center">
+            <label className="block text-lg font-medium">Permissions</label>
+            <div className="flex flex-wrap justify-start gap-x-14 w-full mt-2">
+
+            <div className="flex items-center w-full sm:w-auto">
+                <input
+                  id="csvuploader"
+                  name="csvuploader"
+                  type="checkbox"
+                  className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                  checked={userData?.permissions?.csvuploader}
+                  onChange={handleChange}
+                />
+                <label
+                  htmlFor="csvuploader"
+                  className="ml-2 block text-md text-gray-900 font-semibold"
+                >
+                  CSV Uploader
+                </label>
+              </div>
+
+              <div className="flex items-center w-full sm:w-auto">
+                <input
+                  id="createTemplate"
+                  name="createTemplate"
+                  type="checkbox"
+                  className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                  checked={userData?.permissions?.createTemplate}
+                  onChange={handleChange}
+                />
+                <label
+                  htmlFor="createTemplate"
+                  className="ml-2 block text-md text-gray-900 font-semibold"
+                >
+                  Create Template
+                </label>
+              </div>
+
+              <div className="flex items-center w-full sm:w-auto">
                 <input
                   id="dataEntry"
                   name="dataEntry"
@@ -218,7 +259,8 @@ const CreateUser = () => {
                   Data Entry
                 </label>
               </div>
-              {/* <div className="flex items-center">
+
+              <div className="flex items-center w-full sm:w-auto">
                 <input
                   id="csvCompare"
                   name="csvCompare"
@@ -233,9 +275,12 @@ const CreateUser = () => {
                 >
                   CSV Compare
                 </label>
-              </div> */}
+              </div>
 
-              <div className="flex items-center">
+             
+             
+
+              <div className="flex items-center w-full sm:w-auto">
                 <input
                   id="resultGenerator"
                   name="resultGenerator"
@@ -251,6 +296,7 @@ const CreateUser = () => {
                   Result Generator
                 </label>
               </div>
+             
             </div>
           </div>
           <div className="pt-1">

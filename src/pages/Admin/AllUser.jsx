@@ -67,7 +67,7 @@ export function AllUser() {
       );
       setOpen(false);
       setSelectedUser(null);
-      setUpdateSuccess(true);
+      setUpdateSuccess(!updateSuccess);
       toast.success("User Updated Successfully");
     } catch (error) {
       console.error("Error updating user:", error);
@@ -97,9 +97,13 @@ export function AllUser() {
       toast.error("Error in deleting user");
     }
   };
-
   const closeModal = () => {
     setOpen(false);
+  };
+
+  const validateMobile = (value) => {
+    const regex = /^\d{10}$/;
+    return regex.test(value);
   };
   return (
     <div className="pt-48">
@@ -231,7 +235,7 @@ export function AllUser() {
               enter="ease-out duration-300"
               enterFrom="opacity-0"
               enterTo="opacity-100"
-              leave="ease-in duration-200"
+              leave="ease-in duration-200"  
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
@@ -297,6 +301,7 @@ export function AllUser() {
                                     type="text"
                                     name="mobile"
                                     id="mobile"
+                                    maxLength={10}
                                     value={selectedUser?.mobile}
                                     onChange={(e) =>
                                       setSelectedUser({
@@ -348,7 +353,7 @@ export function AllUser() {
                                     }
                                     className="mt-1 block w-40 py-1 px-3 border  shadow-blue-100 bg-white rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                   >
-                                    <option selected>Select role</option>
+                                    <option selected disabled>Select role</option>
                                     <option value="Admin">Admin</option>
                                     <option value="Moderator">Moderator</option>
                                     <option value="Operator">Operator</option>

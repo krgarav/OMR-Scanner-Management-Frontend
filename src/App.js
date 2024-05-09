@@ -50,43 +50,27 @@ function App() {
             {/* <Route path="/home" element={""} /> */}
             {role === "Admin" && (
               <>
-                <Route path="/comparecsv" element={<CsvHomepage />} />
-                <Route
-                  path="/comparecsv/assign_operator"
-                  element={<Assignee />}
-                />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/create-user" element={<CreateUser />} />
                 <Route path="/all-user" element={<AllUser />} />
-                <Route path="/imageuploader" element={<ImageUploader />} />
-                <Route
-                  path="/imageuploader/scanner"
-                  element={<ImageScanner />}
-                />
-                <Route path="/csvuploader" element={<CsvUploader />} />
-                <Route
-                  path="/csvuploader/templatemap/:id"
-                  element={<TemplateMapping />}
-                />
-                <Route
-                  path="/csvuploader/taskAssign/:id"
-                  element={<TaskManager />}
-                />
               </>
             )}
-            {/* {(role === "Admin" ||
+
+            {/* ------comparecsv----------- */}
+            {(role === "Admin" ||
               role === "Moderator" ||
               role === "Operator") &&
-              permissions && (
+              permissions.comparecsv && (
                 <>
                   <Route path="/profile" element={<Profile />} />
+                  <Route path="/comparecsv" element={<CsvHomepage />} />
                   <Route
-                    path="datamatching/correct_compare_csv"
-                    element={<Correction />}
+                    path="/comparecsv/assign_operator"
+                    element={<Assignee />}
                   />
                 </>
-              )} */}
-
+              )}
+            {/* ------------------dataEntry------------------ */}
             {(role === "Admin" ||
               role === "Moderator" ||
               role === "Operator") &&
@@ -97,6 +81,38 @@ function App() {
                   <Route
                     path="datamatching/correct_compare_csv"
                     element={<Correction />}
+                  />
+                </>
+              )}
+            {/* -----------------csvuploader------------------- */}
+            {(role === "Admin" ||
+              role === "Moderator" ||
+              role === "Operator") &&
+              permissions.csvuploader && (
+                <>
+                  <Route path="/profile" element={<Profile />} />
+                  <Route path="/csvuploader" element={<CsvUploader />} />
+                  <Route
+                    path="/csvuploader/templatemap/:id"
+                    element={<TemplateMapping />}
+                  />
+                  <Route
+                    path="/csvuploader/taskAssign/:id"
+                    element={<TaskManager />}
+                  />
+                </>
+              )}
+            {/* ---------createTemplate------------ */}
+            {(role === "Admin" ||
+              role === "Moderator" ||
+              role === "Operator") &&
+              permissions.createTemplate && (
+                <>
+                  <Route path="/profile" element={<Profile />} />
+                  <Route path="/imageuploader" element={<ImageUploader />} />
+                  <Route
+                    path="/imageuploader/scanner"
+                    element={<ImageScanner />}
                   />
                 </>
               )}

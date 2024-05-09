@@ -3,9 +3,10 @@ import { toast } from "react-toastify";
 
 export const REACT_APP_IP = "localhost";
 
-const token = JSON.parse(localStorage.getItem("userData"));
 
 export const onGetTemplateHandler = async () => {
+const token = JSON.parse(localStorage.getItem("userData"));
+
   try {
     const response = await axios.post(
       `http://${REACT_APP_IP}:4000/get/templetes`,
@@ -23,6 +24,8 @@ export const onGetTemplateHandler = async () => {
 };
 
 export const onGetAllUsersHandler = async () => {
+const token = JSON.parse(localStorage.getItem("userData"));
+
   try {
     const response = await axios.post(
       `http://${REACT_APP_IP}:4000/users/getallusers`,
@@ -40,6 +43,10 @@ export const onGetAllUsersHandler = async () => {
 };
 
 export const onGetVerifiedUserHandler = async () => {
+const token = JSON.parse(localStorage.getItem("userData"));
+if(!token){
+  return 
+}
   try {
     const response = await axios.post(
       `http://${REACT_APP_IP}:4000/users/getuser`,
@@ -56,6 +63,8 @@ export const onGetVerifiedUserHandler = async () => {
 };
 
 export const onGetAllTasksHandler = async () => {
+const token = JSON.parse(localStorage.getItem("userData"));
+
   try {
     const response = await axios.get(
       `http://${REACT_APP_IP}:4000/get/alltasks`,
@@ -73,6 +82,7 @@ export const onGetAllTasksHandler = async () => {
 };
 
 export const onGetTaskHandler = async (id) => {
+const token = JSON.parse(localStorage.getItem("userData"));
   try {
     const response = await axios.get(
       `http://${REACT_APP_IP}:4000/get/task/${id}`,

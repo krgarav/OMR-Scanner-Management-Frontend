@@ -11,14 +11,18 @@ const menuItems = [
   {
     name: "Create Template",
     href: "imageuploader",
+    permission: "createTemplate",
   },
   {
     name: "Csv Uploader",
     href: "csvuploader",
+    permission: "csvuploader",
   },
   {
     name: "CSV Compare",
     href: "comparecsv",
+    permission: "comparecsv",
+
   },
   {
     name: "Data Entry",
@@ -42,7 +46,6 @@ export default function Navbar() {
   // const userData = JSON.parse(localStorage.getItem("userData"));
   const [userData, setUserData] = useState({});
   const datactx = useContext(dataContext);
-
   useEffect(() => {
     const getUser = async () => {
       try {
@@ -202,7 +205,12 @@ export default function Navbar() {
                   })}
             </ul>
           </div>
-          <div className="relative">
+          <div className="relative flex gap-4 bg-slate-200 shadow-sm px-6 rounded-lg py-2">
+
+            <div>
+              <h4 className="text-xl font-semibold">{userData.userName}</h4>
+              <p className="text-center text-sm">{userData.role}</p>
+            </div>
             <button
               type="button"
               className="rounded-full"
@@ -212,7 +220,7 @@ export default function Navbar() {
             </button>
             {userData?.role === "Admin"
               ? isUserMenuOpen && (
-                  <div className="absolute right-0 mt-3 w-48 bg-white rounded-lg shadow-xl z-20 ">
+                  <div className="absolute right-0 mt-16 w-48 bg-white rounded-lg shadow-xl z-20 ">
                     <div className="py-1">
                       {userMenuItems?.map((item) => (
                         <button
