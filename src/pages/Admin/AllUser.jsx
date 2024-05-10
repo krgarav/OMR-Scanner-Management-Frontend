@@ -77,7 +77,9 @@ export function AllUser() {
 
   const handleDeleteUser = async (userId) => {
     try {
-      const confirmed = window.confirm("Are you sure you want to delete this user?");
+      const confirmed = window.confirm(
+        "Are you sure you want to delete this user?"
+      );
       if (!confirmed) {
         return;
       }
@@ -106,8 +108,8 @@ export function AllUser() {
   //   return regex.test(value);
   // };
   return (
-    <div className="pt-48">
-      <section className="mx-auto w-full max-w-7xl  px-12 py-10 bg-white rounded-xl">
+    <div className="pt-[10%]">
+      <section className="md:mx-auto w-full max-w-6xl  px-12 py-10 bg-white rounded-xl">
         <div className="flex flex-col space-y-4  sm:flex-row md:items-center sm:justify-between sm:space-y-0">
           <div>
             <h2 className="text-3xl font-semibold">All Users</h2>
@@ -164,59 +166,75 @@ export function AllUser() {
                   </thead>
                   <tbody className="divide-y divide-gray-200 bg-white ">
                     {users?.map((user, index) => (
-                        <tr key={index}>
-                          <td className="whitespace-nowrap px-4 py-4">
-                            <div className="flex items-center">
-                              <div className="ml-4">
-                                <div className="text-sm font-medium text-gray-900">
-                                  {user.userName}
-                                </div>
-                                <div className="text-sm text-gray-700">
-                                  {user.email}
-                                </div>
+                      <tr key={index}>
+                        <td className="whitespace-nowrap px-4 py-4">
+                          <div className="flex items-center">
+                            <div className="ml-4">
+                              <div className="text-sm font-medium text-gray-900">
+                                {user.userName}
+                              </div>
+                              <div className="text-sm text-gray-700">
+                                {user.email}
                               </div>
                             </div>
-                          </td>
-                          <td className="whitespace-nowrap px-12 py-4">
-                            <div className="text-sm text-gray-900 ">
-                              {user.mobile}
-                            </div>
-                          </td>
-                          <td className="whitespace-nowrap px-12 py-4">
-                            <div className="text-sm text-gray-900 ">
-                              {user.role}
-                            </div>
-                          </td>
-                          <td className="whitespace-nowrap px-4 py-4 text-sm text-gray-700">
-                            {user?.permissions &&
-                              Object.entries(user.permissions)
-                                .filter(([key, value]) => value === true)
-                                .map(([key, value]) => (
-                                  <span
-                                    key={key}
-                                    className="inline-flex rounded-full bg-blue-100 px-2 py-1 text-sm font-semibold leading-5 text-blue-800 mr-2"
-                                  >
-                                    {key}
-                                  </span>
-                                ))}
-                          </td>
-                          <td className="whitespace-nowrap px-4 py-4 text-right text-2xl font-medium">
-                            <button>
-                              <BiEdit
-                                className=" text-blue-500"
-                                onClick={() => onModelHandler(user)}
-                              />
-                            </button>
-                          </td>
-                          <td className="whitespace-nowrap px-4 py-4 text-right text-2xl font-semibold">
-                            <Link to="#" className="text-red-600">
-                              <RiDeleteBin6Line
-                                onClick={() => handleDeleteUser(user.id)}
-                              />
-                            </Link>
-                          </td>
-                        </tr>
-                      ))}
+                          </div>
+                        </td>
+                        <td className="whitespace-nowrap px-12 py-4">
+                          <div className="text-sm text-gray-900 ">
+                            {user.mobile}
+                          </div>
+                        </td>
+                        <td className="whitespace-nowrap px-12 py-4">
+                          <div className="text-sm text-gray-900 ">
+                            {user.role}
+                          </div>
+                        </td>
+                        <td className=" px-4 py-4 text-sm text-gray-700">
+                          {user?.permissions &&
+                            Object.entries(user.permissions)
+                              .filter(([key, value]) => value === true)
+                              .reduce((acc, [key]) => {
+                                // Push permissions into sets of three
+                                if (
+                                  acc.length === 0 ||
+                                  acc[acc.length - 1].length === 3
+                                ) {
+                                  acc.push([]);
+                                }
+                                acc[acc.length - 1].push(key);
+                                return acc;
+                              }, [])
+                              .map((permissionSet, index) => (
+                                <div key={index} className="flex">
+                                  {permissionSet.map((key) => (
+                                    <span
+                                      key={key}
+                                      className="rounded-full bg-blue-100 px-2 py-1 text-sm font-semibold leading-5 my-1 text-blue-800 mr-2"
+                                    >
+                                      {key}
+                                    </span>
+                                  ))}
+                                </div>
+                              ))}
+                        </td>
+
+                        <td className="whitespace-nowrap px-4 py-4 text-right text-2xl font-medium">
+                          <button>
+                            <BiEdit
+                              className=" text-blue-500"
+                              onClick={() => onModelHandler(user)}
+                            />
+                          </button>
+                        </td>
+                        <td className="whitespace-nowrap px-4 py-4 text-right text-2xl font-semibold">
+                          <Link to="#" className="text-red-600">
+                            <RiDeleteBin6Line
+                              onClick={() => handleDeleteUser(user.id)}
+                            />
+                          </Link>
+                        </td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
@@ -235,7 +253,7 @@ export function AllUser() {
               enter="ease-out duration-300"
               enterFrom="opacity-0"
               enterTo="opacity-100"
-              leave="ease-in duration-200"  
+              leave="ease-in duration-200"
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
@@ -304,7 +322,10 @@ export function AllUser() {
                                     maxLength={10}
                                     value={selectedUser?.mobile}
                                     onChange={(e) => {
-                                      const newValue = e.target.value.replace(/\D/g, '');
+                                      const newValue = e.target.value.replace(
+                                        /\D/g,
+                                        ""
+                                      );
                                       setSelectedUser({
                                         ...selectedUser,
                                         mobile: newValue,
@@ -354,7 +375,9 @@ export function AllUser() {
                                     }
                                     className="mt-1 block w-40 py-1 px-3 border  shadow-blue-100 bg-white rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                   >
-                                    <option selected disabled>Select role</option>
+                                    <option selected disabled>
+                                      Select role
+                                    </option>
                                     <option value="Admin">Admin</option>
                                     <option value="Moderator">Moderator</option>
                                     <option value="Operator">Operator</option>

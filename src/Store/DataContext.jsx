@@ -15,9 +15,10 @@ const dataContext = React.createContext({
   imageMappedData: [],
   csvFile: [],
   csvDataWithImage: [],
-  userData : {},
-  loginData : {},
+  userData: {},
+  loginData: {},
   uploadZipImage: [],
+  formFeilds: [],
 
   modifyUserData: () => {},
   modifyLoginData: () => {},
@@ -36,7 +37,8 @@ const dataContext = React.createContext({
   setImageMappedData: () => {},
   setCsvFile: () => {},
   setCsvDataWithImage: () => {},
-  setUploadZipImage : ()=>{}
+  setUploadZipImage: () => {},
+  setFormFeilds: () => {},
 });
 
 export default dataContext;
