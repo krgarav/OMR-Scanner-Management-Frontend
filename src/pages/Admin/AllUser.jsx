@@ -71,7 +71,7 @@ export function AllUser() {
       toast.success("User Updated Successfully");
     } catch (error) {
       console.error("Error updating user:", error);
-      toast.error("Error in updating user:");
+      toast.error(error.response.data);
     }
   };
 
@@ -101,10 +101,10 @@ export function AllUser() {
     setOpen(false);
   };
 
-  const validateMobile = (value) => {
-    const regex = /^\d{10}$/;
-    return regex.test(value);
-  };
+  // const validateMobile = (value) => {
+  //   const regex = /^\d{10}$/;
+  //   return regex.test(value);
+  // };
   return (
     <div className="pt-48">
       <section className="mx-auto w-full max-w-7xl  px-12 py-10 bg-white rounded-xl">
@@ -303,12 +303,13 @@ export function AllUser() {
                                     id="mobile"
                                     maxLength={10}
                                     value={selectedUser?.mobile}
-                                    onChange={(e) =>
+                                    onChange={(e) => {
+                                      const newValue = e.target.value.replace(/\D/g, '');
                                       setSelectedUser({
                                         ...selectedUser,
-                                        mobile: e.target.value,
-                                      })
-                                    }
+                                        mobile: newValue,
+                                      });
+                                    }}
                                     className="mt-1 focus:ring-indigo-500 px-3 focus:border-indigo-500 block w-full shadow-md shadow-blue-100 sm:text-sm lg:text-md border-gray-300 rounded-md"
                                   />
                                 </div>
