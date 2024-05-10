@@ -23,9 +23,12 @@ const CsvUploader = () => {
     const fetchTemplate = async () => {
       try {
         const response = await onGetTemplateHandler();
-        setAllTemplates(response);
+        const csvTemplates = response.filter(
+          (data) => data.TempleteType === "Data Entry"
+        );
+        setAllTemplates(csvTemplates);
       } catch (error) {
-        console.log(error);
+        console.log(error);   
       }
     };
     fetchTemplate();
@@ -123,7 +126,7 @@ const CsvUploader = () => {
         localStorage.setItem("fileId", JSON.stringify(fileId));
       } catch (error) {
         console.error("Error uploading files: ", error);
-        toast.error(error.message);
+        toast.error("Something went wrong please refresh the page.");
       }
     }
   };
