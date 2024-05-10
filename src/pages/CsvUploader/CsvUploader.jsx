@@ -28,19 +28,11 @@ const CsvUploader = () => {
         );
         setAllTemplates(csvTemplates);
       } catch (error) {
-        console.log(error);   
+        console.log(error);
       }
     };
     fetchTemplate();
   }, []);
-
-  // useEffect(() => {
-  //   const timeout = setTimeout(() => {
-  //     dataCtx.modifyIsLoading(false);
-  //   }, 500);
-
-  //   return () => clearTimeout(timeout);
-  // }, []);
 
   const filteredTemplates = allTemplates?.filter((template) =>
     template.name.toLowerCase().includes(templateName.toLowerCase())
@@ -122,7 +114,8 @@ const CsvUploader = () => {
         const fileId = response.data;
         toast.success("Files uploaded successfully!");
         dataCtx.modifyIsLoading(false);
-        navigate(`/csvuploader/templatemap/${selectedId}`);
+        // navigate(`/csvuploader/templatemap/${selectedId}`);
+        navigate(`/csvuploader/duplicatedetector/${selectedId}`);
         localStorage.setItem("fileId", JSON.stringify(fileId));
       } catch (error) {
         console.error("Error uploading files: ", error);

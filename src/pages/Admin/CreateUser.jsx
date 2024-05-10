@@ -105,7 +105,7 @@ const CreateUser = () => {
       toast.success("User Created successfully");
     } catch (error) {
       console.error("Error creating user:", error);
-      toast.error("Something went wrong!");
+      toast.error(error.response.data);
     }
   };
 
