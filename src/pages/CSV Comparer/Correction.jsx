@@ -141,7 +141,6 @@ const Correction = () => {
   };
 
   const nextHandler = () => {
-    console.log(currIndex, maximum);
     setCurrIndex((prev) => {
       if (prev == maximum) {
         return prev;
@@ -160,26 +159,33 @@ const Correction = () => {
   //     .join("\n");
   //   return csvHeader + csvData;
   // };
-  const downloadHandler = () => {
-    // const jsonObj = dataCtx.csvFile;
-    // const csvData = convertToCsv(jsonObj);
-    // const blob = new Blob([csvData], { type: "text/csv" });
-    // const link = document.createElement("a");
-    // link.href = window.URL.createObjectURL(blob);
-    // const date = new Date().toJSON();
-    // link.download = `data_${date}.csv`;
-    // link.click();
-    // toast.success("Downloaded the corrected csv file", {
-    //   position: "bottom-left",
-    //   autoClose: 2000,
-    //   hideProgressBar: false,
-    //   closeOnClick: true,
-    //   pauseOnHover: true,
-    //   draggable: true,
-    //   progress: undefined,
-    //   theme: "dark",
-    // });
+  const submitHandler = () => {
+    const req = async () => {
+      const response = await axios.get(
+        `http://${REACT_APP_IP}:4000/submitTask/${taskId}`,
+        {
+          headers: {
+            token: token,
+          },
+        }
+      );
+      console.log(response);
+      toast.success("Downloaded the corrected csv file", {
+        position: "bottom-left",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "dark",
+      });
+    };
     const result = window.confirm("Are you sure to submit the assigned task ?");
+    if (result) {
+      req();
+    } else {
+      return; 
+    }
   };
 
   return (
@@ -236,8 +242,7 @@ const Correction = () => {
               </Button>
               <Button
                 variant="contained"
-                endIcon={<DownloadIcon />}
-                onClick={downloadHandler}
+                onClick={submitHandler}
                 color="secondary"
               >
                 SUBMIT TASK

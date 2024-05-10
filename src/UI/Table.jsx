@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -8,7 +8,6 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { Button } from "@mui/material";
 import SaveIcon from "@mui/icons-material/Save";
-import dataContext from "../Store/DataContext";
 import { toast } from "react-toastify";
 import { REACT_APP_IP } from "../services/common";
 import axios from "axios";
@@ -16,18 +15,41 @@ import axios from "axios";
 function createData(name, calories, fat, carbs, protein) {
   return { name, calories, fat, carbs, protein };
 }
-
 const TableCol = (props) => {
   const [resultObj, setResultObj] = useState([]);
   const inputRef = useRef();
-  const dataCtx = useContext(dataContext);
   const { PRIMARY, COLUMN_NAME, FILE_1_DATA, FILE_2_DATA, CORRECTED } =
     props.data;
   const token = JSON.parse(localStorage.getItem("userData"));
   useEffect(() => {
-    const parsedData = JSON.parse(CORRECTED);
+    const handleKeyDown = (event) => {
+      if (event.key === "Tab" || event.key === "Alt") {
+        event.preventDefault(); // Prevent the default behavior for Tab and Alt keys
+        inputRef.current.focus(); // Keep focus on the input element
+      }
+    };
 
-    // if (parsedData.length > 0) {
+    const handleClickOutside = (event) => {
+      if (inputRef.current && !inputRef.current.contains(event.target)) {
+        inputRef.current.focus(); // Keep focus on the input element if clicked outside
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown); // Listen for keydown event
+    document.addEventListener("click", handleClickOutside); // Listen for click event
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown); // Clean up keydown event listener
+      document.removeEventListener("click", handleClickOutside); // Clean up click event listener
+    };
+  }, [props.data]);
+
+  useEffect(() => {
+    inputRef.current.focus();
+  }, [props.data]);
+
+  useEffect(() => {
+    const parsedData = JSON.parse(CORRECTED);
     let found = false;
 
     for (let i = 0; i < parsedData.length; i++) {
@@ -42,16 +64,14 @@ const TableCol = (props) => {
     if (!found) {
       inputRef.current.value = "";
     }
-    // inputRef.current.value = props.data.corrected;
   }, [props.data]);
-  // useEffect(() => {
-  //   setResultObj(props.data);
-  // }, [props.data]);
 
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.altKey && event.key === "s") {
         const btn = document.getElementById("saveBtn");
+        const nextBtn = document.getElementById("nextBtn");
+        nextBtn.click();
         btn.click();
       }
     };
@@ -67,20 +87,6 @@ const TableCol = (props) => {
 
   const rows = [createData(PRIMARY, COLUMN_NAME, FILE_1_DATA, FILE_2_DATA)];
   const save = () => {
-    // const csvFile = dataCtx.csvFile;
-    // for (let i = 0; i < csvFile.length; i++) {
-    //   if (csvFile[i][dataCtx.primaryKey].trim() === resultObj.PRIMARY.trim()) {
-    //     csvFile[i][resultObj.COLUMN_NAME] = inputRef.current.value;
-    //   }
-    // }
-    // const mappedData = [...dataCtx.imageMappedData];
-    // for (let j = 0; j < mappedData.length; j++) {
-    //   if (mappedData[j].data.PRIMARY.trim() === resultObj.PRIMARY.trim()) {
-    //     mappedData[j].data.corrected = inputRef.current.value;
-    //   }
-    // }
-    // dataCtx.setImageMappedData(mappedData);
-    // dataCtx.setCsvFile(csvFile);
     const { index, taskId, data } = props;
     const { COLUMN_NAME } = data;
     const req = async () => {
@@ -98,10 +104,10 @@ const TableCol = (props) => {
           },
         }
       );
-      console.log(response);
     };
     req();
-    // console.log(props);
+    const nextBtn = document.getElementById("nextBtn");
+    nextBtn.click();
   };
   const saveHandler = () => {
     const capitalStrArr = ["A", "B", "C", "D"];
@@ -283,7 +289,6 @@ const TableCol = (props) => {
                   placeholder="Enter correct answer"
                   className="border p-3 w-2/3"
                   ref={inputRef}
-                  // defaultValue={props.data.corrected}
                 />
               </TableCell>
               <TableCell align="right">

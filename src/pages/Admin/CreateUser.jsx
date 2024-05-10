@@ -47,10 +47,10 @@ const CreateUser = () => {
     }
   };
 
-  const validateMobile = (value) => {
-    const regex = /^\d{10}$/;
-    return regex.test(value);
-  };
+  // const validateMobile = (value) => {
+  //   const regex = /^\d{10}$/;
+  //   return regex.test(value);
+  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -63,12 +63,12 @@ const CreateUser = () => {
       !userData.email ||
       !userData.password
     ) {
-      return toast.error("plzz select role and permission");
+      return toast.error("plzz select All fields");
     }
 
-    if (!validateMobile(userData.mobile)) {
-      return toast.error("Invalid mobile number:", userData.mobile);
-    }
+    // if (!validateMobile(userData.mobile)) {
+    //   return toast.error("Invalid mobile number:", userData.mobile);
+    // }
 
     const { permissions } = userData;
     const isAnyPermissionTrue = Object.values(permissions).some(
@@ -195,9 +195,7 @@ const CreateUser = () => {
                 onChange={handleChange}
                 className="mt-2 block w-full py-2 px-4 border  shadow-blue-100 bg-white rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               >
-                <option disabled value="">
-                  Select role
-                </option>
+                <option selected value="">Select role</option>
                 <option value="Admin">Admin</option>
                 <option value="Moderator">Moderator</option>
                 <option value="Operator">Operator</option>

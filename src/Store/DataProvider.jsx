@@ -19,6 +19,7 @@ const initialData = {
   csvDataWithImage: [],
   userData: {},
   uploadZipImage: [],
+  formFeilds: [],
 };
 
 const DataProvider = (props) => {
@@ -160,15 +161,22 @@ const DataProvider = (props) => {
       };
     });
   };
-  const setUploadZipImageHandler =(state)=>{
+  const setUploadZipImageHandler = (state) => {
     setDataState((item) => {
       return {
         ...item,
         uploadZipImage: state,
       };
     });
-  }
-
+  };
+  const setFormFeildsHandler = (state) => {
+    setDataState((item) => {
+      return {
+        ...item,
+        formFeilds: state,
+      };
+    });
+  };
   const dataContext = {
     isLogin: dataState.isLogin,
     loginData: dataState.loginData,
@@ -187,8 +195,8 @@ const DataProvider = (props) => {
     csvDataWithImage: dataState.csvDataWithImage,
     isLoading: dataState.isLoading,
     userData: dataState.userData,
-    uploadZipImage : dataState.uploadZipImage,
-
+    uploadZipImage: dataState.uploadZipImage,
+    formFeilds: dataState.formFeilds,
     modifyAuth: modifyAuthHandler,
     modifyLoginData: modifyLoginDataHandler,
     modifyIsLoading: modifyIsLoadingHandler,
@@ -206,7 +214,8 @@ const DataProvider = (props) => {
     setImageMappedData: setImageMappedDataHandler,
     setCsvFile: setCsvFileHandler,
     setCsvDataWithImage: setCsvDataWithImageHandler,
-    setUploadZipImage : setUploadZipImageHandler
+    setUploadZipImage: setUploadZipImageHandler,
+    setFormFeilds: setFormFeildsHandler,
   };
 
   return (
