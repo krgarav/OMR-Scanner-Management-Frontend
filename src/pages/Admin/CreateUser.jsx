@@ -63,7 +63,9 @@ const CreateUser = () => {
       !userData.email ||
       !userData.password
     ) {
-      return toast.error("plzz select All fields");
+      return toast.error("plzz select All fields",{
+        
+      });
     }
 
     // if (!validateMobile(userData.mobile)) {
@@ -105,7 +107,7 @@ const CreateUser = () => {
       toast.success("User Created successfully");
     } catch (error) {
       console.error("Error creating user:", error);
-      toast.error(error.response.data);
+      toast.error(error.response.data.error);
     }
   };
 

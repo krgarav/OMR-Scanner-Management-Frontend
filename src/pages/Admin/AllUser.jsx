@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment, useRef } from "react";
+import React, { useState, useEffect, Fragment, useRef, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Dialog, Transition } from "@headlessui/react";
@@ -7,6 +7,8 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { REACT_APP_IP } from "../../services/common";
+import dataContext from "../../Store/DataContext";
+
 import {
   onGetAllUsersHandler,
   onGetVerifiedUserHandler,
@@ -21,6 +23,9 @@ export function AllUser() {
   const cancelButtonRef = useRef(null);
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const token = JSON.parse(localStorage.getItem("userData"));
+  const dataCtx = useContext(dataContext);
+  // console.log(dataCtx.userData.user.id,"-----------login id")
+
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -75,12 +80,17 @@ export function AllUser() {
     }
   };
 
-  const handleDeleteUser = async (userId) => {
+  const handleDeleteUser = async (userId,loggedInUserId) => {
     try {
+      if (userId === loggedInUserId) {
+        toast.error("You cannot delete yourself.");
+        return;
+      }
       const confirmed = window.confirm("Are you sure you want to delete this user?");
       if (!confirmed) {
         return;
       }
+
       await axios.post(
         `http://${REACT_APP_IP}:4000/users/deleteuser/${userId}`,
         {},
@@ -211,7 +221,7 @@ export function AllUser() {
                           <td className="whitespace-nowrap px-4 py-4 text-right text-2xl font-semibold">
                             <Link to="#" className="text-red-600">
                               <RiDeleteBin6Line
-                                onClick={() => handleDeleteUser(user.id)}
+                                onClick={() => handleDeleteUser(user.id, dataCtx.userData.user.id)}
                               />
                             </Link>
                           </td>
