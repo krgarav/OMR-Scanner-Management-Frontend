@@ -30,15 +30,39 @@ export default function Login() {
         localStorage.setItem("userData", JSON.stringify(response.data.token));
         dataCtx.modifyIslogin(true);
         dataCtx.modifyLoginData(response.data);
-        console.log(response.data,"logonadta")
-        toast.success("Login Successfull");
+        console.log(response.data, "logonadta");
+        toast.success("Login Successfull", {
+          position: "bottom-left",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: "dark",
+        });
       } else {
         console.error("Login failed:", response.data.error);
-        toast.error("Login failed: Try Again!!");
+        toast.error("Login failed: Try Again!!", {
+          position: "bottom-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: "dark",
+        });
       }
     } catch (error) {
       console.error("Login request failed:", error.message);
-      toast.error("email and password Didn't match");
+      toast.error(error.response.data.error, {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "dark",
+      });
     }
   };
 

@@ -106,6 +106,8 @@ const TableCol = (props) => {
       );
     };
     req();
+    const nextBtn = document.getElementById("nextBtn");
+    nextBtn.click();
   };
   const saveHandler = () => {
     const capitalStrArr = ["A", "B", "C", "D"];

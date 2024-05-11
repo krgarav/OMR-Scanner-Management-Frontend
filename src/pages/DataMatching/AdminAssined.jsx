@@ -203,7 +203,7 @@ const AdminAssined = () => {
                             </div>
                           </div>
                           <div className="whitespace-nowrap ">
-                            <div className=" text-md text-center">
+                            <div className=" text-md text-center font-semibold border-2 py-1">
                               {taskData.TemplateType}
                             </div>
                           </div>
@@ -269,7 +269,7 @@ const AdminAssined = () => {
                               onClick={() =>
                                 onCompareTaskStartHandler(taskData)
                               }
-                              className="rounded border border-indigo-500 bg-indigo-500 px-2 py-1 font-semibold text-white"
+                              className="rounded border border-indigo-500 bg-indigo-500 px-6 py-1 font-semibold text-white"
                             >
                               Download
                             </button>
@@ -302,7 +302,7 @@ const AdminAssined = () => {
                             </div>
                           </div>
                           <div className="whitespace-nowrap">
-                            <div className="text-md text-center">
+                            <div className="text-md text-center font-semibold border-2 py-1">
                               {taskData.TemplateType}
                             </div>
                           </div>
@@ -360,7 +360,7 @@ const AdminAssined = () => {
                               // onClick={() =>
                               //   onCompareTaskStartHandler(taskData)
                               // }
-                              className="rounded border border-indigo-500 bg-indigo-500 px-2 py-1 font-semibold text-white"
+                              className="rounded border border-indigo-500 bg-indigo-500 px-6 py-1 font-semibold text-white"
                             >
                               Download
                             </button>

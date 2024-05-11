@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-*{
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -38,7 +38,13 @@ a {
 }
 
 .templatemapping {
-  background-image: url("assets/images/templatemappingbg.jpg") ;
+  background-image: url("assets/images/templatemappingbg.jpg");
+  background-position: 50% 0;
+  background-size: cover;
+  height: auto;
+}
+.duplicateImg {
+  background-image: url("assets/images/duplicateImg2.jpg");
   background-position: 50% 0;
   background-size: cover;
   height: auto;

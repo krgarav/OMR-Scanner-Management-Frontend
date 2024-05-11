@@ -116,8 +116,8 @@ export function AllUser() {
   //   return regex.test(value);
   // };
   return (
-    <div className="pt-48">
-      <section className="mx-auto w-full max-w-7xl  px-12 py-10 bg-white rounded-xl">
+    <div className="pt-[10%]">
+      <section className="md:mx-auto w-full max-w-6xl  px-12 py-10 bg-white rounded-xl">
         <div className="flex flex-col space-y-4  sm:flex-row md:items-center sm:justify-between sm:space-y-0">
           <div>
             <h2 className="text-3xl font-semibold">All Users</h2>
@@ -245,7 +245,7 @@ export function AllUser() {
               enter="ease-out duration-300"
               enterFrom="opacity-0"
               enterTo="opacity-100"
-              leave="ease-in duration-200"  
+              leave="ease-in duration-200"
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
@@ -314,7 +314,10 @@ export function AllUser() {
                                     maxLength={10}
                                     value={selectedUser?.mobile}
                                     onChange={(e) => {
-                                      const newValue = e.target.value.replace(/\D/g, '');
+                                      const newValue = e.target.value.replace(
+                                        /\D/g,
+                                        ""
+                                      );
                                       setSelectedUser({
                                         ...selectedUser,
                                         mobile: newValue,
@@ -364,7 +367,9 @@ export function AllUser() {
                                     }
                                     className="mt-1 block w-40 py-1 px-3 border  shadow-blue-100 bg-white rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                   >
-                                    <option selected disabled>Select role</option>
+                                    <option selected disabled>
+                                      Select role
+                                    </option>
                                     <option value="Admin">Admin</option>
                                     <option value="Moderator">Moderator</option>
                                     <option value="Operator">Operator</option>

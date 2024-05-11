@@ -12,6 +12,7 @@ import classes from "./CSVHompage.module.css";
 import { REACT_APP_IP } from "../../services/common";
 import LoadingButton from "@mui/lab/LoadingButton";
 import ModalWithLoadingBar from "../../UI/Modal";
+import MultList from "../../UI/MultList";
 
 const CsvHomepage = () => {
   const [loading, setLoading] = useState(false);
@@ -40,6 +41,7 @@ const CsvHomepage = () => {
       secondInputCsvFiles = [],
       imageColName = "",
       uploadZipImage = [],
+      formFeilds = [],
     } = dataCtx;
 
     if (firstInputCsvFiles.length === 0) {
@@ -83,6 +85,7 @@ const CsvHomepage = () => {
         formData.append("primaryKey", primaryKey);
         formData.append("skippingKey", skippingKey);
         formData.append("imageColName", imageColName);
+        formData.append("formFeilds", formFeilds);
 
         // Make the POST request with Axios
         const response = await axios.post(
@@ -103,51 +106,12 @@ const CsvHomepage = () => {
             },
           }
         );
-console.log(response.data)
+        console.log(response.data);
         dataCtx.setCsvFile(response.data.data);
         const modifiedRes = response.data.data.map((item) => {
           return { ...item, corrected: "" };
         });
         dataCtx.addToCorrectedCsv(modifiedRes);
-        // const csvData = response.data;
-        // const blob = new Blob([csvData], { type: "text/csv" });
-
-        // // Create a temporary URL for the Blob
-        // const url = URL.createObjectURL(blob);
-
-        // // Create a link element
-        // const link = document.createElement("a");
-        // link.href = url;
-        // link.download = "data.csv"; // Set the filename for the downloaded file
-        // document.body.appendChild(link);
-
-        // //  link to trigger the download
-        // link.click();
-
-        // // Cleanup: Remove the link and revoke the URL
-        // document.body.removeChild(link);
-        // URL.revokeObjectURL(url);
-        // Handle response
-
-        // const imgFile = dataCtx.zipImageFile;
-        // const allRes = response.data.data;
-        // const objArr = [];
-
-        // for (let i = 0; i < allRes.length; i++) {
-        //   for (let j = 0; j < imgFile.length; j++) {
-        //     if (
-        //       allRes[i]["IMAGE_NAME"].replace(/^0+/, "") ===
-        //       imgFile[j].imgName.replace(/^0+/, "")
-        //     ) {
-        //       const obj = {
-        //         data: { ...allRes[i], corrected: "" },
-        //         img: imgFile[j],
-        //       };
-        //       objArr.push(obj);
-        //     }
-        //   }
-        // }
-        // dataCtx.setImageMappedData(objArr);
         setLoading(false);
         navigate("/comparecsv/assign_operator", { state: response.data });
       } catch (err) {
@@ -157,7 +121,6 @@ console.log(response.data)
     };
     sendRequest();
   };
-  // console.log("jljhlijhi");
   return (
     <>
       <main
@@ -197,35 +160,18 @@ console.log(response.data)
               </div>
               <OptimisedList />
             </div>
-            {/* <div className="flex flex-col w-1/2 bg-opacity-60 border pb-2 pt-3 px-2  bg-slate-100 rounded">
-              <label>Required for assigning the task</label>
-              <br />
-              <TextField
-                id="outlined-basic"
-                label="Enter template Name"
-                variant="outlined"
-                onChange={(event) => {
-                  // setTemplateName(event.target.value);
-                }}
-              />
-            </div> */}
+            <div className="bg-opacity-60 border pl-2 pb-2  bg-slate-100 rounded w-1/3 ">
+              <div className="flex flex-row pt-2 pb-2 justify-between self-center ">
+                <p className="text-sm font-semibold align-bottom self-center ">
+                  Select Form Feilds For Mult or Blank
+                </p>
+                <Button>Clear All</Button>
+              </div>
+              <MultList />
+            </div>
             <div className="flex self-end">
-              {/* Conditional rendering based on loading state */}
-              {/* {loading ? (
-                <CircularProgress size={24} sx={{ marginRight: "8px" }} /> // Display loading spinner
-              ) : (
-                <Fab
-                  variant="extended"
-                  color="primary"
-                  onClick={compareHandler}
-                >
-                  <CompareArrowsIcon sx={{ marginRight: "8px" }} />
-                  Compare And Match
-                </Fab>
-              )} */}
               <LoadingButton
                 color="primary"
-                // onClick={handleClick}
                 onClick={compareHandler}
                 loading={loading}
                 loadingPosition="start"
@@ -233,8 +179,6 @@ console.log(response.data)
                   <CompareArrowsIcon size={24} sx={{ marginRight: "8px" }} />
                 }
                 variant="contained"
-                // size={24}
-                // sx={{ marginRight: "8px" }}
               >
                 Compare And Match
               </LoadingButton>
