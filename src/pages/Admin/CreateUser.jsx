@@ -38,6 +38,19 @@ const CreateUser = () => {
           ...userData,
           [name]: formattedValue,
         });
+      } else if (name === "role" && value === "Admin") {
+        // If role is Admin, set all permissions to true
+        setUserData({
+          ...userData,
+          [name]: value,
+          permissions: {
+            dataEntry: true,
+            resultGenerator: true,
+            comparecsv: true,
+            csvuploader: true,
+            createTemplate: true,
+          },
+        });
       } else {
         setUserData({
           ...userData,
@@ -63,9 +76,7 @@ const CreateUser = () => {
       !userData.email ||
       !userData.password
     ) {
-      return toast.error("plzz select All fields",{
-        
-      });
+      return toast.error("plzz select All fields", {});
     }
 
     // if (!validateMobile(userData.mobile)) {
@@ -197,7 +208,9 @@ const CreateUser = () => {
                 onChange={handleChange}
                 className="mt-2 block w-full py-2 px-4 border  shadow-blue-100 bg-white rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               >
-                <option selected value="">Select role</option>
+                <option selected value="">
+                  Select role
+                </option>
                 <option value="Admin">Admin</option>
                 <option value="Moderator">Moderator</option>
                 <option value="Operator">Operator</option>
