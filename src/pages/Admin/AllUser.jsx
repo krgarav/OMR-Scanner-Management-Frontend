@@ -78,17 +78,41 @@ export function AllUser() {
       setOpen(false);
       setSelectedUser(null);
       setUpdateSuccess(!updateSuccess);
-      toast.success("User Updated Successfully");
+      toast.success("User Updated Successfully", {
+        position: "bottom-left",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "dark",
+      });
     } catch (error) {
       console.error("Error updating user:", error);
-      toast.error(error.response.data);
+      toast.error(error.response.data, {
+        position: "bottom-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "dark",
+      });
     }
   };
 
   const handleDeleteUser = async (userId, loggedInUserId) => {
     try {
       if (userId === loggedInUserId) {
-        toast.error("You cannot delete yourself.");
+        toast.error("You cannot delete yourself.", {
+          position: "bottom-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: "dark",
+        });
         return;
       }
       const confirmed = window.confirm(
@@ -108,10 +132,26 @@ export function AllUser() {
         }
       );
       setUsers(users.filter((user) => user.id !== userId));
-      toast.success("User Deleted Successfully");
+      toast.success("User Deleted Successfully", {
+        position: "bottom-left",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "dark",
+      });
     } catch (error) {
       console.error("Error deleting user:", error);
-      toast.error("Error in deleting user");
+      toast.error("Error in deleting user", {
+        position: "bottom-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "dark",
+      });
     }
   };
   const closeModal = () => {

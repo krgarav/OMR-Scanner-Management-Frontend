@@ -76,7 +76,15 @@ const CreateUser = () => {
       !userData.email ||
       !userData.password
     ) {
-      return toast.error("plzz select All fields", {});
+      return toast.error("plzz select All fields", {
+        position: "bottom-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "dark",
+      });
     }
 
     // if (!validateMobile(userData.mobile)) {
@@ -89,7 +97,15 @@ const CreateUser = () => {
     );
 
     if (!isAnyPermissionTrue) {
-      return toast.error("Please select at least one permission");
+      return toast.error("Please select at least one permission", {
+        position: "bottom-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "dark",
+      });
     }
     try {
       await axios.post(
@@ -115,10 +131,26 @@ const CreateUser = () => {
           createTemplate: false,
         },
       });
-      toast.success("User Created successfully");
+      toast.success("User Created successfully", {
+        position: "bottom-left",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "dark",
+      });
     } catch (error) {
       console.error("Error creating user:", error);
-      toast.error(error.response.data.error);
+      toast.error(error.response.data.error, {
+        position: "bottom-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "dark",
+      });
     }
   };
 
