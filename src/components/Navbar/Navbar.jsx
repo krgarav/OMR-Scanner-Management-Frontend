@@ -60,13 +60,13 @@ export default function Navbar() {
   }, []);
   useEffect(() => {
     if (userData && Object.keys(userData).length !== 0) {
-      if (userData.role === "Admin") {
-        const currentPath =
-          localStorage.getItem("currentPath") === "/"
-            ? "imageuploader"
-            : localStorage.getItem("currentPath");
-        navigate(currentPath);
-      } else {
+      // if (userData.role === "Admin") {
+      //   const currentPath =
+      //     localStorage.getItem("currentPath") === "/"
+      //       ? "imageuploader"
+      //       : localStorage.getItem("currentPath");
+      //   navigate(currentPath);
+      // } else {
         const firstAllowedLink = menuItems.find(
           (item) => userData.permissions[item.permission]
         );
@@ -78,7 +78,7 @@ export default function Navbar() {
           navigate(currentPath);
         }
       }
-    }
+    // }
   }, [userData]);
 
   useEffect(() => {
@@ -164,7 +164,7 @@ export default function Navbar() {
           </div>
           <div className="hidden lg:block">
             <ul className="flex justify-center items-center space-x-2">
-              {userData?.role === "Admin"
+              {/* {userData?.role === "Admin"
                 ? menuItems?.map((item) => {
                     const active =
                       mainUrl[0] === item.href
@@ -184,7 +184,8 @@ export default function Navbar() {
                       </li>
                     );
                   })
-                : filteredMenuItems?.map((item) => {
+                : */}
+                 {filteredMenuItems?.map((item) => {
                     const active =
                       mainUrl[0] === item.href
                         ? "bg-gray-300 duration-1000 transition-colors ease-in-out text-teal-500"

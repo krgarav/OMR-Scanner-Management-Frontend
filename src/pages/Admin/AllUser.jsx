@@ -1,4 +1,10 @@
-import React, { useState, useEffect, Fragment, useRef } from "react";
+import React, {
+  useState,
+  useEffect,
+  Fragment,
+  useRef,
+  useContext,
+} from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Dialog, Transition } from "@headlessui/react";
@@ -7,6 +13,8 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { REACT_APP_IP } from "../../services/common";
+import dataContext from "../../Store/DataContext";
+
 import {
   onGetAllUsersHandler,
   onGetVerifiedUserHandler,
@@ -21,6 +29,8 @@ export function AllUser() {
   const cancelButtonRef = useRef(null);
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const token = JSON.parse(localStorage.getItem("userData"));
+  const dataCtx = useContext(dataContext);
+  // console.log(dataCtx.userData.user.id,"-----------login id")
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -68,21 +78,50 @@ export function AllUser() {
       setOpen(false);
       setSelectedUser(null);
       setUpdateSuccess(!updateSuccess);
-      toast.success("User Updated Successfully");
+      toast.success("User Updated Successfully", {
+        position: "bottom-left",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "dark",
+      });
     } catch (error) {
       console.error("Error updating user:", error);
-      toast.error(error.response.data);
+      toast.error(error.response.data, {
+        position: "bottom-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "dark",
+      });
     }
   };
 
-  const handleDeleteUser = async (userId) => {
+  const handleDeleteUser = async (userId, loggedInUserId) => {
     try {
+      if (userId === loggedInUserId) {
+        toast.error("You cannot delete yourself.", {
+          position: "bottom-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: "dark",
+        });
+        return;
+      }
       const confirmed = window.confirm(
         "Are you sure you want to delete this user?"
       );
       if (!confirmed) {
         return;
       }
+
       await axios.post(
         `http://${REACT_APP_IP}:4000/users/deleteuser/${userId}`,
         {},
@@ -93,10 +132,26 @@ export function AllUser() {
         }
       );
       setUsers(users.filter((user) => user.id !== userId));
-      toast.success("User Deleted Successfully");
+      toast.success("User Deleted Successfully", {
+        position: "bottom-left",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "dark",
+      });
     } catch (error) {
       console.error("Error deleting user:", error);
-      toast.error("Error in deleting user");
+      toast.error("Error in deleting user", {
+        position: "bottom-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "dark",
+      });
     }
   };
   const closeModal = () => {
@@ -109,7 +164,7 @@ export function AllUser() {
   // };
   return (
     <div className="pt-[10%]">
-      <section className="md:mx-auto w-full max-w-6xl  px-12 py-10 bg-white rounded-xl">
+      <section className="md:mx-auto w-full max-w-6xl   px-12 py-10 bg-white rounded-xl">
         <div className="flex flex-col space-y-4  sm:flex-row md:items-center sm:justify-between sm:space-y-0">
           <div>
             <h2 className="text-3xl font-semibold">All Users</h2>
@@ -217,7 +272,6 @@ export function AllUser() {
                                 </div>
                               ))}
                         </td>
-
                         <td className="whitespace-nowrap px-4 py-4 text-right text-2xl font-medium">
                           <button>
                             <BiEdit
@@ -229,7 +283,12 @@ export function AllUser() {
                         <td className="whitespace-nowrap px-4 py-4 text-right text-2xl font-semibold">
                           <Link to="#" className="text-red-600">
                             <RiDeleteBin6Line
-                              onClick={() => handleDeleteUser(user.id)}
+                              onClick={() =>
+                                handleDeleteUser(
+                                  user.id,
+                                  dataCtx.userData.user.id
+                                )
+                              }
                             />
                           </Link>
                         </td>

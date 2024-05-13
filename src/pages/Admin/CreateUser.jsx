@@ -38,6 +38,19 @@ const CreateUser = () => {
           ...userData,
           [name]: formattedValue,
         });
+      } else if (name === "role" && value === "Admin") {
+        // If role is Admin, set all permissions to true
+        setUserData({
+          ...userData,
+          [name]: value,
+          permissions: {
+            dataEntry: true,
+            resultGenerator: true,
+            comparecsv: true,
+            csvuploader: true,
+            createTemplate: true,
+          },
+        });
       } else {
         setUserData({
           ...userData,
@@ -63,7 +76,15 @@ const CreateUser = () => {
       !userData.email ||
       !userData.password
     ) {
-      return toast.error("plzz select All fields");
+      return toast.error("plzz select All fields", {
+        position: "bottom-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "dark",
+      });
     }
 
     // if (!validateMobile(userData.mobile)) {
@@ -76,7 +97,15 @@ const CreateUser = () => {
     );
 
     if (!isAnyPermissionTrue) {
-      return toast.error("Please select at least one permission");
+      return toast.error("Please select at least one permission", {
+        position: "bottom-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "dark",
+      });
     }
     try {
       await axios.post(
@@ -102,10 +131,26 @@ const CreateUser = () => {
           createTemplate: false,
         },
       });
-      toast.success("User Created successfully");
+      toast.success("User Created successfully", {
+        position: "bottom-left",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "dark",
+      });
     } catch (error) {
       console.error("Error creating user:", error);
-      toast.error(error.response.data);
+      toast.error(error.response.data.error, {
+        position: "bottom-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "dark",
+      });
     }
   };
 
@@ -195,7 +240,9 @@ const CreateUser = () => {
                 onChange={handleChange}
                 className="mt-2 block w-full py-2 px-4 border  shadow-blue-100 bg-white rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               >
-                <option selected value="">Select role</option>
+                <option selected value="">
+                  Select role
+                </option>
                 <option value="Admin">Admin</option>
                 <option value="Moderator">Moderator</option>
                 <option value="Operator">Operator</option>

@@ -76,8 +76,8 @@ function App() {
               role === "Operator") &&
               permissions.dataEntry && (
                 <>
-                  <Route path="/datamatching" element={<DataMatching />} />
                   <Route path="/profile" element={<Profile />} />
+                  <Route path="/datamatching" element={<DataMatching />} />
                   <Route
                     path="datamatching/correct_compare_csv"
                     element={<Correction />}
