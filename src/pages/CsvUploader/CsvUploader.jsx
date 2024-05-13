@@ -114,15 +114,18 @@ const CsvUploader = () => {
         const fileId = response.data;
         toast.success("Files uploaded successfully!");
         dataCtx.modifyIsLoading(false);
-        // navigate(`/csvuploader/templatemap/${selectedId}`);
         navigate(`/csvuploader/duplicatedetector/${selectedId}`);
         localStorage.setItem("fileId", JSON.stringify(fileId));
+        localStorage.setItem("imageName", JSON.stringify(imageName));
       } catch (error) {
         console.error("Error uploading files: ", error);
         toast.error("Something went wrong please refresh the page.");
       }
     }
   };
+
+  console.log("csv", csvFile?.name);
+  console.log("image", imageFolder?.name);
 
   return (
     <div className="">
@@ -217,7 +220,7 @@ const CsvUploader = () => {
                   className="flex items-center font-medium text-white bg-gradient-to-r from-purple-600 to-indigo-700 rounded-3xl shadow-md cursor-pointer select-none text-lg px-6 py-2 hover:shadow-xl active:shadow-md"
                   htmlFor="file-upload"
                 >
-                  <span>Upload CSV File</span>
+                  <span>Upload CSV File : {csvFile?.name}</span>
                 </label>
                 <input
                   id="file-upload"
@@ -252,7 +255,7 @@ const CsvUploader = () => {
                   className="flex items-center font-medium text-white bg-gradient-to-r from-purple-600 to-indigo-700 rounded-3xl shadow-md cursor-pointer select-none text-lg px-6 py-2 hover:shadow-xl active:shadow-md"
                   htmlFor="image-folder-upload"
                 >
-                  <span>Upload Zip file</span>
+                  <span>Upload Zip file : {imageFolder?.name}</span>
 
                   <input
                     id="image-folder-upload"
