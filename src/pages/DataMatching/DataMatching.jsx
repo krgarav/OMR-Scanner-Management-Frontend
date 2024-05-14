@@ -351,7 +351,7 @@ const DataMatching = () => {
     }
     const conditions = {
       Blank: blankChecked ? Number(blankCount) : 0,
-      mult: multChecked,
+      "*": multChecked,
       AllData: allDataChecked,
     };
 
@@ -363,7 +363,7 @@ const DataMatching = () => {
     try {
       const response = await axios.post(
         `http://${REACT_APP_IP}:4000/get/csvdata`,
-        { updatedTasks },
+        { taskData: updatedTasks },
         {
           headers: {
             token: token,
