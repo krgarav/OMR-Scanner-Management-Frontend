@@ -23,14 +23,16 @@ const DataMatching = () => {
   const [csvCurrentData, setCsvCurrentData] = useState([]);
   const [allTasks, setAllTasks] = useState([]);
   const [imageColName, setImageColName] = useState("");
-  const [blankCount, setBlackCount] = useState(0);
+  const [blankCount, setBlackCount] = useState(1);
   const [currentTaskData, setCurrentTaskData] = useState({});
   const [selectedCoordintes, setSelectedCoordinates] = useState(false);
   const [currImageName, setCurrImageName] = useState("");
   const [blankChecked, setBlankChecked] = useState(false);
+  const [modifiedKeys, setModifiedKeys] = useState({});
   const [multChecked, setMultChecked] = useState(false);
   const [allDataChecked, setAllDataChecked] = useState(false);
   const [imageNotFound, setImageNotFound] = useState(true);
+  const [dataTypeChecker, setDataTypeChecker] = useState("");
   const [currentIndex, setCurrentIndex] = useState(1);
   const [compareTask, setCompareTask] = useState([]);
   const [csvData, setCsvData] = useState([]);
@@ -105,14 +107,16 @@ const DataMatching = () => {
   }, [currentTaskData]);
 
   const onCsvUpdateHandler = async () => {
+    console.log("modifiedKeys:", modifiedKeys);
     try {
-      await axios.post(
+      const response = await axios.post(
         `http://${REACT_APP_IP}:4000/updatecsvdata/${parseInt(
           currentTaskData?.fileId
         )}`,
         {
           data: csvCurrentData,
-          index: currentIndex + Number(currentTaskData.min),
+          index: csvCurrentData.rowIndex + 2,
+          updatedColumn: modifiedKeys,
         },
         {
           headers: {
@@ -121,14 +125,17 @@ const DataMatching = () => {
         }
       );
 
+      console.log("API response:", response.data);
+
       setCsvData((prevCsvData) => {
         const newCsvData = [...prevCsvData];
         newCsvData[currentIndex] = csvCurrentData;
         return newCsvData;
       });
 
-      toast.success("Data update successfully.");
+      toast.success("Data updated successfully.");
     } catch (error) {
+      console.error("API error:", error);
       toast.error(error.message);
     }
   };
@@ -136,9 +143,9 @@ const DataMatching = () => {
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === "ArrowLeft") {
-        onImageHandler("prev", csvData, currentTaskData);
+        onImageHandler("prev", currentIndex, csvData, currentTaskData);
       } else if (event.key === "ArrowRight") {
-        onImageHandler("next", csvData, currentTaskData);
+        onImageHandler("next", currentIndex, csvData, currentTaskData);
       } else if (event.altKey && event.key === "s") {
         setCsvCurrentData((prevData) => ({
           ...prevData,
@@ -152,7 +159,12 @@ const DataMatching = () => {
     };
   }, [csvData, currentTaskData, setCsvCurrentData, onCsvUpdateHandler]);
 
-  const onImageHandler = async (direction, csvData, taskData) => {
+  const onImageHandler = async (
+    direction,
+    currMatchingIndex,
+    csvData,
+    taskData
+  ) => {
     const headers = csvData[0];
     const getKeyByValue = (object, value) => {
       return Object.keys(object).find((key) => object[key] === value);
@@ -160,17 +172,16 @@ const DataMatching = () => {
 
     const keyForImage = getKeyByValue(headers, "Image");
     setImageColName(keyForImage);
-    console.log(keyForImage);
+
     try {
       let imageName1;
-      let newIndex = Number(taskData.currentIndex) - Number(taskData.min) + 1;
-      // let newIndex = currentIndex;
+      // let newIndex = Number(taskData.currentIndex) - Number(taskData.min) + 1;
+      let newIndex = currMatchingIndex;
 
       if (direction === "initial") {
         const objects = csvData[newIndex];
         imageName1 = objects[keyForImage];
         setCsvCurrentData(objects);
-        // newIndex = newIndex + 1;
       } else {
         newIndex = direction === "next" ? newIndex + 1 : newIndex - 1;
         if (newIndex > 0 && newIndex < csvData.length) {
@@ -192,8 +203,19 @@ const DataMatching = () => {
         `http://${REACT_APP_IP}:4000/get/image`,
         {
           imageName: imageName1,
-          currentIndex: newIndex + Number(taskData.min) - 1,
+          rowIndex: csvData[newIndex].rowIndex,
+          // rowIndex: 1,
+          // currentIndex: newIndex + Number(taskData.min) - 1,
           id: taskData.id,
+          colName: allDataChecked
+            ? "allDataIndex"
+            : multChecked && blankChecked
+            ? "multAndBlankDataIndex"
+            : multChecked && !blankChecked
+            ? "multDataIndex"
+            : !multChecked && blankChecked
+            ? "blankDataIndex"
+            : "",
         },
         {
           headers: {
@@ -216,11 +238,9 @@ const DataMatching = () => {
             currentIndex: parseInt(prevData.currentIndex) - 1,
           };
         } else {
-          console.error("Invalid direction:", direction);
           return prevData;
         }
       });
-
       setImageUrl(url);
       setImageNotFound(true);
       setPopUp(false);
@@ -239,40 +259,16 @@ const DataMatching = () => {
       ...prevData,
       [key]: value,
     }));
+
+    setModifiedKeys((prevKeys) => {
+      return {
+        ...prevKeys,
+        [key]: true,
+      };
+    });
   };
 
-  //   const onCsvUpdateHandler = async () => {
-  //     // const updatedData = [...csvData];
-  //     // updatedData[currentIndex] = csvCurrentData;
-  //     // setCsvData(updatedData);
-  //     // console.log(csvCurrentData);
-  //     try {
-  //       await axios.post(
-  //         `http://${REACT_APP_IP}:4000/updatecsvdata/${parseInt(
-  //           currentTaskData?.fileId
-  //         )}`,
-  //         {
-  //           data: csvCurrentData,
-  //           index: currentIndex + Number(currentTaskData.min),
-  //         },
-  //         {
-  //           headers: {
-  //             token: token,
-  //           },
-  //         }
-  //       );
-
-  //       setCsvData((prevCsvData) => {
-  //         const newCsvData = [...prevCsvData];
-  //         newCsvData[currentIndex] = csvCurrentData;
-  //         return newCsvData;
-  //       });
-
-  //       toast.success("Data update successfully.");
-  //     } catch (error) {
-  //       toast.error(error.message);
-  //     }
-  //   };
+  console.log(csvData);
 
   const imageFocusHandler = (headerName) => {
     if (!imageNotFound) {
@@ -340,6 +336,11 @@ const DataMatching = () => {
   };
 
   const onTaskStartHandler = async () => {
+    if (blankChecked && blankCount < 1) {
+      toast.warning("Please enter a value greater than zero for blank.");
+      return;
+    }
+
     if (!blankChecked && !multChecked && !allDataChecked) {
       toast.warning("Please select at least one option.");
       return;
@@ -360,6 +361,16 @@ const DataMatching = () => {
       conditions,
     };
 
+    if (allDataChecked) {
+      setDataTypeChecker("allDataIndex");
+    } else if (multChecked && blankChecked) {
+      setDataTypeChecker("multAndBlankDataIndex");
+    } else if (multChecked && !blankChecked) {
+      setDataTypeChecker("multDataIndex");
+    } else if (!multChecked && blankChecked) {
+      setDataTypeChecker("blankDataIndex");
+    }
+
     try {
       const response = await axios.post(
         `http://${REACT_APP_IP}:4000/get/csvdata`,
@@ -370,8 +381,46 @@ const DataMatching = () => {
           },
         }
       );
-      setCsvData(response.data);
-      onImageHandler("initial", response.data, updatedTasks);
+      let currRowIndex;
+
+      if (allDataChecked) {
+        setDataTypeChecker("allDataIndex");
+        currRowIndex = response.data.rowIndexdata.allDataIndex;
+      } else if (multChecked && blankChecked) {
+        setDataTypeChecker("multAndBlankDataIndex");
+        currRowIndex = response.data.rowIndexdata.multAndBlankDataIndex;
+      } else if (multChecked && !blankChecked) {
+        setDataTypeChecker("multDataIndex");
+        currRowIndex = response.data.rowIndexdata.multDataIndex;
+      } else if (!multChecked && blankChecked) {
+        setDataTypeChecker("blankDataIndex");
+        currRowIndex = response.data.rowIndexdata.blankDataIndex;
+      }
+
+      setCsvData(response.data.filteredData);
+      let matchingIndex;
+      for (let i = 0; i < response.data.filteredData.length; i++) {
+        if (response.data.filteredData[i].rowIndex === Number(currRowIndex)) {
+          matchingIndex = i;
+          break;
+        }
+      }
+
+      console.log("matching ---" + matchingIndex);
+
+      if (matchingIndex === 0 || matchingIndex === undefined) {
+        setCurrentIndex(1);
+        onImageHandler("initial", 1, response.data.filteredData, updatedTasks);
+      } else {
+        setCurrentIndex(matchingIndex);
+        onImageHandler(
+          "initial",
+          matchingIndex,
+          response.data.filteredData,
+          updatedTasks
+        );
+      }
+
       setPopUp(false);
     } catch (error) {
       toast.error(error.message);
@@ -773,11 +822,11 @@ const DataMatching = () => {
               </>
             )}
             {!popUp && (
-              <div className=" flex flex-col lg:flex-row md:flex-col-reverse  bg-gradient-to-r from-[rgb(255,195,36)] to-orange-500">
+              <div className=" flex flex-col lg:flex-row md:flex-col-reverse bg-gradient-to-r from-[rgb(255,195,36)] to-orange-500">
                 {/* LEFT SECTION */}
                 <div className=" border-e lg:w-3/12 xl:w-2/12 order-lg-1 second">
                   <div className=" flex flex-col overflow-hidden w-[100%]">
-                    <article className="p-3 shadow transition pt-28 hover:shadow-lg overflow-auto h-[100vh]">
+                    <article className="pt-10 shadow transition lg:pt-28 hover:shadow-lg mx-auto overflow-auto h-[100vh]">
                       {csvCurrentData &&
                         Object.entries({ ...csvData[0] }).map(
                           ([key, value], i) => {
@@ -794,7 +843,7 @@ const DataMatching = () => {
                                   className="w-5/6 px-3 py-1  overflow-x font-bold"
                                 >
                                   <label className=" w-full overflow-hidden  rounded-md  font-semibold  py-2 shadow-sm  ">
-                                    <span className="text-sm text-gray-700 font-bold">
+                                    <span className="text-sm text-gray-700 font-bold flex">
                                       {key?.toUpperCase()}
                                     </span>
                                   </label>
@@ -821,7 +870,7 @@ const DataMatching = () => {
                   {/* View image */}
                 </div>
                 {/* RIGHT SECTION */}
-                <div className="w-full lg:w-9/12 xl:w-10/12 order-1 pt-20 order-lg-2 bg-gradient-to-r from-[rgb(255,195,36)] to-orange-300 matchingMain">
+                <div className="w-full lg:w-9/12 xl:w-10/12 order-1 pt-20 order-lg-2  matchingMain">
                   {!imageUrl ? (
                     <div className="flex justify-center items-center ">
                       <div className="mt-10">
@@ -891,7 +940,7 @@ const DataMatching = () => {
                         style={{
                           position: "relative",
                           border: "2px solid gray",
-                          width: "50rem",
+                          width: "48rem",
                           height: "23rem",
                           overflow: "auto",
                         }}
@@ -923,65 +972,65 @@ const DataMatching = () => {
                             </>
                           ))}
                       </div>
-                      <div className=" py-3 px-3 w-full xl:w-2/3  mx-auto">
-                        <div className="">
+                      <div className="w-full xl:w-2/3 xl:px-6 mx-auto">
+                        <div className="mt-4 w-full ">
                           <label
-                            className="text-xl font-semibold py-2 mt-1 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                            className="text-xl font-semibold ms-2 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             htmlFor="questions"
                           >
                             Questions:
                           </label>
-                        </div>
-                        <div className="flex overflow-auto h-[360px]">
-                          <div className="flex flex-wrap">
-                            {csvCurrentData &&
-                              Object.entries(csvCurrentData).map(
-                                ([key, value], i) => {
-                                  const csvHeader = csvData[0][key];
-                                  const templateData =
-                                    templateHeaders?.templetedata.find(
-                                      (data) => data.attribute === csvHeader
-                                    );
-                                  if (
-                                    templateData &&
-                                    templateData.fieldType ===
-                                      "questionsField" &&
-                                    key !== imageColName
-                                  ) {
-                                    return (
-                                      <div
-                                        key={i}
-                                        className="gap-1 mx-2 my-1 flex"
-                                      >
-                                        <label
-                                          htmlFor={`Quantity${i}`}
-                                          className="font-bold text-sm w-9 text-bold my-1"
+                          <div className="flex overflow-auto max-h-[360px] mt-3 ms-2 xl:ms-2">
+                            <div className="flex flex-wrap">
+                              {csvCurrentData &&
+                                Object.entries(csvCurrentData).map(
+                                  ([key, value], i) => {
+                                    const csvHeader = csvData[0][key];
+                                    const templateData =
+                                      templateHeaders?.templetedata.find(
+                                        (data) => data.attribute === csvHeader
+                                      );
+                                    if (
+                                      templateData &&
+                                      templateData.fieldType ===
+                                        "questionsField" &&
+                                      key !== imageColName
+                                    ) {
+                                      return (
+                                        <div
+                                          key={i}
+                                          className=" me-3 my-1 flex"
                                         >
-                                          {key}
-                                        </label>
-                                        <div className="flex rounded">
-                                          <input
-                                            type="text"
-                                            id={`Quantity${i}`}
-                                            className="h-7 w-7 border-transparent text-center rounded text-sm"
-                                            placeholder={value}
-                                            value={csvCurrentData[key]}
-                                            onChange={(e) =>
-                                              changeCurrentCsvDataHandler(
-                                                key,
-                                                e.target.value
-                                              )
-                                            }
-                                            onFocus={() =>
-                                              imageFocusHandler(key)
-                                            }
-                                          />
+                                          <label
+                                            htmlFor={`Quantity${i}`}
+                                            className="font-bold text-sm w-9 text-bold my-1"
+                                          >
+                                            {key}
+                                          </label>
+                                          <div className="flex rounded">
+                                            <input
+                                              type="text"
+                                              id={`Quantity${i}`}
+                                              className="h-7 w-7 border-transparent text-center rounded text-sm"
+                                              placeholder={value}
+                                              value={csvCurrentData[key]}
+                                              onChange={(e) =>
+                                                changeCurrentCsvDataHandler(
+                                                  key,
+                                                  e.target.value
+                                                )
+                                              }
+                                              onFocus={() =>
+                                                imageFocusHandler(key)
+                                              }
+                                            />
+                                          </div>
                                         </div>
-                                      </div>
-                                    );
+                                      );
+                                    }
                                   }
-                                }
-                              )}
+                                )}
+                            </div>
                           </div>
                         </div>
                       </div>

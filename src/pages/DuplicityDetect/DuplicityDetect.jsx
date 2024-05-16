@@ -32,7 +32,7 @@ const ImageScanner = () => {
             },
           }
         );
-        setCsvHeaders(response.data);
+        setCsvHeaders(response.data.headers);
       } catch (error) {
         console.log(error);
       }

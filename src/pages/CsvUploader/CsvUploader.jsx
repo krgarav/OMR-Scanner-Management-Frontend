@@ -119,13 +119,12 @@ const CsvUploader = () => {
         localStorage.setItem("imageName", JSON.stringify(imageName));
       } catch (error) {
         console.error("Error uploading files: ", error);
-        toast.error("Something went wrong please refresh the page.");
+        // toast.error("Something went wrong please refresh the page.");
+        dataCtx.modifyIsLoading(false);
+        toast.error(error.response?.data?.error);
       }
     }
   };
-
-  console.log("csv", csvFile?.name);
-  console.log("image", imageFolder?.name);
 
   return (
     <div className="">

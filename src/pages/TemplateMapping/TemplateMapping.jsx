@@ -41,7 +41,11 @@ const TemplateMapping = () => {
             },
           }
         );
-        setCsvHeaders(response.data);
+        localStorage.setItem(
+          "totalData",
+          JSON.stringify(response.data.rowCount)
+        );
+        setCsvHeaders(response.data.headers);
       } catch (error) {
         console.log(error);
       }
@@ -103,6 +107,9 @@ const TemplateMapping = () => {
     //   return;
     // }
     // console.log(selectedAssociations);
+
+    console.log(mappedvalues);
+
     if (!mappedvalues.includes("Image")) {
       toast.error("Please select all the field properly.");
       return;
@@ -111,8 +118,6 @@ const TemplateMapping = () => {
       ...selectedAssociations,
       fileId: fileId,
     };
-
-    console.log(mappedData);
 
     try {
       await axios.post(

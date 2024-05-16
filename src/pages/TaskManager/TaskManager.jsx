@@ -22,8 +22,9 @@ const TemplateMapping = () => {
   const dataCtx = useContext(dataContext);
   const { id } = useParams();
   const navigate = useNavigate();
-  const { fileId } = JSON.parse(localStorage.getItem("fileId"));
+  const { fileId } = JSON.parse(localStorage.getItem("fileId")) || "";
   const token = JSON.parse(localStorage.getItem("userData"));
+  const totalData = JSON.parse(localStorage.getItem("totalData")) || "";
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -51,6 +52,11 @@ const TemplateMapping = () => {
   }, [selectedUser]);
 
   const onTaskAssignedHandler = () => {
+    if (Number(taskValue.max) > totalData) {
+      toast.warning("Max value must be less than or equal to the total data.");
+      return;
+    }
+
     if (
       !taskValue.max ||
       taskValue.max <= 0 ||
@@ -120,7 +126,7 @@ const TemplateMapping = () => {
               <div className="flex items-start sm:gap-8">
                 <div className="flex gap-3">
                   <h1 className="rounded border border-indigo-500 bg-indigo-500 px-3 py-2 font-medium text-white">
-                    Total Data - 5000
+                    Total Data - {totalData}
                   </h1>
                 </div>
               </div>
