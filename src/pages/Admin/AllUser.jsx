@@ -349,7 +349,7 @@ export function AllUser() {
                                 <div className="mb-5 flex gap-4">
                                   <label
                                     htmlFor="userName"
-                                    className="block text-lg mt-2 w-[110px]  font-medium text-gray-700"
+                                    className="block text-lg mt-2 w-[200px]  font-medium text-gray-700"
                                   >
                                     Username
                                   </label>
@@ -370,7 +370,7 @@ export function AllUser() {
                                 <div className="mb-5 flex gap-4">
                                   <label
                                     htmlFor="mobile"
-                                    className="block text-lg mt-2 w-[110px] font-medium text-gray-700"
+                                    className="block text-lg mt-2 w-[200px] font-medium text-gray-700"
                                   >
                                     Mobile
                                   </label>
@@ -396,7 +396,7 @@ export function AllUser() {
                                 <div className="mb-5 flex gap-4">
                                   <label
                                     htmlFor="email"
-                                    className="block text-lg mt-2 w-[110px] font-medium text-gray-700"
+                                    className="block text-lg mt-2 w-[200px] font-medium text-gray-700"
                                   >
                                     Email
                                   </label>
@@ -416,8 +416,29 @@ export function AllUser() {
                                 </div>
                                 <div className="mb-5 flex gap-4">
                                   <label
+                                    htmlFor="password"
+                                    className="block text-lg mt-2 w-[200px]  font-medium text-gray-700"
+                                  >
+                                   New Password
+                                  </label>
+                                  <input
+                                    type="text"
+                                    name="password"
+                                    id="password"
+                                    placeholder="change password"
+                                    onChange={(e) =>
+                                      setSelectedUser({
+                                        ...selectedUser,
+                                        password: e.target.value,
+                                      })
+                                    }
+                                    className="mt-1 focus:ring-indigo-500  px-4 py-1 border-3 border-gray-100 shadow-blue-100 focus:border-indigo-500 block w-full shadow-md sm:text-sm  rounded-md"
+                                  />
+                                </div>
+                                <div className="mb-5 flex gap-4">
+                                  <label
                                     htmlFor="role"
-                                    className="block w-[80px] text-lg mt-2 font-medium text-gray-700"
+                                    className="block w-[140px] text-lg mt-2 font-medium text-gray-700"
                                   >
                                     Role
                                   </label>
