@@ -4,7 +4,9 @@ import uploadIcon from "../../assets/images/uploaderIcon.png";
 import { toast } from "react-toastify";
 
 const ImageUploader = () => {
-  const [image, setImage] = useState(null);
+  // const [image, setImage] = useState(null);
+  const [images, setImages] = useState([]);
+  const [imageNames, setImageNames] = useState([]);
   const [selectedFormat, setSelectedFormat] = useState("tiff");
   const [newValue, setNewValue] = useState(1);
   const [openUpload, setOpenUpload] = useState(true);
@@ -12,37 +14,37 @@ const ImageUploader = () => {
   const navigate = useNavigate();
 
   // Function to handle image selection
-  const handleImageChange = (e) => {
+  const handleImageChange = (e, index) => {
     const file = e.target.files[0];
-    handleImage(file);
+    handleImage(file, index);
   };
 
   // Function to handle image drop
-  const handleDrop = (e) => {
+  const handleDrop = (e, index) => {
     e.preventDefault();
     const file = e.dataTransfer.files[0];
-    handleImage(file);
+    handleImage(file, index);
   };
 
   // Function to handle both image selection and drop
-  const handleImage = (file) => {
+  const handleImage = (file, index) => {
     if (file) {
-      // Check if the file type is an image
-      const imageTypes = ["image/jpeg", "image/png", "image/gif"];
+      const imageTypes = ["image/jpeg", "image/jpeg", "image/jpeg "];
       if (imageTypes.includes(file.type)) {
         const reader = new FileReader();
 
         reader.onload = () => {
           toast.success("Image selected successfully.");
-          setImage(reader.result);
-          navigate("/imageuploader/scanner");
-          localStorage.setItem("image", JSON.stringify(reader.result));
+          const newImages = [...images];
+          const newImageNames = [...imageNames];
+          newImages[index] = reader.result;
+          newImageNames[index] = file.name;
+          setImages(newImages);
+          setImageNames(newImageNames);
         };
 
-        // Read the file as data URL regardless of the file type
         reader.readAsDataURL(file);
       } else {
-        // If the file type is not an image, display a toast message
         toast.error("Please select a valid image file (jpg, png, etc).");
       }
     }
@@ -66,77 +68,87 @@ const ImageUploader = () => {
     setOpenUpload(!openUpload);
   };
 
+  const handleFinalSubmit = () => {
+    if (
+      images.length === parseInt(newValue) &&
+      images.every((image) => image)
+    ) {
+      localStorage.setItem("images", JSON.stringify(images));
+      navigate("/imageuploader/scanner");
+    } else {
+      toast.error("Please upload all required images.");
+    }
+  };
+
   return (
     <div>
-      <section
-        className="bgImage h-[100vh]"
-        onDrop={handleDrop}
-        onDragOver={handleDragOver}
-      >
-        <div className="mx-auto max-w-screen-sm px-4 py-12 lg:flex lg:h-screen lg:items-center flex-row">
+      <section className="bgImage h-[100vh]">
+        <div className="mx-auto max-w-screen-sm px-4 py-12 lg:flex lg:h-screen lg:items-center flex-col">
           {!openUpload && (
             <>
-              {[...Array(parseInt(newValue))].map((_, index) => (
-                <div key={index} className="mt-40">
-                  <div className="mt-40">
-                    <h1 className="text-white text-center text-4xl mb-8 font-bold">
-                      OMR India Outsources
-                    </h1>
+              <div className="mt-40">
+                <h1 className="text-white text-center text-4xl mb-8 font-bold">
+                  OMR India Outsources
+                </h1>
+              </div>
+              <div>
+                {imageNames.map((name, index) => (
+                  <div key={index} className="text-white text-lg mb-2">
+                    {name}
                   </div>
-                  <div
-                    className="mx-auto max-w-xxl border-4 backdrop-blur-xl border-dashed  border-white  w-full rounded-lg p-8 text-center "
-                    onDrop={(e) => handleDrop(e, index)}
-                    onDragOver={handleDragOver}
-                  >
-                    <svg
-                      className="mx-auto h-20 w-20 text-gray-300"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
+                ))}
+              </div>
+
+                         
+              <div className="relative flex justify-center">
+                {[...Array(parseInt(newValue))].map((_, index) => (
+                  <div key={index} className="mt-4">
+                    <label
+                      className="flex items-center font-medium text-white bg-gradient-to-r from-purple-600 to-indigo-700 rounded-lg shadow-md cursor-pointer select-none text-lg px-6 py-3 hover:shadow-xl active:shadow-md"
+                      htmlFor={`file-upload-${index}`}
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                      ></path>
-                    </svg>
-                    <h2 className="mt-1 text-lg font-large text-white mb-6">
-                      Create Template
-                    </h2>
-                    <div className="relative flex justify-center">
-                      <label
-                        className="flex items-center font-medium text-white bg-gradient-to-r from-purple-600 to-indigo-700 rounded-lg shadow-md cursor-pointer select-none text-lg px-6 py-3 hover:shadow-xl active:shadow-md"
-                        htmlFor={`file-upload-${index}`}
-                      >
-                        <img
-                          src={uploadIcon}
-                          alt="uploadIcon"
-                          className="mr-2"
-                        />
-                        <span>Upload Image</span>
-                      </label>
-                      <input
-                        onChange={(e) => handleImageChange(e, index)}
-                        id={`file-upload-${index}`}
-                        type="file"
-                        className="absolute -top-full opacity-0"
-                      />
-                    </div>
-                    <p className="mt-4 text-sm text-white">
-                      or drag and drop an image here
-                    </p>
-                  </div>
-                </div>
-              ))}
+                      <img src={uploadIcon} alt="uploadIcon" className="mr-2" />
+                      <span>{imageNames[index] || "Upload Image"}</span>
+                    </label>
+                    <input
+                      onChange={(e) => handleImageChange(e, index)}
+                      id={`file-upload-${index}`}
+                      type="file"
+                      className="absolute -top-full opacity-0"
+                    />
+                  </div>  
+                ))}
+              </div>
+
+              <div className="relative flex justify-center mt-8">
+                <label
+                  className="flex items-center font-medium text-white bg-gradient-to-r from-purple-600 to-indigo-700 rounded-lg shadow-md cursor-pointer select-none text-lg px-6 py-3 hover:shadow-xl active:shadow-md"
+                  htmlFor="file-upload"
+                >
+                  <img src={uploadIcon} alt="uploadIcon" className="mr-2" />
+                  <span>Upload Images</span>
+                </label>
+                <input
+                  onChange={handleImageChange}
+                  id="file-upload"
+                  type="file"
+                  className="absolute -top-full opacity-0"
+                  multiple
+                />
+              </div>
+              <button
+                onClick={handleFinalSubmit}
+                className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
+              >
+                Submit All Images
+              </button>
             </>
           )}
 
           {openUpload && (
             <div className="mt-96">
-              {/* Image File type selector */}
               <div className="flex m-4 items-center">
-                <div className="">
+                <div>
                   <label htmlFor="tiff" className="text-white cursor-pointer">
                     Tiff
                     <input
@@ -150,7 +162,7 @@ const ImageUploader = () => {
                     />
                   </label>
                 </div>
-                <div className="">
+                <div>
                   <label htmlFor="jpeg" className="text-white cursor-pointer">
                     JPEG
                     <input
@@ -166,7 +178,6 @@ const ImageUploader = () => {
                 </div>
               </div>
 
-              {/* No of Pages Input boxes  */}
               <div>
                 <div className="bg-black">
                   <label className="text-white text-lg">
