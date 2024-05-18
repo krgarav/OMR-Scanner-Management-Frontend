@@ -17,6 +17,7 @@ const ImageScanner = () => {
   const [inputField, setInputField] = useState("");
   const [fieldType, setFieldType] = useState("");
   const [open, setOpen] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const cancelButtonRef = useRef(null);
   const [templateData, setTemplateData] = useState({
     name: "",
@@ -30,11 +31,23 @@ const ImageScanner = () => {
   const imageRef = useRef(null);
   const navigate = useNavigate();
 
-  const imageURL = JSON.parse(localStorage.getItem("image"));
+  const imageURL = JSON.parse(localStorage.getItem("images"));
 
   useEffect(() => {
-    setImage(imageURL);
-  }, [imageURL]);
+    if (imageURL && imageURL.length > 0) {
+      setImage(imageURL[currentImageIndex]); // Set the first image from the array
+    }
+  }, [currentImageIndex]);
+
+
+
+  const handleNext = () => {
+    if (currentImageIndex < imageURL.length - 1) {
+      setCurrentImageIndex((prev) => prev + 1);
+    } else {
+      setCurrentImageIndex(0);
+    }
+  };
 
   // Function to handle mouse down event for drag selection
   const handleMouseDown = (e) => {
@@ -127,9 +140,9 @@ const ImageScanner = () => {
     toast.success("Coordinate successfully added.");
   };
 
-  console.log(questionRange);
+  // console.log(questionRange);
 
-  console.log(selectedCoordinates);
+  // console.log(selectedCoordinates);
 
   const onRemoveSelectedHandler = (id) => {
     const newArray = selectedCoordinates.filter((data) => data.id !== id);
@@ -501,6 +514,16 @@ const ImageScanner = () => {
                 )}
               </div>
             </div>
+          </div>
+          <div>
+            <button
+              onClick={handleNext}
+              className="ms-auto group  mt-2 flex items-center  rounded-lg bg-teal-600 hover:shadow-lg hover:shadow-blue-200  py-2 px-2 transition-colors hover:bg-teal-700 focus:outline-none focus:ring"
+            >
+              <span className="font-medium  flex text-white transition-colors group-hover:text-white  group-active:text-white mx-auto">
+                Next
+              </span>
+            </button>
           </div>
         </div>
       )}
