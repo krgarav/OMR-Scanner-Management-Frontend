@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import uploadIcon from "../../assets/images/uploaderIcon.png";
 import { toast } from "react-toastify";
 import UTIF from "utif";
-// import Tiff from "tiff.js";
 
 const ImageUploader = () => {
   // const [image, setImage] = useState(null);
@@ -25,8 +24,14 @@ const ImageUploader = () => {
   // Function to handle image selection
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
+    files.forEach((file) => {
+      if (file.type !== "image/jpeg") {
+        setOpenUpload(!openUpload);
+      } 
+    });
     handleImages(files);
   };
+
   // Function to handle both image selection and drop
   const handleImages = (files) => {
     if (!files || files.length === 0) return;
@@ -35,47 +40,69 @@ const ImageUploader = () => {
     const newImageNames = [];
     let processedCount = 0;
 
+    const updateImages = () => {
+      if (processedCount === files.length) {
+        setImages((prevImages) => [...prevImages, ...newImages]);
+        setImageNames((prevImageNames) => [
+          ...prevImageNames,
+          ...newImageNames,
+        ]);
+        localStorage.setItem("images", JSON.stringify([...newImages]));
+        toast.success("Images selected successfully.");
+      }
+    };
+
     const handleFileLoad = (file, data) => {
       if (file.type === "image/tiff") {
         const arrayBuffer = data;
         const ifds = UTIF.decode(arrayBuffer);
+        let pagesProcessed = 0;
 
         ifds.forEach((ifd, index) => {
-          UTIF.decodeImage(arrayBuffer, ifds);
+          UTIF.decodeImage(arrayBuffer, ifd);
           const rgba = UTIF.toRGBA8(ifd);
 
-          const blob = new Blob([new Uint8Array(rgba)], { type: "image/jpeg" });
-          const reader = new FileReader();
-          reader.onload = () => {
-            const base64data = reader.result;
-            newImages.push(base64data);
-            newImageNames.push(`${file.name} - Page ${index + 1}`);
-            processedCount++;
-            if (processedCount === files.length) {
-              setImages((prevImages) => [...prevImages, ...newImages]);
-              setImageNames((prevImageNames) => [
-                ...prevImageNames,
-                ...newImageNames,
-              ]);
-              localStorage.setItem("images", JSON.stringify([...newImages]));
-              toast.success("Images selected successfully.");
+          // Check if width and height are valid
+          if (ifd.width && ifd.height && rgba) {
+            const canvas = document.createElement("canvas");
+            canvas.width = ifd.width;
+            canvas.height = ifd.height;
+            const ctx = canvas.getContext("2d");
+            const imageData = new ImageData(
+              new Uint8ClampedArray(rgba),
+              ifd.width,
+              ifd.height
+            );
+            ctx.putImageData(imageData, 0, 0);
+
+            canvas.toBlob((blob) => {
+              const reader = new FileReader();
+              reader.onload = () => {
+                const base64data = reader.result;
+                newImages.push(base64data);
+                newImageNames.push(`${file.name} - Page ${index + 1}`);
+                pagesProcessed++;
+                if (pagesProcessed === ifds.length) {
+                  processedCount++;
+                  updateImages();
+                }
+              };
+              reader.readAsDataURL(blob);
+            }, "image/jpeg");
+          } else {
+            console.error("Invalid TIFF image data:", ifd);
+            pagesProcessed++;
+            if (pagesProcessed === ifds.length) {
+              processedCount++;
+              updateImages();
             }
-          };
-          reader.readAsDataURL(blob);
+          }
         });
       } else {
         newImages.push(data);
         newImageNames.push(file.name);
         processedCount++;
-        if (processedCount === files.length) {
-          setImages((prevImages) => [...prevImages, ...newImages]);
-          setImageNames((prevImageNames) => [
-            ...prevImageNames,
-            ...newImageNames,
-          ]);
-          localStorage.setItem("images", JSON.stringify([...newImages]));
-          toast.success("Images selected successfully.");
-        }
+        updateImages();
       }
     };
 
@@ -90,7 +117,6 @@ const ImageUploader = () => {
       }
     });
   };
-
 
   // Prevent default behavior on drag over
   const handleDragOver = (e) => {
@@ -148,22 +174,25 @@ const ImageUploader = () => {
               ))}
             </div>
 
-            <div className="relative flex justify-center mt-8">
-              <label
-                className="flex items-center font-medium text-white bg-gradient-to-r from-purple-600 to-indigo-700 rounded-lg shadow-md cursor-pointer select-none text-lg px-6 py-3 hover:shadow-xl active:shadow-md"
-                htmlFor="file-upload"
-              >
-                <img src={uploadIcon} alt="uploadIcon" className="mr-2" />
-                <span>Upload Images</span>
-              </label>
-              <input
-                onChange={handleImageChange}
-                id="file-upload"
-                type="file"
-                className="absolute -top-full opacity-0"
-                multiple
-              />
-            </div>
+            {openUpload && (
+              <div className="relative flex justify-center mt-8">
+                <label
+                  className="flex items-center font-medium text-white bg-gradient-to-r from-purple-600 to-indigo-700 rounded-lg shadow-md cursor-pointer select-none text-lg px-6 py-3 hover:shadow-xl active:shadow-md"
+                  htmlFor="file-upload"
+                >
+                  <img src={uploadIcon} alt="uploadIcon" className="mr-2" />
+                  <span>Upload Images</span>
+                </label>
+                <input
+                  onChange={handleImageChange}
+                  id="file-upload"
+                  type="file"
+                  className="absolute -top-full opacity-0"
+                  accept=".tiff,.tif,.jpeg,.jpg"
+                  multiple
+                />
+              </div>
+            )}
 
             <button
               onClick={handleFinalSubmit}
