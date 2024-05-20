@@ -381,7 +381,7 @@ const DataMatching = () => {
           },
         }
       );
-      console.log(response,"--responsegetcsv----")
+      console.log(response, "--responsegetcsv----");
       let currRowIndex;
 
       if (allDataChecked) {
