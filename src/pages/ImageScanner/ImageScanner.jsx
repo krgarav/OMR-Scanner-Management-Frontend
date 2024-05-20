@@ -39,14 +39,31 @@ const ImageScanner = () => {
     }
   }, [currentImageIndex]);
 
-
+  useEffect(() => {
+    const handlekeyDown = (e) => {
+      if (e.key === "ArrowRight") {
+        handleNext();
+        // console.log("object");
+      } else if (e.key === "ArrowLeft") {
+        handlePrev();
+      }
+    };
+    window.addEventListener("keydown", handlekeyDown);
+    return () => {
+      window.removeEventListener("keydown", handlekeyDown);
+    };
+  }, []);
 
   const handleNext = () => {
-    if (currentImageIndex < imageURL.length - 1) {
-      setCurrentImageIndex((prev) => prev + 1);
-    } else {
-      setCurrentImageIndex(0);
-    }
+    setCurrentImageIndex((prevIndex) =>
+      prevIndex < imageURL.length - 1 ? prevIndex + 1 : prevIndex
+    );
+  };
+
+  const handlePrev = () => {
+    setCurrentImageIndex((prevIndex) =>
+      prevIndex > 0 ? prevIndex - 1 : prevIndex
+    );
   };
 
   // Function to handle mouse down event for drag selection
@@ -516,14 +533,14 @@ const ImageScanner = () => {
             </div>
           </div>
           <div>
-            <button
+            {/* <button
               onClick={handleNext}
               className="ms-auto group  mt-2 flex items-center  rounded-lg bg-teal-600 hover:shadow-lg hover:shadow-blue-200  py-2 px-2 transition-colors hover:bg-teal-700 focus:outline-none focus:ring"
             >
               <span className="font-medium  flex text-white transition-colors group-hover:text-white  group-active:text-white mx-auto">
                 Next
               </span>
-            </button>
+            </button> */}
           </div>
         </div>
       )}

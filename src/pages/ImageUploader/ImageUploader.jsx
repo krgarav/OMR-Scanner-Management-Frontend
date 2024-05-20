@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import uploadIcon from "../../assets/images/uploaderIcon.png";
 import { toast } from "react-toastify";
 import UTIF from "utif";
-// import Tiff from "tiff.js";
 
 const ImageUploader = () => {
   // const [image, setImage] = useState(null);
@@ -25,8 +24,14 @@ const ImageUploader = () => {
   // Function to handle image selection
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
+    files.forEach((file) => {
+      if (file.type !== "image/jpeg") {
+        setOpenUpload(!openUpload);
+      } 
+    });
     handleImages(files);
   };
+
   // Function to handle both image selection and drop
   const handleImages = (files) => {
     if (!files || files.length === 0) return;
@@ -169,22 +174,25 @@ const ImageUploader = () => {
               ))}
             </div>
 
-            <div className="relative flex justify-center mt-8">
-              <label
-                className="flex items-center font-medium text-white bg-gradient-to-r from-purple-600 to-indigo-700 rounded-lg shadow-md cursor-pointer select-none text-lg px-6 py-3 hover:shadow-xl active:shadow-md"
-                htmlFor="file-upload"
-              >
-                <img src={uploadIcon} alt="uploadIcon" className="mr-2" />
-                <span>Upload Images</span>
-              </label>
-              <input
-                onChange={handleImageChange}
-                id="file-upload"
-                type="file"
-                className="absolute -top-full opacity-0"
-                multiple
-              />
-            </div>
+            {openUpload && (
+              <div className="relative flex justify-center mt-8">
+                <label
+                  className="flex items-center font-medium text-white bg-gradient-to-r from-purple-600 to-indigo-700 rounded-lg shadow-md cursor-pointer select-none text-lg px-6 py-3 hover:shadow-xl active:shadow-md"
+                  htmlFor="file-upload"
+                >
+                  <img src={uploadIcon} alt="uploadIcon" className="mr-2" />
+                  <span>Upload Images</span>
+                </label>
+                <input
+                  onChange={handleImageChange}
+                  id="file-upload"
+                  type="file"
+                  className="absolute -top-full opacity-0"
+                  accept=".tiff,.tif,.jpeg,.jpg"
+                  multiple
+                />
+              </div>
+            )}
 
             <button
               onClick={handleFinalSubmit}
