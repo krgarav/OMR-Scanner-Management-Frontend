@@ -13,6 +13,7 @@ const ImageScanner = () => {
   const [selection, setSelection] = useState(null);
   const [dragStart, setDragStart] = useState(null);
   const [selectedCoordinates, setSelectedCoordinates] = useState([]);
+  const [selectedCoordinatesPages, setSelectedCoordinatesPages] = useState([]);
   const [image, setImage] = useState(null);
   const [inputField, setInputField] = useState("");
   const [fieldType, setFieldType] = useState("");
@@ -59,6 +60,8 @@ const ImageScanner = () => {
       prevIndex < imageURL.length - 1 ? prevIndex + 1 : prevIndex
     );
   };
+
+  console.log(selectedCoordinatesPages);
 
   const handlePrev = () => {
     setCurrentImageIndex((prevIndex) =>
@@ -156,10 +159,6 @@ const ImageScanner = () => {
     });
     toast.success("Coordinate successfully added.");
   };
-
-  // console.log(questionRange);
-
-  // console.log(selectedCoordinates);
 
   const onRemoveSelectedHandler = (id) => {
     const newArray = selectedCoordinates.filter((data) => data.id !== id);
