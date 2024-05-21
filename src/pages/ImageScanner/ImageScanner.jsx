@@ -13,7 +13,6 @@ const ImageScanner = () => {
   const [selection, setSelection] = useState(null);
   const [dragStart, setDragStart] = useState(null);
   const [selectedCoordinates, setSelectedCoordinates] = useState([]);
-  const [selectedCoordinatesPages, setSelectedCoordinatesPages] = useState([]);
   const [image, setImage] = useState(null);
   const [inputField, setInputField] = useState("");
   const [fieldType, setFieldType] = useState("");
@@ -36,6 +35,8 @@ const ImageScanner = () => {
 
   const imageURL = JSON.parse(localStorage.getItem("images"));
 
+  console.log(imageURL);
+
   useEffect(() => {
     if (imageURL && imageURL.length > 0) {
       setImage(imageURL[currentImageIndex]); // Set the first image from the array
@@ -57,22 +58,12 @@ const ImageScanner = () => {
     };
   }, []);
 
-  useEffect(() => {
-    setSelectedCoordinatesPages((prev) => [
-      ...prev,
-      { coordinates: selectedCoordinates },
-    ]);
-  }, [currentImageIndex, selectedCoordinates]);
-
   const handleNext = () => {
     setCurrentImageIndex((prevIndex) =>
       prevIndex < imageURL.length - 1 ? prevIndex + 1 : prevIndex
     );
     setSelection(null);
-    setSelectedCoordinates([])
   };
-
-  console.log(selectedCoordinatesPages);
 
   const handlePrev = () => {
     setCurrentImageIndex((prevIndex) =>
@@ -110,7 +101,7 @@ const ImageScanner = () => {
       coordinateY: Math.min(dragStart.y, offsetY),
       width: Math.abs(offsetX - dragStart.x),
       height: Math.abs(offsetY - dragStart.y),
-      pageNumber: currentImageIndex,
+      pageNo: currentImageIndex,
     });
   };
 
@@ -347,20 +338,22 @@ const ImageScanner = () => {
                       data-bs-target="#exampleModal"
                     />
                     <>
-                      {selectedCoordinates?.map((data, index) => (
-                        <div
-                          key={index}
-                          className="border-blue-500"
-                          style={{
-                            border: "2px solid #007bff",
-                            position: "absolute",
-                            left: data.coordinateX,
-                            top: data.coordinateY,
-                            width: data.width,
-                            height: data.height,
-                          }}
-                        ></div>
-                      ))}
+                      {selectedCoordinates
+                        .filter((data) => data.pageNo === currentImageIndex)
+                        .map((data, index) => (
+                          <div
+                            key={index}
+                            className="border-blue-500"
+                            style={{
+                              border: "2px solid #007bff",
+                              position: "absolute",
+                              left: data.coordinateX,
+                              top: data.coordinateY,
+                              width: data.width,
+                              height: data.height,
+                            }}
+                          ></div>
+                        ))}
                       {selection && (
                         <div
                           className="border-blue-500"

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import axios from "axios";
+import axios, { all } from "axios";
 import UploadFile from "../../assets/images/CsvUploaderImg copy.png";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -14,10 +14,12 @@ const CsvUploader = () => {
   const [selectedId, setSelectedId] = useState();
   const [allTemplates, setAllTemplates] = useState([]);
   const [templateName, setTemplateName] = useState("");
-  const [imageName, setImageName] = useState("");
+  const [imageNames, setImageNames] = useState([]);
   const dataCtx = useContext(dataContext);
   const navigate = useNavigate();
   const token = JSON.parse(localStorage.getItem("userData"));
+
+  const data = allTemplates?.find((item) => item.id === selectedId);
 
   useEffect(() => {
     const fetchTemplate = async () => {
@@ -46,6 +48,14 @@ const CsvUploader = () => {
       "Please upload a CSV or Excel file.",
       setCsvFile
     );
+  };
+
+  const handleImageNameChange = (index, value) => {
+    setImageNames((prevNames) => {
+      const updatedNames = [...prevNames];
+      updatedNames[index] = value;
+      return updatedNames;
+    });
   };
 
   const onImageFolderHandler = (event) => {
@@ -80,10 +90,10 @@ const CsvUploader = () => {
       return;
     }
 
-    if (!imageName) {
-      toast.error("Please enter the image name.");
-      return;
-    }
+    // if (!imageNames.length !== data.pageCount) {
+    //   toast.error("Please enter the image name.");
+    //   return;
+    // }
 
     if (!csvFile) {
       toast.error("Please upload the CSV file.");
@@ -99,10 +109,12 @@ const CsvUploader = () => {
     formData.append("csvFile", csvFile);
     formData.append("zipFile", imageFolder);
 
+    const imageNamesString = imageNames.join(",");
+
     if (selectedId) {
       try {
         const response = await axios.post(
-          `http://${REACT_APP_IP}:4000/upload/${selectedId}?imageColName=${imageName}`,
+          `http://${REACT_APP_IP}:4000/upload/${selectedId}?imageNames=${imageNamesString}`,
           formData,
           {
             headers: {
@@ -116,7 +128,8 @@ const CsvUploader = () => {
         dataCtx.modifyIsLoading(false);
         navigate(`/csvuploader/duplicatedetector/${selectedId}`);
         localStorage.setItem("fileId", JSON.stringify(fileId));
-        localStorage.setItem("imageName", JSON.stringify(imageName));
+        localStorage.setItem("pageCount", JSON.stringify(data.pageCount));
+        localStorage.setItem("imageName", JSON.stringify("Front side Image"));
       } catch (error) {
         console.error("Error uploading files: ", error);
         // toast.error("Something went wrong please refresh the page.");
@@ -128,7 +141,7 @@ const CsvUploader = () => {
 
   return (
     <div className="">
-      {dataCtx.isLoading ? (
+      {dataCtx?.isLoading ? (
         <Loader />
       ) : (
         <div className="csvuploader xl:h-[100vh]">
@@ -187,16 +200,27 @@ const CsvUploader = () => {
               <div className="mt-4">
                 <div className="flex items-center justify-center">
                   <div className="rounded-lg">
-                    <div className="flex gap-3">
-                      <input
-                        type="text"
-                        value={imageName}
-                        onChange={(e) => setImageName(e.target.value)}
-                        required
-                        placeholder="enter image name..."
-                        className="input rounded-full ps-3 py-1 mr-6 border-1 border-gray-200 rounded-3 border-transparent shadow  focus:outline-none focus:border-blue-500 placeholder-gray-400"
-                      />
-                    </div>
+                    {data &&
+                      Array.from({ length: data.pageCount }).map((_, index) => (
+                        <div key={index} className="flex gap-3">
+                          <input
+                            type="text"
+                            value={imageNames[index] || ""}
+                            onChange={(e) =>
+                              handleImageNameChange(index, e.target.value)
+                            }
+                            required
+                            placeholder={
+                              data.pageCount === 1
+                                ? "enter image name"
+                                : `enter ${
+                                    index === 0 ? "first" : "second"
+                                  } image name`
+                            }
+                            className="input rounded-full ps-3 mb-5 py-1 mr-6 border-1 border-gray-200 rounded-3 border-transparent shadow focus:outline-none focus:border-blue-500 placeholder-gray-400"
+                          />
+                        </div>
+                      ))}
                   </div>
                 </div>
               </div>
