@@ -13,15 +13,18 @@ const ImageScanner = () => {
   const [selection, setSelection] = useState(null);
   const [dragStart, setDragStart] = useState(null);
   const [selectedCoordinates, setSelectedCoordinates] = useState([]);
+  const [selectedCoordinatesPages, setSelectedCoordinatesPages] = useState([]);
   const [image, setImage] = useState(null);
   const [inputField, setInputField] = useState("");
   const [fieldType, setFieldType] = useState("");
   const [open, setOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [] = useState([]);
   const cancelButtonRef = useRef(null);
   const [templateData, setTemplateData] = useState({
     name: "",
     other: "",
+    pageCount: "",
   });
   const [questionRange, setQuestionRange] = useState({
     min: "",
@@ -54,10 +57,19 @@ const ImageScanner = () => {
     };
   }, []);
 
+  useEffect(() => {
+    setSelectedCoordinatesPages((prev) => [
+      ...prev,
+      { coordinates: selectedCoordinates },
+    ]);
+  }, [currentImageIndex, selectedCoordinates]);
+
   const handleNext = () => {
     setCurrentImageIndex((prevIndex) =>
       prevIndex < imageURL.length - 1 ? prevIndex + 1 : prevIndex
     );
+    setSelection(null);
+    setSelectedCoordinates([])
   };
 
   const handlePrev = () => {
@@ -96,6 +108,7 @@ const ImageScanner = () => {
       coordinateY: Math.min(dragStart.y, offsetY),
       width: Math.abs(offsetX - dragStart.x),
       height: Math.abs(offsetY - dragStart.y),
+      pageNumber: currentImageIndex,
     });
   };
 
@@ -157,10 +170,6 @@ const ImageScanner = () => {
     toast.success("Coordinate successfully added.");
   };
 
-  // console.log(questionRange);
-
-  // console.log(selectedCoordinates);
-
   const onRemoveSelectedHandler = (id) => {
     const newArray = selectedCoordinates.filter((data) => data.id !== id);
     setSelectedCoordinates(newArray);
@@ -178,6 +187,7 @@ const ImageScanner = () => {
       templateData: {
         name: templateData.name,
         other: templateData.other,
+        pageCount: imageURL.length,
       },
       metaData: [...selectedCoordinates],
     };
@@ -194,6 +204,7 @@ const ImageScanner = () => {
       );
       toast.success("Template created successfully!");
       navigate("/imageuploader");
+      console.log(data);
     } catch (error) {
       console.log(error);
       toast.error(error.message);
