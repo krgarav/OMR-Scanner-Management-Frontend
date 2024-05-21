@@ -268,8 +268,6 @@ const DataMatching = () => {
     });
   };
 
-  console.log(csvData);
-
   const imageFocusHandler = (headerName) => {
     if (!imageNotFound) {
       return;
