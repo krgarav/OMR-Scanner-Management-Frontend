@@ -24,11 +24,6 @@ const ImageUploader = () => {
   // Function to handle image selection
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
-    files.forEach((file) => {
-      if (file.type !== "image/jpeg") {
-        setOpenUpload(!openUpload);
-      } 
-    });
     handleImages(files);
   };
 
@@ -111,6 +106,7 @@ const ImageUploader = () => {
       reader.onload = () => handleFileLoad(file, reader.result);
 
       if (file.type === "image/tiff") {
+        setOpenUpload(!openUpload)
         reader.readAsArrayBuffer(file);
       } else {
         reader.readAsDataURL(file);
