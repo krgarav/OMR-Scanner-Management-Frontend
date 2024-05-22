@@ -278,7 +278,7 @@ const ImageScanner = () => {
                       <div className="text-center sm:mt-0 sm:ml-4 sm:text-left">
                         <div className="flex justify-between">
                           <h1 className="text-xl font-bold text-gray-500 mb-6">
-                            Duplicates Data...
+                            Duplicates : {duplicatesData.length}
                           </h1>
                           <h1 className="text-xl font-bold text-gray-500 mb-6">
                             Column Name : {columnName}
@@ -286,14 +286,14 @@ const ImageScanner = () => {
                         </div>
                         <div className="text-gray-600 font-semibold my-2">
                           <dl className="-my-3 divide-y divide-gray-100 text-sm">
-                            <div className="grid grid-cols-3 gap-1 py-3 text-center even:bg-gray-50 sm:grid-cols-7 sm:gap-4">
+                            <div className="flex justify-between gap-1 py-3 text-center even:bg-gray-50 sm:grid-cols-7 sm:gap-4">
                               <dt className="font-medium text-md text-gray-700">
                                 {columnName}
                               </dt>
-                              <dd className="text-gray-700 font-medium sm:col-span-2">
+                              <dd className="text-gray-700 font-medium ">
                                 Row Index
                               </dd>
-                              <dd className="text-gray-700 font-medium sm:col-span-2">
+                              <dd className="text-gray-700 font-medium">
                                 Edit
                               </dd>
                               <dt className="font-medium text-md text-gray-700">
@@ -307,20 +307,20 @@ const ImageScanner = () => {
                             {duplicatesData?.map((data, index) => (
                               <div
                                 key={index}
-                                className="grid grid-cols-3 gap-1 py-3 text-center even:bg-gray-50 sm:grid-cols-7 sm:gap-4"
+                                className="flex justify-around gap-1 py-3 text-center even:bg-gray-50 sm:grid-cols-7 "
                               >
-                                <dt className="font-medium text-md text-gray-700">
+                                <dt className="font-medium text-md text-gray-700 whitespace-normal">
                                   {data.row[columnName]}
                                 </dt>
-                                <dd className="text-gray-700 font-medium sm:col-span-2">
+                                <dd className="text-gray-700 font-medium ">
                                   {data.index}
                                 </dd>
-                                <div className="text-gray-700 font-medium sm:col-span-2">
+                                <div className="text-gray-700 ">
                                   <div className="relative">
                                     <div className="inline-flex items-center overflow-hidden rounded-md border bg-white">
                                       <button
                                         onClick={() => onEditModalHandler(data)}
-                                        className="border-e px-4 py-2 text-sm/none text-gray-600 hover:bg-gray-50 hover:text-gray-700"
+                                        className="border-e px-1 py-2 text-sm/none text-gray-600 hover:bg-gray-50 hover:text-gray-700"
                                       >
                                         Edit
                                       </button>
@@ -372,6 +372,7 @@ const ImageScanner = () => {
                                             className="text-center p-2"
                                             type="text"
                                             placeholder={value}
+                                            value={value}
                                             onChange={(e) =>
                                               changeCurrentCsvDataHandler(
                                                 key,

@@ -5,7 +5,10 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import Loader from "../../components/Loader/Loader";
 import dataContext from "../../Store/DataContext";
-import { onGetTemplateHandler } from "../../services/common";
+import {
+  onGetTemplateHandler,
+  onGetVerifiedUserHandler,
+} from "../../services/common";
 import { REACT_APP_IP } from "../../services/common";
 
 const CsvUploader = () => {
@@ -15,6 +18,7 @@ const CsvUploader = () => {
   const [allTemplates, setAllTemplates] = useState([]);
   const [templateName, setTemplateName] = useState("");
   const [imageNames, setImageNames] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null);
   const dataCtx = useContext(dataContext);
   const navigate = useNavigate();
   const token = JSON.parse(localStorage.getItem("userData"));
@@ -25,6 +29,8 @@ const CsvUploader = () => {
     const fetchTemplate = async () => {
       try {
         const response = await onGetTemplateHandler();
+        const user = await onGetVerifiedUserHandler();
+        setCurrentUser(user.user);
         const csvTemplates = response.filter(
           (data) => data.TempleteType === "Data Entry"
         );
@@ -87,6 +93,11 @@ const CsvUploader = () => {
   const onSaveFilesHandler = async () => {
     if (!selectedId) {
       toast.error("Please select the name.");
+      return;
+    }
+
+    if (currentUser.role !== "Admin") {
+      toast.warning("Access denied. Admins only.");
       return;
     }
 

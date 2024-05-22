@@ -18,11 +18,13 @@ import AdminAssined from "./AdminAssined";
 const DataMatching = () => {
   const [popUp, setPopUp] = useState(true);
   const [startModal, setStartModal] = useState(true);
-  const [imageUrl, setImageUrl] = useState();
+  const [imageUrls, setImageUrls] = useState([]);
   const [templateHeaders, setTemplateHeaders] = useState();
   const [csvCurrentData, setCsvCurrentData] = useState([]);
   const [allTasks, setAllTasks] = useState([]);
   const [imageColName, setImageColName] = useState("");
+  const [imageColNames, setImageColNames] = useState([]);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [blankCount, setBlackCount] = useState(1);
   const [currentTaskData, setCurrentTaskData] = useState({});
   const [selectedCoordintes, setSelectedCoordinates] = useState(false);
@@ -107,7 +109,6 @@ const DataMatching = () => {
   }, [currentTaskData]);
 
   const onCsvUpdateHandler = async () => {
-    console.log("modifiedKeys:", modifiedKeys);
     try {
       const response = await axios.post(
         `http://${REACT_APP_IP}:4000/updatecsvdata/${parseInt(
@@ -125,14 +126,12 @@ const DataMatching = () => {
         }
       );
 
-      console.log("API response:", response.data);
-
       setCsvData((prevCsvData) => {
         const newCsvData = [...prevCsvData];
         newCsvData[currentIndex] = csvCurrentData;
         return newCsvData;
       });
-
+      onImageHandler("next", currentIndex, csvData, currentTaskData);
       toast.success("Data updated successfully.");
     } catch (error) {
       console.error("API error:", error);
@@ -143,9 +142,19 @@ const DataMatching = () => {
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === "ArrowLeft") {
-        onImageHandler("prev", currentIndex, csvData, currentTaskData);
+        if (currentImageIndex > 0) {
+          setCurrentImageIndex(currentImageIndex - 1);
+        } else {
+          onImageHandler("prev", currentIndex, csvData, currentTaskData);
+          setCurrentImageIndex(0);
+        }
       } else if (event.key === "ArrowRight") {
-        onImageHandler("next", currentIndex, csvData, currentTaskData);
+        if (currentImageIndex < imageUrls.length - 1) {
+          setCurrentImageIndex(currentImageIndex + 1);
+        } else {
+          onImageHandler("next", currentIndex, csvData, currentTaskData);
+          setCurrentImageIndex(0);
+        }
       } else if (event.altKey && event.key === "s") {
         setCsvCurrentData((prevData) => ({
           ...prevData,
@@ -166,28 +175,31 @@ const DataMatching = () => {
     taskData
   ) => {
     const headers = csvData[0];
-    const getKeyByValue = (object, value) => {
-      return Object.keys(object).find((key) => object[key] === value);
+
+    const getKeysByPattern = (object, pattern) => {
+      const regex = new RegExp(pattern);
+      return Object.keys(object).filter((key) => regex.test(object[key]));
     };
 
-    const keyForImage = getKeyByValue(headers, "Image");
-    setImageColName(keyForImage);
+    const imageNames = [];
+    for (let i = 0; i < templateHeaders.pageCount; i++) {
+      imageNames.push(...getKeysByPattern(headers, `Image${i + 1}`));
+    }
+    setImageColNames(imageNames);
 
     try {
-      let imageName1;
-      // let newIndex = Number(taskData.currentIndex) - Number(taskData.min) + 1;
       let newIndex = currMatchingIndex;
-
+      let allImagePaths;
       if (direction === "initial") {
         const objects = csvData[newIndex];
-        imageName1 = objects[keyForImage];
+        allImagePaths = imageNames.map((key) => objects[key]);
         setCsvCurrentData(objects);
       } else {
         newIndex = direction === "next" ? newIndex + 1 : newIndex - 1;
         if (newIndex > 0 && newIndex < csvData.length) {
           setCurrentIndex(newIndex);
           const objects = csvData[newIndex];
-          imageName1 = objects[keyForImage];
+          allImagePaths = imageNames.map((key) => objects[key]);
           setCsvCurrentData(objects);
         } else {
           toast.warning(
@@ -202,7 +214,7 @@ const DataMatching = () => {
       const response = await axios.post(
         `http://${REACT_APP_IP}:4000/get/image`,
         {
-          imageName: imageName1,
+          imageNameArray: allImagePaths,
           rowIndex: csvData[newIndex].rowIndex,
           // rowIndex: 1,
           // currentIndex: newIndex + Number(taskData.min) - 1,
@@ -223,9 +235,9 @@ const DataMatching = () => {
           },
         }
       );
-      const url = response.data?.base64Image;
-      const pathParts = imageName1?.split("/");
-      setCurrImageName(pathParts[pathParts.length - 1]);
+      // const url = response.data?.base64Image;
+      // const pathParts = imageName1?.split("/");
+      // setCurrImageName(pathParts[pathParts.length - 1]);
       setCurrentTaskData((prevData) => {
         if (direction === "next") {
           return {
@@ -241,7 +253,8 @@ const DataMatching = () => {
           return prevData;
         }
       });
-      setImageUrl(url);
+      setModifiedKeys(null);
+      setImageUrls(response.data.arrayOfImages);
       setImageNotFound(true);
       setPopUp(false);
     } catch (error) {
@@ -273,7 +286,7 @@ const DataMatching = () => {
       return;
     }
 
-    if (!imageUrl || !imageContainerRef || !imageRef) {
+    if (!imageUrls || !imageContainerRef || !imageRef) {
       setPopUp(true);
     }
 
@@ -379,7 +392,6 @@ const DataMatching = () => {
           },
         }
       );
-      console.log(response, "--responsegetcsv----");
       let currRowIndex;
 
       if (allDataChecked) {
@@ -404,8 +416,6 @@ const DataMatching = () => {
           break;
         }
       }
-
-      console.log("matching ---" + matchingIndex);
 
       if (matchingIndex === 0 || matchingIndex === undefined) {
         setCurrentIndex(1);
@@ -434,6 +444,27 @@ const DataMatching = () => {
   const onCompareTaskStartHandler = (taskdata) => {
     localStorage.setItem("taskdata", JSON.stringify(taskdata));
     navigate("/datamatching/correct_compare_csv", { state: taskdata });
+  };
+
+  const onCompleteHandler = async () => {
+    try {
+      const response = await axios.post(
+        `http://${REACT_APP_IP}:4000/taskupdation/${parseInt(
+          currentTaskData?.id
+        )}`,
+        {},
+        {
+          headers: {
+            token: token,
+          },
+        }
+      );
+      setPopUp(true);
+      setStartModal(true);
+      toast.success("task complted successfully.");
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   return (
@@ -486,92 +517,98 @@ const DataMatching = () => {
                                   </div>
                                   <div className="divide-y divide-gray-200 bg-white overflow-y-auto max-h-[300px]">
                                     {allTasks?.map((taskData) => (
-                                      <div
-                                        key={taskData.id}
-                                        className="grid grid-cols-6 gap-x-6 py-2"
-                                      >
-                                        <div className="whitespace-nowrap">
-                                          <div className="text-md text-center">
-                                            {taskData.templateName}
-                                          </div>
-                                        </div>
-                                        <div className="whitespace-nowrap">
-                                          <div className="text-md text-center">
-                                            {taskData.min}
-                                          </div>
-                                        </div>
-                                        <div className="whitespace-nowrap">
-                                          <div className="text-md text-center">
-                                            {taskData.max}
-                                          </div>
-                                        </div>
-
-                                        <div className="whitespace-nowrap">
-                                          <div className="text-md text-center font-semibold py-1 border-2">
-                                            {taskData.moduleType}
-                                          </div>
-                                        </div>
-
-                                        <div className="whitespace-nowrap">
-                                          <div className="text-md text-center">
-                                            <span
-                                              className={`inline-flex items-center justify-center rounded-full ${
-                                                !taskData.taskStatus
-                                                  ? "bg-amber-100 text-amber-700"
-                                                  : "bg-emerald-100 text-emerald-700"
-                                              } px-2.5 py-0.5 `}
-                                            >
-                                              {!taskData.taskStatus ? (
-                                                <svg
-                                                  xmlns="http://www.w3.org/2000/svg"
-                                                  fill="none"
-                                                  viewBox="0 0 24 24"
-                                                  strokeWidth="1.5"
-                                                  stroke="currentColor"
-                                                  className="-ms-1 me-1.5 h-4 w-4"
-                                                >
-                                                  <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
-                                                  />
-                                                </svg>
-                                              ) : (
-                                                <svg
-                                                  xmlns="http://www.w3.org/2000/svg"
-                                                  fill="none"
-                                                  viewBox="0 0 24 24"
-                                                  strokeWidth="1.5"
-                                                  stroke="currentColor"
-                                                  className="-ms-1 me-1.5 h-4 w-4"
-                                                >
-                                                  <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                                                  />
-                                                </svg>
-                                              )}
-
-                                              <p className="whitespace-nowrap text-sm">
-                                                {taskData.taskStatus
-                                                  ? "Completed"
-                                                  : "Pending"}
-                                              </p>
-                                            </span>
-                                          </div>
-                                        </div>
-                                        <div className="whitespace-nowrap text-center">
-                                          <button
-                                            onClick={() =>
-                                              onDataTypeSelectHandler(taskData)
-                                            }
-                                            className="rounded border border-indigo-500 bg-indigo-500 px-10 py-1 font-semibold text-white"
+                                      <>
+                                        {!taskData.taskStatus && (
+                                          <div
+                                            key={taskData.id}
+                                            className="grid grid-cols-6 gap-x-6 py-2"
                                           >
-                                            Start
-                                          </button>
-                                        </div>
-                                      </div>
+                                            <div className="whitespace-nowrap">
+                                              <div className="text-md text-center">
+                                                {taskData.templateName}
+                                              </div>
+                                            </div>
+                                            <div className="whitespace-nowrap">
+                                              <div className="text-md text-center">
+                                                {taskData.min}
+                                              </div>
+                                            </div>
+                                            <div className="whitespace-nowrap">
+                                              <div className="text-md text-center">
+                                                {taskData.max}
+                                              </div>
+                                            </div>
+
+                                            <div className="whitespace-nowrap">
+                                              <div className="text-md text-center font-semibold py-1 border-2">
+                                                {taskData.moduleType}
+                                              </div>
+                                            </div>
+
+                                            <div className="whitespace-nowrap">
+                                              <div className="text-md text-center">
+                                                <span
+                                                  className={`inline-flex items-center justify-center rounded-full ${
+                                                    !taskData.taskStatus
+                                                      ? "bg-amber-100 text-amber-700"
+                                                      : "bg-emerald-100 text-emerald-700"
+                                                  } px-2.5 py-0.5 `}
+                                                >
+                                                  {!taskData.taskStatus ? (
+                                                    <svg
+                                                      xmlns="http://www.w3.org/2000/svg"
+                                                      fill="none"
+                                                      viewBox="0 0 24 24"
+                                                      strokeWidth="1.5"
+                                                      stroke="currentColor"
+                                                      className="-ms-1 me-1.5 h-4 w-4"
+                                                    >
+                                                      <path
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
+                                                      />
+                                                    </svg>
+                                                  ) : (
+                                                    <svg
+                                                      xmlns="http://www.w3.org/2000/svg"
+                                                      fill="none"
+                                                      viewBox="0 0 24 24"
+                                                      strokeWidth="1.5"
+                                                      stroke="currentColor"
+                                                      className="-ms-1 me-1.5 h-4 w-4"
+                                                    >
+                                                      <path
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                                      />
+                                                    </svg>
+                                                  )}
+
+                                                  <p className="whitespace-nowrap text-sm">
+                                                    {taskData.taskStatus
+                                                      ? "Completed"
+                                                      : "Pending"}
+                                                  </p>
+                                                </span>
+                                              </div>
+                                            </div>
+                                            <div className="whitespace-nowrap text-center">
+                                              <button
+                                                onClick={() =>
+                                                  onDataTypeSelectHandler(
+                                                    taskData
+                                                  )
+                                                }
+                                                className="rounded border border-indigo-500 bg-indigo-500 px-10 py-1 font-semibold text-white"
+                                              >
+                                                Start
+                                              </button>
+                                            </div>
+                                          </div>
+                                        )}
+                                      </>
                                     ))}
                                     {compareTask?.map((taskData) => (
                                       <div
@@ -870,7 +907,7 @@ const DataMatching = () => {
                 </div>
                 {/* RIGHT SECTION */}
                 <div className="w-full lg:w-9/12 xl:w-10/12 order-1 pt-20 order-lg-2  matchingMain">
-                  {!imageUrl ? (
+                  {imageUrls.length === 0 ? (
                     <div className="flex justify-center items-center ">
                       <div className="mt-10">
                         <ImageNotFound />
@@ -900,11 +937,16 @@ const DataMatching = () => {
                           color="info"
                         >
                           update
-                        </Button>
+                        </Button> */}
 
                         <Button
                           onClick={() =>
-                            onImageHandler("prev", csvData, currentTaskData)
+                            onImageHandler(
+                              "prev",
+                              currentIndex,
+                              csvData,
+                              currentTaskData
+                            )
                           }
                           variant="contained"
                           endIcon={<ArrowBackIosIcon />}
@@ -914,24 +956,36 @@ const DataMatching = () => {
 
                         <Button
                           onClick={() =>
-                            onImageHandler("next", csvData, currentTaskData)
+                            onImageHandler(
+                              "next",
+                              currentIndex,
+                              csvData,
+                              currentTaskData
+                            )
                           }
                           variant="contained"
                           endIcon={<ArrowForwardIosIcon />}
                         >
                           Next
                         </Button>
-                        <Button
-                          onClick={taskUpdationHandler}
-                          variant="contained"
-                          color="success"
-                          endIcon={<CheckIcon />}
-                        >
-                          Task Completed
-                        </Button> */}
+                        {currentIndex === csvData.length - 1 && (
+                          <Button
+                            onClick={onCompleteHandler}
+                            variant="contained"
+                            color="success"
+                            endIcon={<CheckIcon />}
+                          >
+                            Task Completed
+                          </Button>
+                        )}
                       </div>
                       <h3 className="text-center pt-12 text-lg font-semibold pb-1">
-                        Image Name : {currImageName}
+                        Data No : {currentIndex}
+                        <span className="m-20">
+                          {" "}
+                          Image : {currentImageIndex + 1} Out of{" "}
+                          {imageUrls.length}
+                        </span>
                       </h3>
                       <div
                         ref={imageContainerRef}
@@ -945,7 +999,7 @@ const DataMatching = () => {
                         }}
                       >
                         <img
-                          src={`data:image/jpeg;base64,${imageUrl}`}
+                          src={`data:image/jpeg;base64,${imageUrls[currentImageIndex]?.base64Image}`}
                           alt="Selected"
                           ref={imageRef}
                           style={{
@@ -955,21 +1009,22 @@ const DataMatching = () => {
                         />
 
                         {!selectedCoordintes &&
-                          templateHeaders?.templetedata?.map((data, index) => (
-                            <>
-                              <div
-                                key={index}
-                                style={{
-                                  border: "2px solid #007bff",
-                                  position: "absolute",
-                                  left: `${data.coordinateX}px`,
-                                  top: `${data.coordinateY}px`,
-                                  width: `${data.width}px`,
-                                  height: `${data.height}px`,
-                                }}
-                              ></div>
-                            </>
-                          ))}
+                          templateHeaders?.templetedata?.map(
+                            (data, index) =>
+                              data.pageNo === currentImageIndex && (
+                                <div
+                                  key={index}
+                                  style={{
+                                    border: "2px solid #007bff",
+                                    position: "absolute",
+                                    left: `${data.coordinateX}px`,
+                                    top: `${data.coordinateY}px`,
+                                    width: `${data.width}px`,
+                                    height: `${data.height}px`,
+                                  }}
+                                ></div>
+                              )
+                          )}
                       </div>
                       <div className="w-full xl:w-2/3 xl:px-6 mx-auto">
                         <div className="mt-4 w-full ">

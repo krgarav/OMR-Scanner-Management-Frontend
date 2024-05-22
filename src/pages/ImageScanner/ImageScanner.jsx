@@ -164,8 +164,11 @@ const ImageScanner = () => {
   };
 
   const onRemoveSelectedHandler = (id) => {
-    const newArray = selectedCoordinates.filter((data) => data.id !== id);
-    setSelectedCoordinates(newArray);
+    if (window.confirm("Do you want to delete?")) {
+      const newArray = selectedCoordinates.filter((data) => data.id !== id);
+      setSelectedCoordinates(newArray);
+      toast.success("Successfully deleted coordinate.");
+    }
   };
 
   const onSubmitHandler = async (e) => {

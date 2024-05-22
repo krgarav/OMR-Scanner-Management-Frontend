@@ -1,10 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  onGetTaskHandler,
-  onGetTemplateHandler,
-  onGetVerifiedUserHandler,
-  REACT_APP_IP,
-} from "../../services/common";
+import { REACT_APP_IP, onGetAllTasksHandler } from "../../services/common";
 import axios from "axios";
 
 const AdminAssined = () => {
@@ -24,7 +19,6 @@ const AdminAssined = () => {
         );
         const AssignedData = response.data.assignedData;
 
-        console.log(response.data.assignedData);
         // const verifiedUser = await onGetVerifiedUserHandler();
         // const tasks = await onGetTaskHandler(verifiedUser.user.id);
         // const templateData = await onGetTemplateHandler();
@@ -61,7 +55,7 @@ const AdminAssined = () => {
         //   return task;
         // });
         // setAllTasks(updatedTasks);
-        setMatchingTask(uploadTask);
+        // setMatchingTask(uploadTask);
         setCompareTask(comTask);
       } catch (error) {
         console.log(error);
@@ -69,6 +63,20 @@ const AdminAssined = () => {
     };
     fetchCurrentUser();
   }, []);
+
+  useEffect(() => {
+    const onFetchTasksData = async () => {
+      try {
+        const tasks = await onGetAllTasksHandler();
+        const uploadTask = tasks.filter((task) => {
+          return task.moduleType === "Data Entry";
+        });
+        setMatchingTask(uploadTask);
+      } catch (error) {}
+    };
+    onFetchTasksData();
+  }, []);
+
   const convertToCsv = (jsonData) => {
     const headers = Object.keys(jsonData[0]);
     const csvHeader = headers.join(",") + "\n";
@@ -134,6 +142,51 @@ const AdminAssined = () => {
     sendReq();
     console.log(taskData);
   };
+
+  const onDownloadHandler = async (currentTaskData) => {
+    try {
+      const response = await fetch(
+        `http://${REACT_APP_IP}:4000/download/csv/${currentTaskData.fileId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+
+      // Extract the filename from the response headers if provided
+      const contentDisposition = response.headers.get("Content-Disposition");
+      let filename = "download.csv";
+      if (
+        contentDisposition &&
+        contentDisposition.indexOf("attachment") !== -1
+      ) {
+        const matches = /filename="([^"]+)"/.exec(contentDisposition);
+        if (matches && matches[1]) {
+          filename = matches[1];
+        }
+      }
+
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error downloading the file:", error);
+    }
+  };
+
   return (
     <div className=" min-h-[100vh] templatemapping">
       <div className=" pt-40">
@@ -303,7 +356,7 @@ const AdminAssined = () => {
                           </div>
                           <div className="whitespace-nowrap">
                             <div className="text-md text-center font-semibold border-2 py-1">
-                              {taskData.TemplateType}
+                              {taskData.moduleType}
                             </div>
                           </div>
                           <div className="whitespace-nowrap  ">
@@ -357,9 +410,7 @@ const AdminAssined = () => {
                           </div>
                           <div className="whitespace-nowrap text-center">
                             <button
-                              // onClick={() =>
-                              //   onCompareTaskStartHandler(taskData)
-                              // }
+                              onClick={() => onDownloadHandler(taskData)}
                               className="rounded border border-indigo-500 bg-indigo-500 px-6 py-1 font-semibold text-white"
                             >
                               Download
