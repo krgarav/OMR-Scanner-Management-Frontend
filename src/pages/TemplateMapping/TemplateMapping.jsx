@@ -21,7 +21,10 @@ const TemplateMapping = () => {
       try {
         const response = await onGetTemplateHandler();
         const templateData = response?.find((data) => data.id == id);
-        templateData.templetedata.push({ attribute: "Image" });
+        for (let i = 1; i <= templateData.pageCount; i++) {
+          templateData.templetedata.push({ attribute: `Image${i}` });
+        }
+        // templateData.templetedata.push({ attribute: "Image" });
         setTemplateHeaders(templateData);
       } catch (error) {
         console.log(error);
@@ -102,18 +105,14 @@ const TemplateMapping = () => {
 
   const onMapSubmitHandler = async () => {
     const mappedvalues = Object.values(selectedAssociations);
-    // if (Object.keys(selectedAssociations).length !== csvHeaders.length) {
-    //   toast.error("please map all fields. ");
-    //   return;
-    // }
-    // console.log(selectedAssociations);
 
-    console.log(mappedvalues);
-
-    if (!mappedvalues.includes("Image")) {
-      toast.error("Please select all the field properly.");
-      return;
+    for (let i = 1; i <= templateHeaders.pageCount; i++) {
+      if (!mappedvalues.includes(`Image${i}`)) {
+        toast.error("Please select all the field properly.");
+        return;
+      }
     }
+
     const mappedData = {
       ...selectedAssociations,
       fileId: fileId,
