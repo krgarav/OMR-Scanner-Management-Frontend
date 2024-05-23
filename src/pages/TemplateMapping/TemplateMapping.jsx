@@ -139,47 +139,58 @@ const TemplateMapping = () => {
     <div className="py-12 min-h-[100vh] overflow-y overflow-x-auto flex justify-center templatemapping">
       <div className="w-[700px] mt-20">
         <h1 className="text-white text-4xl text-center mb-10">Mapping</h1>
-        {csvHeaders &&
-          csvHeaders.map((csvHeader, index) => (
-            <div key={index} className="flex w-full justify-center">
-              <select
-                className="block w-1/3 py-1  me-10 mb-3 text-xl font-semibold text-center border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-                aria-label="Csv Header Name"
-                onChange={(e) =>
-                  handleCsvHeaderChange(csvHeader, e.target.value)
-                }
-                value={csvHeader}
-              >
-                <option disabled defaultValue>
-                  Select CSV Header Name
-                </option>
-                {csvHeaders.map((csvData, idx) => (
-                  <option key={idx} value={csvData}>
-                    {csvData}
-                  </option>
-                ))}
-              </select>
-
-              {/* User Typed field */}
-
-              <select
-                className="block w-1/3 py-1  ms-10 mb-3 text-xl font-semibold text-center border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-                aria-label="Large select example"
-                onChange={(e) =>
-                  handleTemplateHeaderChange(csvHeader, e.target.value)
-                }
-                value={selectedAssociations[csvHeader] || "UserFieldName"}
-              >
-                <option>UserFieldName</option>
-                {templateHeaders &&
-                  templateHeaders?.templetedata?.map((template, idx) => (
-                    <option key={idx} value={template.attribute}>
-                      {template.attribute}
-                    </option>
-                  ))}
-              </select>
+        <div>
+          <div className="flex w-full justify-center mb-4">
+            <div className="w-1/3 text-center">
+              <label className="block text-xl font-semibold">CSV Header</label>
             </div>
-          ))}
+            <div className="w-1/3 text-center">
+              <label className="block text-xl font-semibold">
+                Template Header
+              </label>
+            </div>
+          </div>
+          <div>
+            {csvHeaders &&
+              csvHeaders.map((csvHeader, index) => (
+                <div key={index} className="flex w-full justify-center mb-3">
+                  <select
+                    className="block w-1/3 py-1 me-10 text-xl font-semibold text-center border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                    aria-label="CSV Header Name"
+                    onChange={(e) =>
+                      handleCsvHeaderChange(csvHeader, e.target.value)
+                    }
+                    value={csvHeader}
+                  >
+                    <option disabled defaultValue>
+                      Select CSV Header Name
+                    </option>
+                    {csvHeaders.map((csvData, idx) => (
+                      <option key={idx} value={csvData}>
+                        {csvData}
+                      </option>
+                    ))}
+                  </select>
+                  <select
+                    className="block w-1/3 py-1 ms-10 text-xl font-semibold text-center border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                    aria-label="Template Header"
+                    onChange={(e) =>
+                      handleTemplateHeaderChange(csvHeader, e.target.value)
+                    }
+                    value={selectedAssociations[csvHeader] || "UserFieldName"}
+                  >
+                    <option>UserFieldName</option>
+                    {templateHeaders &&
+                      templateHeaders.templetedata.map((template, idx) => (
+                        <option key={idx} value={template.attribute}>
+                          {template.attribute}
+                        </option>
+                      ))}
+                  </select>
+                </div>
+              ))}
+          </div>
+        </div>
 
         <div className="text-center mt-5 pt-5">
           <label

@@ -22,7 +22,6 @@ const menuItems = [
     name: "CSV Compare",
     href: "comparecsv",
     permission: "comparecsv",
-
   },
   {
     name: "Data Entry",
@@ -67,17 +66,17 @@ export default function Navbar() {
       //       : localStorage.getItem("currentPath");
       //   navigate(currentPath);
       // } else {
-        const firstAllowedLink = menuItems.find(
-          (item) => userData.permissions[item.permission]
-        );
-        if (firstAllowedLink) {
-          const currentPath =
-            localStorage.getItem("currentPath") === "/"
-              ? firstAllowedLink.href
-              : localStorage.getItem("currentPath");
-          navigate(currentPath);
-        }
+      const firstAllowedLink = menuItems.find(
+        (item) => userData.permissions[item.permission]
+      );
+      if (firstAllowedLink) {
+        const currentPath =
+          localStorage.getItem("currentPath") === "/"
+            ? firstAllowedLink.href
+            : localStorage.getItem("currentPath");
+        navigate(currentPath);
       }
+    }
     // }
   }, [userData]);
 
@@ -185,38 +184,36 @@ export default function Navbar() {
                     );
                   })
                 : */}
-                 {filteredMenuItems?.map((item) => {
-                    const active =
-                      mainUrl[0] === item.href
-                        ? "bg-gray-300 duration-1000 transition-colors ease-in-out text-teal-500"
-                        : "";
-                    return (
-                      <li key={item.name}>
-                        <NavLink
-                          to={item.href}
-                          className={`text-lg px-2 rounded-md py-1 font-semibold text-gray-700 no-underline  hover:text-teal-500 ${active}`}
-                          onClick={() => {
-                            setIsUserMenuOpen(false);
-                          }}
-                        >
-                          {item.name}
-                        </NavLink>
-                      </li>
-                    );
-                  })}
+              {filteredMenuItems?.map((item) => {
+                const active =
+                  mainUrl[0] === item.href
+                    ? "bg-gray-300 duration-1000 transition-colors ease-in-out text-teal-500"
+                    : "";
+                return (
+                  <li key={item.name}>
+                    <NavLink
+                      to={item.href}
+                      className={`text-lg px-2 rounded-md py-1 font-semibold text-gray-700 no-underline  hover:text-teal-500 ${active}`}
+                      onClick={() => {
+                        setIsUserMenuOpen(false);
+                      }}
+                    >
+                      {item.name}
+                    </NavLink>
+                  </li>
+                );
+              })}
             </ul>
           </div>
-          <div className="relative flex gap-4 bg-slate-200 shadow-sm px-6 rounded-lg py-2">
-
+          <div
+            onClick={toggleUserMenu}
+            className="relative flex gap-4 bg-slate-200 shadow-sm px-6 rounded-lg py-2"
+          >
             <div>
               <h4 className="text-xl font-semibold">{userData.userName}</h4>
               <p className="text-center text-sm">{userData.role}</p>
             </div>
-            <button
-              type="button"
-              className="rounded-full"
-              onClick={toggleUserMenu}
-            >
+            <button type="button" className="rounded-full">
               <FaCircleUser className="w-7 h-7 text- mt-1 text-indigo-700" />
             </button>
             {userData?.role === "Admin"

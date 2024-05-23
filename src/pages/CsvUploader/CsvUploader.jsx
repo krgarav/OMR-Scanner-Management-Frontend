@@ -92,7 +92,7 @@ const CsvUploader = () => {
 
   const onSaveFilesHandler = async () => {
     if (!selectedId) {
-      toast.error("Please select the name.");
+      toast.error("Please select the template name.");
       return;
     }
 
@@ -101,10 +101,10 @@ const CsvUploader = () => {
       return;
     }
 
-    // if (!imageNames.length !== data.pageCount) {
-    //   toast.error("Please enter the image name.");
-    //   return;
-    // }
+    if (imageNames.length !== data.pageCount) {
+      toast.error("Please fill in all image fields.");
+      return;
+    }
 
     if (!csvFile) {
       toast.error("Please upload the CSV file.");
@@ -223,7 +223,7 @@ const CsvUploader = () => {
                             required
                             placeholder={
                               data.pageCount === 1
-                                ? "enter image name"
+                                ? "image name"
                                 : `enter ${
                                     index === 0 ? "first" : "second"
                                   } image name`

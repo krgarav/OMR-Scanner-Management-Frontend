@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { REACT_APP_IP, onGetAllTasksHandler } from "../../services/common";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const AdminAssined = () => {
   const [compareTask, setCompareTask] = useState([]);
@@ -144,6 +145,11 @@ const AdminAssined = () => {
   };
 
   const onDownloadHandler = async (currentTaskData) => {
+    if (!currentTaskData.taskStatus) {
+      toast.warning("The task is pending, so downloading is not available.");
+      return;
+    }
+
     try {
       const response = await fetch(
         `http://${REACT_APP_IP}:4000/download/csv/${currentTaskData.fileId}`,

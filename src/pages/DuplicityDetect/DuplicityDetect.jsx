@@ -281,7 +281,7 @@ const ImageScanner = () => {
                             Duplicates : {duplicatesData.length}
                           </h1>
                           <h1 className="text-xl font-bold text-gray-500 mb-6">
-                            Column Name : {columnName}
+                            Field : {columnName}
                           </h1>
                         </div>
                         <div className="text-gray-600 font-semibold my-2">
