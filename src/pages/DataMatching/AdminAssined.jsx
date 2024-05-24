@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { REACT_APP_IP, onGetAllTasksHandler } from "../../services/common";
+import {
+  REACT_APP_IP,
+  onGetAllTasksHandler,
+  onGetTemplateHandler,
+  onGetAllUsersHandler,
+} from "../../services/common";
 import axios from "axios";
 import { toast } from "react-toastify";
 
 const AdminAssined = () => {
   const [compareTask, setCompareTask] = useState([]);
   const [matchingTask, setMatchingTask] = useState([]);
+
   useEffect(() => {
     const fetchCurrentUser = async () => {
       try {
@@ -69,10 +75,29 @@ const AdminAssined = () => {
     const onFetchTasksData = async () => {
       try {
         const tasks = await onGetAllTasksHandler();
+        const templateData = await onGetTemplateHandler();
+        const users = await onGetAllUsersHandler();
+        console.log(users)
         const uploadTask = tasks.filter((task) => {
           return task.moduleType === "Data Entry";
         });
-        setMatchingTask(uploadTask);
+
+        const updatedTasks = uploadTask.map((task) => {
+          const matchedTemplate = templateData.find(
+            (template) => template.id === parseInt(task.templeteId)
+          );
+
+          if (matchedTemplate) {
+            return {
+              ...task,
+              templateName: matchedTemplate.name,
+            };
+          }
+
+          return task;
+        });
+
+        setMatchingTask(updatedTasks);
       } catch (error) {}
     };
     onFetchTasksData();
@@ -192,6 +217,8 @@ const AdminAssined = () => {
       console.error("Error downloading the file:", error);
     }
   };
+
+  console.log(matchingTask);
 
   return (
     <div className=" min-h-[100vh] templatemapping">
@@ -342,7 +369,7 @@ const AdminAssined = () => {
                         >
                           <div className="whitespace-nowrap ">
                             <div className="text-center text-md">
-                              {taskData.name}
+                              {taskData.templateName}
                             </div>
                           </div>
                           <div className="whitespace-nowrap ">
