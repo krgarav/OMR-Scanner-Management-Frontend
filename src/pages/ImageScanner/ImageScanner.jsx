@@ -35,8 +35,6 @@ const ImageScanner = () => {
 
   const imageURL = JSON.parse(localStorage.getItem("images"));
 
-  console.log(imageURL);
-
   useEffect(() => {
     if (imageURL && imageURL.length > 0) {
       setImage(imageURL[currentImageIndex]); // Set the first image from the array
@@ -78,7 +76,6 @@ const ImageScanner = () => {
     const offsetY = e.clientY - boundingRect.top;
     setDragStart({ x: offsetX, y: offsetY });
   };
-
   // Function to handle mouse up event for drag selection
   const handleMouseUp = () => {
     if (dragStart) {
@@ -319,7 +316,7 @@ const ImageScanner = () => {
                   <div
                     style={{
                       position: "relative",
-                      border: "1px solid purple",
+                      border: "3px solid purple",
                       height: "50rem",
                     }}
                     className="w-full overflow-y-auto"
@@ -346,10 +343,10 @@ const ImageScanner = () => {
                         .map((data, index) => (
                           <div
                             key={index}
-                            className="border-blue-500"
                             style={{
-                              border: "2px solid #007bff",
+                              border: "3px solid #007bff",
                               position: "absolute",
+                              backgroundColor: "rgba(0, 123, 255, 0.2)",
                               left: data.coordinateX,
                               top: data.coordinateY,
                               width: data.width,
@@ -359,9 +356,9 @@ const ImageScanner = () => {
                         ))}
                       {selection && (
                         <div
-                          className="border-blue-500"
                           style={{
-                            border: "2px solid #007bff",
+                            border: "3px solid #007bff",
+                            backgroundColor: "rgba(0, 123, 255, 0.2)",
                             position: "absolute",
                             left: selection.coordinateX,
                             top: selection.coordinateY,

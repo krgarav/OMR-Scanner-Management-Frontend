@@ -94,6 +94,11 @@ const TemplateMapping = () => {
   };
 
   const onTaskSubmitHandler = async () => {
+    if (taskValue.min - 1 !== totalData) {
+      toast.warning("Please assign all the data.");
+      return;
+    }
+
     try {
       await axios.post(
         `http://${REACT_APP_IP}:4000/assign/user`,
@@ -175,7 +180,7 @@ const TemplateMapping = () => {
                             <div className="ml-4 w-full">
                               <div className="overflow-y-auto h-[310px] px-2 ">
                                 {allUsers?.map((user, i) => {
-                                  if (currentUser.id !== user.id) {
+                                  if (user.role !== "Admin") {
                                     return (
                                       <button
                                         onClick={() =>

@@ -28,7 +28,6 @@ const DataMatching = () => {
   const [blankCount, setBlackCount] = useState(1);
   const [currentTaskData, setCurrentTaskData] = useState({});
   const [selectedCoordintes, setSelectedCoordinates] = useState(false);
-  const [currImageName, setCurrImageName] = useState("");
   const [blankChecked, setBlankChecked] = useState(false);
   const [modifiedKeys, setModifiedKeys] = useState({});
   const [multChecked, setMultChecked] = useState(false);
@@ -149,6 +148,11 @@ const DataMatching = () => {
       if (event.key === "ArrowLeft") {
         if (currentImageIndex > 0) {
           setCurrentImageIndex(currentImageIndex - 1);
+          setSelectedCoordinates(false);
+          if (imageRef.current) {
+            imageRef.current.style.transform = "none";
+            imageRef.current.style.transformOrigin = "initial";
+          }
         } else {
           onImageHandler("prev", currentIndex, csvData, currentTaskData);
           setCurrentImageIndex(0);
@@ -156,6 +160,11 @@ const DataMatching = () => {
       } else if (event.key === "ArrowRight") {
         if (currentImageIndex < imageUrls.length - 1) {
           setCurrentImageIndex(currentImageIndex + 1);
+          setSelectedCoordinates(false);
+          if (imageRef.current) {
+            imageRef.current.style.transform = "none";
+            imageRef.current.style.transformOrigin = "initial";
+          }
         } else {
           onImageHandler("next", currentIndex, csvData, currentTaskData);
           setCurrentImageIndex(0);
@@ -180,7 +189,6 @@ const DataMatching = () => {
     taskData
   ) => {
     const headers = csvData[0];
-
     const getKeysByPattern = (object, pattern) => {
       const regex = new RegExp(pattern);
       return Object.keys(object).filter((key) => regex.test(object[key]));
@@ -258,6 +266,11 @@ const DataMatching = () => {
           return prevData;
         }
       });
+      setSelectedCoordinates(false);
+      if (imageRef.current) {
+        imageRef.current.style.transform = "none";
+        imageRef.current.style.transformOrigin = "initial";
+      }
       setModifiedKeys(null);
       setImageUrls(response.data.arrayOfImages);
       setImageNotFound(true);
@@ -475,10 +488,6 @@ const DataMatching = () => {
       toast.error(error.message);
     }
   };
-
-  // console.log(allTasks)
-
-  // console.log(userRole)
 
   return (
     <>
@@ -998,7 +1007,7 @@ const DataMatching = () => {
                       style={{
                         position: "relative",
                         border: "2px solid gray",
-                        width: "48rem",
+                        width: "50rem",
                         height: "23rem",
                         overflow: "auto",
                       }}
@@ -1020,8 +1029,9 @@ const DataMatching = () => {
                               <div
                                 key={index}
                                 style={{
-                                  border: "2px solid #007bff",
+                                  border: "3px solid #007bff",
                                   position: "absolute",
+                                  backgroundColor: "rgba(0, 123, 255, 0.2)",
                                   left: `${data.coordinateX}px`,
                                   top: `${data.coordinateY}px`,
                                   width: `${data.width}px`,

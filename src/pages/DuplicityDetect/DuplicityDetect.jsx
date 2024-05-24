@@ -13,8 +13,10 @@ const ImageScanner = () => {
   const [showDuplicates, setShowDuplicates] = useState(true);
   const [columnName, setColumnName] = useState("");
   const [editModal, setEditModal] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [currentRowData, setCurrentRowData] = useState(null);
   const [imageUrl, setImageUrl] = useState("");
+  const [modifiedKeys, setModifiedKeys] = useState({});
   const token = JSON.parse(localStorage.getItem("userData"));
   let { fileId } = JSON.parse(localStorage.getItem("fileId")) || "";
   let imageName = JSON.parse(localStorage.getItem("imageName")) || "";
@@ -71,6 +73,13 @@ const ImageScanner = () => {
         [key]: newValue,
       },
     }));
+
+    setModifiedKeys((prevKeys) => {
+      return {
+        ...prevKeys,
+        [key]: true,
+      };
+    });
   };
 
   const onFindDuplicatesHandler = async (columnName) => {
@@ -95,7 +104,7 @@ const ImageScanner = () => {
       }
 
       setDuplicatesData(response.data.duplicates);
-      const url = response.data?.duplicates[0].base64Image;
+      const url = response.data?.duplicates[0].base64Images[currentImageIndex];
       setImageUrl(url);
       setColumnName(columnName);
       setShowDuplicates(false);
@@ -151,12 +160,13 @@ const ImageScanner = () => {
       (item) => item.index === data?.index
     );
     if (indexToUpdate !== -1) {
-      setImageUrl(duplicatesData[indexToUpdate].base64Image);
+      setImageUrl(
+        duplicatesData[indexToUpdate].base64Images[currentImageIndex]
+      );
     }
   };
 
   const onUpdateCurrentDataHandler = async () => {
-    // console.log("update", currentRowData);
     try {
       await axios.post(
         `http://${REACT_APP_IP}:4000/update/duplicatedata`,
@@ -164,6 +174,7 @@ const ImageScanner = () => {
           index: currentRowData?.index,
           fileID: fileId,
           rowData: currentRowData.row,
+          updatedColumn: modifiedKeys,
         },
         {
           headers: {
@@ -184,6 +195,7 @@ const ImageScanner = () => {
           }
           return item;
         });
+        setModifiedKeys(null);
         setDuplicatesData(updatedDuplicateData);
       }
       toast.success("The row has been updated successfully.");
@@ -222,31 +234,33 @@ const ImageScanner = () => {
                           </div>
                         </div>
                         <div className="divide-y divide-gray-200 bg-white overflow-y-auto max-h-[300px] w-full">
-                          {csvHeaders?.map((columnName, index) => (
-                            <div
-                              key={index}
-                              className="flex justify-between items-center"
-                            >
-                              <div className="whitespace-nowrap px-4 py-4">
-                                <div className="flex items-center">
-                                  <div className="ml-4 w-full font-semibold">
-                                    <div className=" px-2">{columnName}</div>
+                          {csvHeaders?.map((columnName, index) =>
+                            columnName === "User Details" ||
+                            columnName === "Updated Details" ? null : ( // If column name is "User Details" or "Updated Details", skip rendering
+                              <div
+                                key={index}
+                                className="flex justify-between items-center"
+                              >
+                                <div className="whitespace-nowrap px-4 py-4">
+                                  <div className="flex items-center">
+                                    <div className="ml-4 w-full font-semibold">
+                                      <div className="px-2">{columnName}</div>
+                                    </div>
                                   </div>
                                 </div>
+                                <div className="whitespace-nowrap px-4 py-4 text-right">
+                                  <button
+                                    onClick={() =>
+                                      onFindDuplicatesHandler(columnName)
+                                    }
+                                    className="rounded border border-indigo-500 bg-indigo-500 px-10 py-1 font-semibold text-white"
+                                  >
+                                    Check
+                                  </button>
+                                </div>
                               </div>
-
-                              <div className="whitespace-nowrap px-4 py-4 text-right">
-                                <button
-                                  onClick={() =>
-                                    onFindDuplicatesHandler(columnName)
-                                  }
-                                  className="rounded border border-indigo-500 bg-indigo-500 px-10 py-1 font-semibold text-white"
-                                >
-                                  Check
-                                </button>
-                              </div>
-                            </div>
-                          ))}
+                            )
+                          )}
                         </div>
                       </div>
                     </div>
@@ -327,7 +341,6 @@ const ImageScanner = () => {
                                     </div>
                                   </div>
                                 </div>
-
                                 <dd
                                   onClick={() =>
                                     onRemoveDuplicateHandler(
@@ -359,31 +372,37 @@ const ImageScanner = () => {
                               {currentRowData &&
                                 currentRowData.row &&
                                 Object.entries(currentRowData.row).map(
-                                  ([key, value], index) => (
-                                    <tr key={index}>
-                                      {key !== imageName && (
-                                        <div className="py-2 px-2 text-center">
-                                          {key.toUpperCase()}
-                                        </div>
-                                      )}
-                                      {key !== imageName && (
-                                        <td className="py-2 p-2 px-2 text-center">
-                                          <input
-                                            className="text-center p-2"
-                                            type="text"
-                                            placeholder={value}
-                                            value={value}
-                                            onChange={(e) =>
-                                              changeCurrentCsvDataHandler(
-                                                key,
-                                                e.target.value
-                                              )
-                                            }
-                                          />
-                                        </td>
-                                      )}
-                                    </tr>
-                                  )
+                                  ([key, value], index) => {
+                                    // Check if key (columnName) is "User Details" or "Updated Details"
+                                    if (
+                                      key === "User Details" ||
+                                      key === "Updated Details"
+                                    ) {
+                                      return null; // Skip rendering this key-value pair
+                                    } else {
+                                      return (
+                                        <tr key={index}>
+                                          <div className="py-2 px-2 text-center">
+                                            {key.toUpperCase()}
+                                          </div>
+                                          <td className="py-2 p-2 px-2 text-center">
+                                            <input
+                                              className="text-center p-2"
+                                              type="text"
+                                              placeholder={value}
+                                              value={value}
+                                              onChange={(e) =>
+                                                changeCurrentCsvDataHandler(
+                                                  key,
+                                                  e.target.value
+                                                )
+                                              }
+                                            />
+                                          </td>
+                                        </tr>
+                                      );
+                                    }
+                                  }
                                 )}
                             </div>
                           </div>

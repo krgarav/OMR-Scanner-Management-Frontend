@@ -207,7 +207,7 @@ export default function Navbar() {
           </div>
           <div
             onClick={toggleUserMenu}
-            className="relative flex gap-4 bg-slate-200 shadow-sm px-6 rounded-lg py-2"
+            className="relative flex gap-4 bg-slate-200 shadow-sm px-6 6 cursor-pointer rounded-lg py-2"
           >
             <div>
               <h4 className="text-xl font-semibold">{userData.userName}</h4>

@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 const AdminAssined = () => {
   const [compareTask, setCompareTask] = useState([]);
   const [matchingTask, setMatchingTask] = useState([]);
+  const token = JSON.parse(localStorage.getItem("userData"));
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
@@ -30,9 +31,9 @@ const AdminAssined = () => {
         // const tasks = await onGetTaskHandler(verifiedUser.user.id);
         // const templateData = await onGetTemplateHandler();
 
-        const uploadTask = AssignedData.filter((task) => {
-          return task.TemplateType === "Data Entry";
-        });
+        // const uploadTask = AssignedData.filter((task) => {
+        //   return task.TemplateType === "Data Entry";
+        // });
         const comTask = AssignedData.filter((task) => {
           return task.TemplateType === "CSVCompare";
         });
@@ -77,7 +78,6 @@ const AdminAssined = () => {
         const tasks = await onGetAllTasksHandler();
         const templateData = await onGetTemplateHandler();
         const users = await onGetAllUsersHandler();
-        console.log(users)
         const uploadTask = tasks.filter((task) => {
           return task.moduleType === "Data Entry";
         });
@@ -126,7 +126,6 @@ const AdminAssined = () => {
             // responseType: "blob", // Set the response type to blob to receive binary data
           }
         );
-        console.log(response.data);
         const jsonObj = response.data.csvFile;
         const csvData = convertToCsv(jsonObj);
         const blob = new Blob([csvData], { type: "text/csv" });
@@ -218,7 +217,30 @@ const AdminAssined = () => {
     }
   };
 
-  console.log(matchingTask);
+  const onCompleteHandler = async (currentTask) => {
+    try {
+      await axios.post(
+        `http://${REACT_APP_IP}:4000/taskupdation/${parseInt(currentTask.id)}`,
+        {},
+        {
+          headers: {
+            token: token,
+          },
+        }
+      );
+      const updatedTasks = matchingTask.map((task) => {
+        if (task.id === currentTask.id) {
+          return { ...task, taskStatus: false };
+        }
+        return task;
+      });
+
+      setMatchingTask(updatedTasks);
+      toast.success("Task status updated.");
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
 
   return (
     <div className=" min-h-[100vh] templatemapping">
@@ -236,7 +258,7 @@ const AdminAssined = () => {
                 <div className="overflow-hidden border border-gray-200 md:rounded-lg">
                   <div className="min-w-full divide-y divide-gray-200 ">
                     <div className="bg-gray-50">
-                      <div className="grid grid-cols-7 ">
+                      <div className="grid grid-cols-8 ">
                         <div className=" py-3.5  text-xl text-center font-semibold text-gray-700 ">
                           <span>Template</span>
                         </div>
@@ -257,6 +279,11 @@ const AdminAssined = () => {
                         <div className=" py-3.5 text-center text-xl font-semibold text-gray-700">
                           Status
                         </div>
+
+                        <div className=" py-3.5 text-center text-xl font-semibold text-gray-700">
+                          Re-Assign
+                        </div>
+
                         <div className="py-3.5 text-center text-xl font-semibold text-gray-700">
                           Download File
                         </div>
@@ -266,7 +293,7 @@ const AdminAssined = () => {
                       {compareTask?.map((taskData) => (
                         <div
                           key={taskData.id}
-                          className="grid grid-cols-7 py-2"
+                          className="grid grid-cols-8 py-2"
                         >
                           <div className="whitespace-nowrap">
                             <div className="text-md text-center">
@@ -342,6 +369,19 @@ const AdminAssined = () => {
                               </span>
                             </div>
                           </div>
+
+                          <div className="whitespace-nowrap text-center">
+                            <button
+                              className={`rounded px-6 py-1 font-semibold ${
+                                taskData.taskStatus
+                                  ? "bg-indigo-500 text-white  border border-indigo-500"
+                                  : "bg-gray-400 text-gray-600 cursor-not-allowed"
+                              }`}
+                              disabled={!taskData.taskStatus}
+                            >
+                              Start Again
+                            </button>
+                          </div>
                           <div className="whitespace-nowrap text-center">
                             {/* <button
                               // onClick={() =>
@@ -365,7 +405,7 @@ const AdminAssined = () => {
                       {matchingTask?.map((taskData) => (
                         <div
                           key={taskData.id}
-                          className="grid grid-cols-7 py-2"
+                          className="grid grid-cols-8 py-2"
                         >
                           <div className="whitespace-nowrap ">
                             <div className="text-center text-md">
@@ -440,6 +480,20 @@ const AdminAssined = () => {
                                 </p>
                               </span>
                             </div>
+                          </div>
+
+                          <div className="whitespace-nowrap text-center">
+                            <button
+                              onClick={() => onCompleteHandler(taskData)}
+                              className={`rounded px-6 py-1 font-semibold ${
+                                taskData.taskStatus
+                                  ? "bg-indigo-500 text-white  border border-indigo-500"
+                                  : "bg-gray-400 text-gray-600 cursor-not-allowed"
+                              }`}
+                              disabled={!taskData.taskStatus}
+                            >
+                              Start Again
+                            </button>
                           </div>
                           <div className="whitespace-nowrap text-center">
                             <button
