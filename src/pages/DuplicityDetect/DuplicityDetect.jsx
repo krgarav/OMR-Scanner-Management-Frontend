@@ -19,7 +19,7 @@ const ImageScanner = () => {
   const [modifiedKeys, setModifiedKeys] = useState({});
   const token = JSON.parse(localStorage.getItem("userData"));
   let { fileId } = JSON.parse(localStorage.getItem("fileId")) || "";
-  let imageName = JSON.parse(localStorage.getItem("imageName")) || "";
+  let imageNames = JSON.parse(localStorage.getItem("imageName")) || "";
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -161,7 +161,7 @@ const ImageScanner = () => {
         {
           colName: columnName,
           fileID: fileId,
-          imageColumnName: imageName,
+          imageColumnName: imageNames,
         },
         {
           headers: {
