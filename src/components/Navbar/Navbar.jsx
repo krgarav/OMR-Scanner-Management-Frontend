@@ -55,7 +55,6 @@ export default function Navbar() {
       }
     };
     getUser();
-    console.log(userData);
   }, []);
   useEffect(() => {
     if (userData && Object.keys(userData).length !== 0) {

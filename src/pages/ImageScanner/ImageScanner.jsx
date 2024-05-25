@@ -240,7 +240,7 @@ const ImageScanner = () => {
               >
                 <div className="overflow-x-auto">
                   <div className="my-3 table-auto  border-collapse border border-gray-400 min-w-full divide-y-2 divide-gray-200 bg-white text-sm rounded-lg">
-                    <div className="ltr:text-left rtl:text-right flex justify-around text-gray-600 w-full">
+                    <div className="ltr:text-left rtl:text-right flex justify-around text-gray-600">
                       <div className="text-center whitespace-nowrap py-2 w-1/3">
                         Name
                       </div>
@@ -252,14 +252,14 @@ const ImageScanner = () => {
                       </div>
                     </div>
 
-                    <div className="divide-y divide-gray-200 w-full">
+                    <div className="divide-y divide-gray-200">
                       {selectedCoordinates &&
                         selectedCoordinates?.map((data) => (
                           <div
                             key={data.id}
-                            className="odd:bg-gray-50 flex "
+                            className="odd:bg-gray-50 flex justify-around"
                           >
-                            <div className="whitespace-nowrap px-4 py-2 text-center font-semibold text-md text-gray-900 text-ellipsis w-1/3 overflow-x-hidden">
+                            <div className="whitespace-nowrap px-4 py-2 text-center font-semibold text-md text-gray-900 text-ellipsis overflow-x-hidden w-1/3">
                               {data.attribute}
                             </div>
                             <div className="whitespace-nowrap px-4 py-2 text-center font-semibold text-md text-gray-900 w-1/3">
@@ -516,10 +516,8 @@ const ImageScanner = () => {
       ) : (
         <div className=" pb-2 w-[75%] ">
           <div className="mx-auto max-w-screen-xl px-2 lg:pt-2 sm:px-6 lg:px-8">
-            <h1 className="text-center mt-6 text-lg font-bold text-blue-700">
-              {currentImageIndex + 1} out of {imageURL.length}
-            </h1>
-            <div className="mt-2 flex justify-center  ">
+             <h1 className="text-center my-4 pt-1 text-xl font-bold text-blue-700">{currentImageIndex + 1} out of {imageURL.length}</h1>
+            <div className="mt-2 flex justify-center ">
               <div className="">
                 {image && (
                   <div
@@ -576,171 +574,171 @@ const ImageScanner = () => {
                           }}
                         ></div>
                       )}
-                        <Transition.Root show={open} as={Fragment}>
-                          <Dialog
-                            as="div"
-                            className="relative z-10"
-                            initialFocus={cancelButtonRef}
-                            onClose={setOpen}
+                      <Transition.Root show={open} as={Fragment}>
+                        <Dialog
+                          as="div"
+                          className="relative z-10"
+                          initialFocus={cancelButtonRef}
+                          onClose={setOpen}
+                        >
+                          <Transition.Child
+                            as={Fragment}
+                            enter="ease-out duration-300"
+                            enterFrom="opacity-0"
+                            enterTo="opacity-100"
+                            leave="ease-in duration-200"
+                            leaveFrom="opacity-100"
+                            leaveTo="opacity-0"
                           >
-                            <Transition.Child
-                              as={Fragment}
-                              enter="ease-out duration-300"
-                              enterFrom="opacity-0"
-                              enterTo="opacity-100"
-                              leave="ease-in duration-200"
-                              leaveFrom="opacity-100"
-                              leaveTo="opacity-0"
-                            >
-                              <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
-                            </Transition.Child>
+                            <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+                          </Transition.Child>
 
-                            <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
-                              <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-                                <Transition.Child
-                                  as={Fragment}
-                                  enter="ease-out duration-300"
-                                  enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                                  enterTo="opacity-100 translate-y-0 sm:scale-100"
-                                  leave="ease-in duration-200"
-                                  leaveFrom="opacity-100 translate-y-0 sm:scale-100"
-                                  leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                                >
-                                  <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
-                                    <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
-                                      <div className="sm:flex sm:items-start">
-                                        <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left flex w-full justify-between items-center">
-                                          <div>
-                                            <Dialog.Title
-                                              as="h1"
-                                              className="text-xl font-semibold leading-6 text-gray-900"
-                                            >
-                                              Add Field Entity..{" "}
-                                            </Dialog.Title>
-                                          </div>
+                          <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
+                            <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+                              <Transition.Child
+                                as={Fragment}
+                                enter="ease-out duration-300"
+                                enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                                enterTo="opacity-100 translate-y-0 sm:scale-100"
+                                leave="ease-in duration-200"
+                                leaveFrom="opacity-100 translate-y-0 sm:scale-100"
+                                leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                              >
+                                <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                                  <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                                    <div className="sm:flex sm:items-start">
+                                      <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left flex w-full justify-between items-center">
+                                        <div>
+                                          <Dialog.Title
+                                            as="h1"
+                                            className="text-xl font-semibold leading-6 text-gray-900"
+                                          >
+                                            Add Field Entity..{" "}
+                                          </Dialog.Title>
+                                        </div>
 
-                                          <div className="mt-2">
-                                            <button
-                                              type="button"
-                                              className=" text-red-600 w-[30px] h-[30px]  text-xl"
-                                              onClick={onResetHandler}
-                                            >
-                                              <RxCross1 className="font-extrabold" />
-                                            </button>
-                                          </div>
+                                        <div className="mt-2">
+                                          <button
+                                            type="button"
+                                            className=" text-red-600 w-[30px] h-[30px]  text-xl flex justify-center items-center"
+                                            onClick={onResetHandler}
+                                          >
+                                            <RxCross1 className="font-extrabold" />
+                                          </button>
                                         </div>
                                       </div>
-                                      <div className="flex gap-5 p-3 mt-3">
-                                        <label
-                                          htmlFor="formField"
-                                          className="flex items-center font-semibold"
-                                        >
-                                          <input
-                                            type="radio"
-                                            id="formField"
-                                            name="fieldType"
-                                            value="formField"
-                                            className="form-radio text-blue-500"
-                                            required
-                                            checked={fieldType === "formField"}
-                                            onChange={(e) =>
-                                              setFieldType(e.target.value)
-                                            }
-                                          />
-                                          <span className="ml-2 text-lg text-gray-700">
-                                            Form Field
-                                          </span>
-                                        </label>
-                                        <label
-                                          htmlFor="questionsField"
-                                          className="flex items-center font-semibold"
-                                        >
-                                          <input
-                                            type="radio"
-                                            id="questionsField"
-                                            name="fieldType"
-                                            value="questionsField"
-                                            className="form-radio text-blue-500"
-                                            required
-                                            checked={
-                                              fieldType === "questionsField"
-                                            }
-                                            onChange={(e) =>
-                                              setFieldType(e.target.value)
-                                            }
-                                          />
-                                          <span className="ml-2 text-lg text-gray-700">
-                                            Questions Field
-                                          </span>
-                                        </label>
-                                      </div>
                                     </div>
-                                    <div className=" px-4 pb-8 sm:flex sm:px-6 justify-between">
-                                      {fieldType === "formField" ||
-                                      fieldType === "" ? (
+                                    <div className="flex gap-5 p-3 mt-3">
+                                      <label
+                                        htmlFor="formField"
+                                        className="flex items-center font-semibold"
+                                      >
                                         <input
+                                          type="radio"
+                                          id="formField"
+                                          name="fieldType"
+                                          value="formField"
+                                          className="form-radio text-blue-500"
                                           required
-                                          className="input w-[72%] border-2 font-semibold bg-white text-lg focus:border-1 rounded-xl px-3 py-2 shadow-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
-                                          type="text"
-                                          name="field"
-                                          placeholder="Field.."
-                                          value={inputField}
+                                          checked={fieldType === "formField"}
                                           onChange={(e) =>
-                                            setInputField(e.target.value)
+                                            setFieldType(e.target.value)
                                           }
                                         />
-                                      ) : (
-                                        <div className="flex gap-5">
-                                          <div className="flex items-center gap-4">
-                                            <span className="font-bold">
-                                              Start
-                                            </span>
-                                            <input
-                                              type="number"
-                                              id="Quantity"
-                                              value={questionRange.min}
-                                              onChange={(e) =>
-                                                setQuestionRange({
-                                                  ...questionRange,
-                                                  min: e.target.value,
-                                                })
-                                              }
-                                              className="h-10 w-16 rounded  border-2  border-gray-200 text-center [-moz-appearance:_textfield] sm:text-sm [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none"
-                                            />
-                                          </div>
-                                          <div className="flex items-center gap-4">
-                                            <span className="font-bold">End</span>
-                                            <input
-                                              type="number"
-                                              id="Quantity"
-                                              value={questionRange.max}
-                                              onChange={(e) =>
-                                                setQuestionRange({
-                                                  ...questionRange,
-                                                  max: e.target.value,
-                                                })
-                                              }
-                                              className="h-10 w-16 rounded  border-2  border-gray-200 text-center [-moz-appearance:_textfield] sm:text-sm [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none"
-                                            />
-                                          </div>
-                                        </div>
-                                      )}
-
-                                      <button
-                                        type="button"
-                                        data-bs-dismiss="modal"
-                                        className="bg-teal-600 hover:bg-indigo-500 text-white rounded-lg hover:shadow-lg hover:shadow-blue-200  text-md font-medium px-3"
-                                        onClick={onSelectedHandler}
+                                        <span className="ml-2 text-lg text-gray-700">
+                                          Form Field
+                                        </span>
+                                      </label>
+                                      <label
+                                        htmlFor="questionsField"
+                                        className="flex items-center font-semibold"
                                       >
-                                        Save Field
-                                      </button>
+                                        <input
+                                          type="radio"
+                                          id="questionsField"
+                                          name="fieldType"
+                                          value="questionsField"
+                                          className="form-radio text-blue-500"
+                                          required
+                                          checked={
+                                            fieldType === "questionsField"
+                                          }
+                                          onChange={(e) =>
+                                            setFieldType(e.target.value)
+                                          }
+                                        />
+                                        <span className="ml-2 text-lg text-gray-700">
+                                          Questions Field
+                                        </span>
+                                      </label>
                                     </div>
-                                  </Dialog.Panel>
-                                </Transition.Child>
-                              </div>
+                                  </div>
+                                  <div className=" px-4 pb-8 sm:flex sm:px-6 justify-between">
+                                    {fieldType === "formField" ||
+                                    fieldType === "" ? (
+                                      <input
+                                        required
+                                        className="input w-[72%] border-2 font-semibold bg-white text-lg focus:border-1 rounded-xl px-3 py-2 shadow-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+                                        type="text"
+                                        name="field"
+                                        placeholder="Field.."
+                                        value={inputField}
+                                        onChange={(e) =>
+                                          setInputField(e.target.value)
+                                        }
+                                      />
+                                    ) : (
+                                      <div className="flex gap-5">
+                                        <div className="flex items-center gap-4">
+                                          <span className="font-bold">
+                                            Start
+                                          </span>
+                                          <input
+                                            type="number"
+                                            id="Quantity"
+                                            value={questionRange.min}
+                                            onChange={(e) =>
+                                              setQuestionRange({
+                                                ...questionRange,
+                                                min: e.target.value,
+                                              })
+                                            }
+                                            className="h-10 w-16 rounded  border-2  border-gray-200 text-center [-moz-appearance:_textfield] sm:text-sm [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none"
+                                          />
+                                        </div>
+                                        <div className="flex items-center gap-4">
+                                          <span className="font-bold">End</span>
+                                          <input
+                                            type="number"
+                                            id="Quantity"
+                                            value={questionRange.max}
+                                            onChange={(e) =>
+                                              setQuestionRange({
+                                                ...questionRange,
+                                                max: e.target.value,
+                                              })
+                                            }
+                                            className="h-10 w-16 rounded  border-2  border-gray-200 text-center [-moz-appearance:_textfield] sm:text-sm [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none"
+                                          />
+                                        </div>
+                                      </div>
+                                    )}
+
+                                    <button
+                                      type="button"
+                                      data-bs-dismiss="modal"
+                                      className="bg-teal-600 hover:bg-indigo-500 text-white rounded-lg hover:shadow-lg hover:shadow-blue-200  text-md font-medium px-3"
+                                      onClick={onSelectedHandler}
+                                    >
+                                      Save Field
+                                    </button>
+                                  </div>
+                                </Dialog.Panel>
+                              </Transition.Child>
                             </div>
-                          </Dialog>
-                        </Transition.Root>
+                          </div>
+                        </Dialog>
+                      </Transition.Root>
                     </>
                   </div>
                 )}

@@ -78,28 +78,43 @@ const AdminAssined = () => {
         const tasks = await onGetAllTasksHandler();
         const templateData = await onGetTemplateHandler();
         const users = await onGetAllUsersHandler();
-        const uploadTask = tasks.filter((task) => {
-          return task.moduleType === "Data Entry";
-        });
+
+        const uploadTask = tasks.filter(
+          (task) => task.moduleType === "Data Entry"
+        );
 
         const updatedTasks = uploadTask.map((task) => {
           const matchedTemplate = templateData.find(
             (template) => template.id === parseInt(task.templeteId)
           );
 
-          if (matchedTemplate) {
-            return {
-              ...task,
-              templateName: matchedTemplate.name,
-            };
+          const matchedUser = users.users.find(
+            (user) => user.id === parseInt(task.userId)
+          );
+
+          // Create a new task object with existing task properties
+          const updatedTask = { ...task };
+
+          // Add userName if matchedUser is found
+          if (matchedUser) {
+            updatedTask.userName = matchedUser.userName;
           }
 
-          return task;
+          // Add templateName if matchedTemplate is found
+          if (matchedTemplate) {
+            updatedTask.templateName = matchedTemplate.name;
+          }
+
+          // Return the updated task
+          return updatedTask;
         });
 
         setMatchingTask(updatedTasks);
-      } catch (error) {}
+      } catch (error) {
+        console.error("Error fetching tasks data:", error);
+      }
     };
+
     onFetchTasksData();
   }, []);
 
@@ -243,10 +258,10 @@ const AdminAssined = () => {
   };
 
   return (
-    <div className=" min-h-[100vh] templatemapping">
-      <div className=" pt-40">
+    <div className="h-[100vh] flex justify-center items-center templatemapping pt-20">
+      <div className="">
         {/* MAIN SECTION  */}
-        <section className="mx-auto w-full max-w-7xl px-8 py-10 bg-white rounded-xl">
+        <section className="mx-auto max-w-7xl px-8 py-10 bg-white rounded-xl ">
           <div className="flex flex-col space-y-4  md:flex-row md:items-center md:justify-between md:space-y-0">
             <div>
               <h2 className="text-3xl font-semibold">Assigned Tasks</h2>
@@ -285,7 +300,7 @@ const AdminAssined = () => {
                         </div>
 
                         <div className="py-3.5 text-center text-xl font-semibold text-gray-700">
-                          Download File
+                          Download
                         </div>
                       </div>
                     </div>
@@ -372,7 +387,7 @@ const AdminAssined = () => {
 
                           <div className="whitespace-nowrap text-center">
                             <button
-                              className={`rounded px-6 py-1 font-semibold ${
+                              className={`rounded px-4 py-1 font-semibold ${
                                 taskData.taskStatus
                                   ? "bg-indigo-500 text-white  border border-indigo-500"
                                   : "bg-gray-400 text-gray-600 cursor-not-allowed"
@@ -395,7 +410,7 @@ const AdminAssined = () => {
                               onClick={() =>
                                 onCompareTaskStartHandler(taskData)
                               }
-                              className="rounded border border-indigo-500 bg-indigo-500 px-6 py-1 font-semibold text-white"
+                              className="rounded border border-indigo-500 bg-indigo-500 px-4 py-1 font-semibold text-white"
                             >
                               Download
                             </button>
@@ -485,7 +500,7 @@ const AdminAssined = () => {
                           <div className="whitespace-nowrap text-center">
                             <button
                               onClick={() => onCompleteHandler(taskData)}
-                              className={`rounded px-6 py-1 font-semibold ${
+                              className={`rounded px-4 py-1 font-semibold ${
                                 taskData.taskStatus
                                   ? "bg-indigo-500 text-white  border border-indigo-500"
                                   : "bg-gray-400 text-gray-600 cursor-not-allowed"
@@ -498,7 +513,7 @@ const AdminAssined = () => {
                           <div className="whitespace-nowrap text-center">
                             <button
                               onClick={() => onDownloadHandler(taskData)}
-                              className="rounded border border-indigo-500 bg-indigo-500 px-6 py-1 font-semibold text-white"
+                              className="rounded border border-indigo-500 bg-indigo-500 px-4 py-1 font-semibold text-white"
                             >
                               Download
                             </button>
