@@ -315,8 +315,9 @@ const DataMatching = () => {
       (data) => data.attribute === matchedValue
     );
 
-    //  if(matchedCoordinate) {
-    //  }
+    if (matchedCoordinate) {
+      setCurrentImageIndex(matchedCoordinate.pageNo);
+    }
 
     if (!imageNotFound) {
       return;
