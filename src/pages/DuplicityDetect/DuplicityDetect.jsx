@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import ImageNotFound from "../../components/ImageNotFound/ImageNotFound";
 import { MdDelete } from "react-icons/md";
@@ -6,17 +6,21 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import { REACT_APP_IP } from "../../services/common";
+import { Dialog, Transition } from "@headlessui/react";
+import { RxCross1 } from "react-icons/rx";
 
 const ImageScanner = () => {
   const [csvHeaders, setCsvHeaders] = useState([]);
   const [duplicatesData, setDuplicatesData] = useState([]);
   const [showDuplicates, setShowDuplicates] = useState(true);
+  const [showDuplicateField, setShowDuplicateField] = useState(false);
   const [columnName, setColumnName] = useState("");
   const [editModal, setEditModal] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [currentRowData, setCurrentRowData] = useState(null);
   const [imageUrl, setImageUrl] = useState("");
   const [modifiedKeys, setModifiedKeys] = useState({});
+  const cancelButtonRef = useRef(null);
   const token = JSON.parse(localStorage.getItem("userData"));
   let { fileId } = JSON.parse(localStorage.getItem("fileId")) || "";
   let imageName = JSON.parse(localStorage.getItem("imageName")) || "";
@@ -165,6 +169,13 @@ const ImageScanner = () => {
       );
     }
   };
+  const onShowModalHandler = (data) => {
+    setShowDuplicateField(true);
+  };
+  const onResetHandler = () => {
+    setShowDuplicateField(false);
+  };
+  console.log(showDuplicateField);
 
   const onUpdateCurrentDataHandler = async () => {
     try {
@@ -208,20 +219,19 @@ const ImageScanner = () => {
   const onDuplicateCheckedHandler = () => {
     navigate(`/csvuploader/templatemap/${id}`);
   };
-
   return (
-    <div className="flex duplicateImg border-1 pt-16">
+    <div className="flex duplicateImg  border-1 justify-center items-center pt-20">
       {showDuplicates ? (
-        <div className="flex justify-center w-[100%] pb-32 mb-10">
-          <div className="mt-40 w-[800px]">
+        <div className="flex justify-center w-[100%]">
+          <div className=" w-[800px]">
             {/* MAIN SECTION  */}
-            <section className="mx-auto w-full max-w-7xl  px-12 py-10 bg-white rounded-xl">
+            <section className="mx-auto w-full max-w-7xl  px-12 py-6 bg-white rounded-xl">
               <div className="flex flex-col space-y-4  md:flex-row md:items-center md:justify-between md:space-y-0">
                 <div>
                   <h2 className="text-3xl font-semibold">Find Duplicates</h2>
                 </div>
               </div>
-              <div className="mt-6 flex flex-col w-full">
+              <div className="mt-6 mb-4 flex flex-col w-full">
                 <div className="mx-4 -my-2  sm:-mx-6 lg:-mx-8">
                   <div className="inline-block  py-2 align-middle md:px-6 lg:px-8">
                     <div className=" border border-gray-200 md:rounded-lg ">
@@ -283,14 +293,14 @@ const ImageScanner = () => {
       ) : (
         <>
           {/* LEFT SECTION  */}
-          <div className="flex w-[30%]">
-            <div className="flex items-center  justify-center px-2 text-center sm:block sm:p-0">
+          <div className="flex w-[25%] bg-red-100">
+            <div className="text-center sm:block sm:p-0 w-full">
               {!editModal ? (
-                <div className="inline-block align-bottom h-[100vh]  bg-teal-100 rounded-lg text-left shadow-md overflow-hidden transform transition-all mt-4  sm:align-middle md:max-w-xl sm:w-full">
-                  <div className=" py-4 px-4">
+                <div className="inline-block align-bottom h-[90vh]  bg-teal-100  rounded-lg text-left shadow-md overflow-hidden transform transition-all  sm:align-middle  sm:w-full">
+                  <div className="px-4">
                     <div className="sm:flex ">
-                      <div className="text-center sm:mt-0 sm:ml-4 sm:text-left">
-                        <div className="flex justify-between">
+                      <div className="text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+                        <div className="flex justify-between mt-4 ">
                           <h1 className="text-xl font-bold text-gray-500 mb-6">
                             Duplicates : {duplicatesData.length}
                           </h1>
@@ -300,19 +310,17 @@ const ImageScanner = () => {
                         </div>
                         <div className="text-gray-600 font-semibold my-2">
                           <dl className="-my-3 divide-y divide-gray-100 text-sm">
-                            <div className="flex justify-between gap-1 py-3 text-center even:bg-gray-50 sm:grid-cols-7 sm:gap-4">
+                            <div className="flex justify-around gap-1 py-3 text-center even:bg-gray-50 sm:grid-cols-4 sm:gap-4">
                               <dt className="font-medium text-md text-gray-700">
                                 {columnName}
                               </dt>
                               <dd className="text-gray-700 font-medium ">
-                                Row Index
+                                Duplicates
                               </dd>
                               <dd className="text-gray-700 font-medium">
-                                Edit
+                                show
                               </dd>
-                              <dt className="font-medium text-md text-gray-700">
-                                Remove
-                              </dt>
+                             
                             </div>
                           </dl>
                         </div>
@@ -321,7 +329,7 @@ const ImageScanner = () => {
                             {duplicatesData?.map((data, index) => (
                               <div
                                 key={index}
-                                className="flex justify-around gap-1 py-3 text-center even:bg-gray-50 sm:grid-cols-7 "
+                                className="flex justify-around gap-1 py-3 text-center even:bg-gray-50 sm:grid-cols-4 "
                               >
                                 <dt className="font-medium text-md text-gray-700 whitespace-normal">
                                   {data.row[columnName]}
@@ -329,29 +337,143 @@ const ImageScanner = () => {
                                 <dd className="text-gray-700 font-medium ">
                                   {data.index}
                                 </dd>
-                                <div className="text-gray-700 ">
-                                  <div className="relative">
-                                    <div className="inline-flex items-center overflow-hidden rounded-md border bg-white">
-                                      <button
-                                        onClick={() => onEditModalHandler(data)}
-                                        className="border-e px-1 py-2 text-sm/none text-gray-600 hover:bg-gray-50 hover:text-gray-700"
-                                      >
-                                        Edit
-                                      </button>
+                                <dd className="text-gray-700 font-medium ">
+                                  {/* <div className="text-gray-700 ">
+                                    <div className="relative">
+                                      <div className="inline-flex items-center overflow-hidden rounded-md border bg-white">
+                                        
+                                      </div>
+                                    </div> 
+                                   </div> */}
+                                  <div className="text-gray-700 ">
+                                    <div className="relative">
+                                      <div className="inline-flex items-center overflow-hidden rounded-md border bg-white">
+                                        <button
+                                          onClick={() =>
+                                            onShowModalHandler(data)
+                                          }
+                                          className="border-e px-3 py-2 bg-blue-400 text-white text-sm/none  hover:bg-gray-50 hover:text-gray-700"
+                                        >
+                                          Show
+                                        </button>
+                                      </div>
                                     </div>
                                   </div>
-                                </div>
-                                <dd
-                                  onClick={() =>
-                                    onRemoveDuplicateHandler(
-                                      index,
-                                      data.index,
-                                      data.row[columnName]
-                                    )
-                                  }
-                                  className="text-red-700 text-2xl ml-8"
-                                >
-                                  <MdDelete />
+                                  {showDuplicateField && (
+                                    <Transition.Root show={showDuplicateField}>
+                                      <Dialog
+                                        className="relative z-10"
+                                        onClose={setShowDuplicateField}
+                                      >
+                                        <Transition.Child
+                                          enter="ease-out duration-300"
+                                          enterFrom="opacity-0"
+                                          enterTo="opacity-100"
+                                          leave="ease-in duration-200"
+                                          leaveFrom="opacity-100"
+                                          leaveTo="opacity-0"
+                                        >
+                                          <div className="fixed inset-0 bg-gray-100 bg-opacity-5 transition-opacity" />
+                                        </Transition.Child>
+
+                                        <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
+                                          <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+                                            <Transition.Child
+                                              enter="ease-out duration-300"
+                                              enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                                              enterTo="opacity-100 translate-y-0 sm:scale-100"
+                                              leave="ease-in duration-200"
+                                              leaveFrom="opacity-100 translate-y-0 sm:scale-100"
+                                              leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                                            >
+                                              <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                                                <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                                                  <div className="sm:flex sm:items-start">
+                                                    <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+                                                      <Dialog.Title
+                                                        as="h2"
+                                                        className="text-xl mb-5 font-semibold leading-6 text-gray-900"
+                                                      >
+                                                        Roll
+                                                      </Dialog.Title>
+                                                      <div className="mt-2">
+                                                        <table className="min-w-full divide-y divide-gray-200">
+                                                          <thead className="bg-gray-50">
+                                                            <tr>
+                                                              <th
+                                                                scope="col"
+                                                                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                                              >
+                                                                Roll
+                                                              </th>
+
+                                                              <th
+                                                                scope="col"
+                                                                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                                              >
+                                                                Edit
+                                                              </th>
+                                                              <th
+                                                                scope="col"
+                                                                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                                              >
+                                                                Remove
+                                                              </th>
+                                                              {/* Add more th for additional columns */}
+                                                            </tr>
+                                                          </thead>
+                                                          <tbody>
+                                                            <tr
+                                                              key={index}
+                                                              className={
+                                                                index % 2 === 0
+                                                                  ? "bg-white"
+                                                                  : "bg-teal-100"
+                                                              }
+                                                            >
+                                                              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                                                53724
+                                                              </td>
+                                                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                                <button
+                                                                  onClick={() =>
+                                                                    onEditModalHandler(data)
+                                                                  }
+                                                                  className="border-e px-3 bg-gray-100 py-2 text-sm/none text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700"
+                                                                >
+                                                                  Edit
+                                                                </button>
+                                                              </td>
+                                                              <td
+                                                                className="px-6 py-4 whitespace-nowrap text-red-500
+                                                                text-2xl ml-8 "
+                                                                onClick={() =>
+                                                                  onRemoveDuplicateHandler(
+                                                                    index,
+                                                                    data.index,
+                                                                    data.row[
+                                                                      columnName
+                                                                    ]
+                                                                  )
+                                                                }
+                                                              >
+                                                                <MdDelete className="mx-auto" />
+                                                              </td>
+                                                              {/* Add more td for additional columns */}
+                                                            </tr>
+                                                          </tbody>
+                                                        </table>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </Dialog.Panel>
+                                            </Transition.Child>
+                                          </div>
+                                        </div>
+                                      </Dialog>
+                                    </Transition.Root>
+                                  )}
                                 </dd>
                               </div>
                             ))}
@@ -435,7 +557,7 @@ const ImageScanner = () => {
 
           {/* RIGHT SECTION  */}
           {!imageUrl ? (
-            <div className="flex w-[65%] justify-center items-center ">
+            <div className="flex w-[70%] justify-center items-center ">
               <div className="">
                 <ImageNotFound />
 
@@ -449,7 +571,7 @@ const ImageScanner = () => {
               </div>
             </div>
           ) : (
-            <div className=" pb-2 w-[80%] py-3">
+            <div className=" pb-2 w-[70%] py-3">
               <div className="mx-auto max-w-screen-xl px-2 lg:pt-2 sm:px-6 lg:px-8">
                 <div className="mt-2 flex justify-center pt-6 py-4">
                   <div className="">
