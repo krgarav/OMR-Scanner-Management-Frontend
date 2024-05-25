@@ -354,7 +354,6 @@ const ImageScanner = () => {
                               <dd className="text-gray-700 font-medium">
                                 show
                               </dd>
-                             
                             </div>
                           </dl>
                         </div>
@@ -379,108 +378,106 @@ const ImageScanner = () => {
                                       </div>
                                     </div> 
                                    </div> */}
-                                  <div className="text-gray-700 ">
-                                    <div className="relative">
-                                      <div className="inline-flex items-center overflow-hidden rounded-md border bg-white">
-                                        <button
-                                          onClick={() =>
-                                            onShowModalHandler(data)
-                                          }
-                                          className="border-e px-3 py-2 bg-blue-400 text-white text-sm/none  hover:bg-gray-50 hover:text-gray-700"
-                                        >
-                                          Show
-                                        </button>
-                                      </div>
+                                </dd>
+                                <div className="text-gray-700 ">
+                                  <div className="relative">
+                                    <div className="inline-flex items-center overflow-hidden rounded-md border bg-white">
+                                      <button
+                                        onClick={() => onShowModalHandler(data)}
+                                        className="border-e px-3 py-2 bg-blue-400 text-white text-sm/none  hover:bg-gray-50 hover:text-gray-700"
+                                      >
+                                        Show
+                                      </button>
                                     </div>
                                   </div>
-                                  {showDuplicateField && (
-                                    <Transition.Root show={showDuplicateField}>
-                                      <Dialog
-                                        className="relative z-10"
-                                        onClose={setShowDuplicateField}
+                                </div>
+                                {showDuplicateField && (
+                                  <Transition.Root show={showDuplicateField}>
+                                    <Dialog
+                                      className="relative z-10"
+                                      onClose={setShowDuplicateField}
+                                    >
+                                      <Transition.Child
+                                        enter="ease-out duration-300"
+                                        enterFrom="opacity-0"
+                                        enterTo="opacity-100"
+                                        leave="ease-in duration-200"
+                                        leaveFrom="opacity-100"
+                                        leaveTo="opacity-0"
                                       >
-                                        <Transition.Child
-                                          enter="ease-out duration-300"
-                                          enterFrom="opacity-0"
-                                          enterTo="opacity-100"
-                                          leave="ease-in duration-200"
-                                          leaveFrom="opacity-100"
-                                          leaveTo="opacity-0"
-                                        >
-                                          <div className="fixed inset-0 bg-gray-100 bg-opacity-5 transition-opacity" />
-                                        </Transition.Child>
+                                        <div className="fixed inset-0 bg-gray-100 bg-opacity-5 transition-opacity" />
+                                      </Transition.Child>
 
-                                        <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
-                                          <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-                                            <Transition.Child
-                                              enter="ease-out duration-300"
-                                              enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                                              enterTo="opacity-100 translate-y-0 sm:scale-100"
-                                              leave="ease-in duration-200"
-                                              leaveFrom="opacity-100 translate-y-0 sm:scale-100"
-                                              leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                                            >
-                                              <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
-                                                <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
-                                                  <div className="sm:flex sm:items-start">
-                                                    <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                                                      <Dialog.Title
-                                                        as="h2"
-                                                        className="text-xl mb-5 font-semibold leading-6 text-gray-900"
-                                                      >
-                                                        Roll
-                                                      </Dialog.Title>
-                                                      <div className="mt-2">
-                                                        <table className="min-w-full divide-y divide-gray-200">
-                                                          <thead className="bg-gray-50">
-                                                            <tr>
-                                                              <th
-                                                                scope="col"
-                                                                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                                              >
-                                                                Roll
-                                                              </th>
+                                      <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
+                                        <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+                                          <Transition.Child
+                                            enter="ease-out duration-300"
+                                            enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                                            enterTo="opacity-100 translate-y-0 sm:scale-100"
+                                            leave="ease-in duration-200"
+                                            leaveFrom="opacity-100 translate-y-0 sm:scale-100"
+                                            leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                                          >
+                                            <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                                              <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                                                <div className="sm:flex sm:items-start">
+                                                  <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+                                                    <Dialog.Title
+                                                      as="h2"
+                                                      className="text-xl mb-5 font-semibold leading-6 text-gray-900"
+                                                    >
+                                                      Roll
+                                                    </Dialog.Title>
+                                                    <div className="mt-2">
+                                                      <div className="min-w-full divide-y divide-gray-200">
+                                                        <div className="bg-gray-50">
+                                                          <div className="flex">
+                                                            <div className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                              Roll
+                                                            </div>
+                                                            <div className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                              Row Index
+                                                            </div>
+                                                            <div className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                              Edit
+                                                            </div>
+                                                            <div className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                              Remove
+                                                            </div>
+                                                            {/* Add more th for additional columns */}
+                                                          </div>
+                                                        </div>
 
-                                                              <th
-                                                                scope="col"
-                                                                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                                              >
-                                                                Edit
-                                                              </th>
-                                                              <th
-                                                                scope="col"
-                                                                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                                              >
-                                                                Remove
-                                                              </th>
-                                                              {/* Add more th for additional columns */}
-                                                            </tr>
-                                                          </thead>
-                                                          <tbody>
-                                                            <tr
-                                                              key={index}
-                                                              className={
-                                                                index % 2 === 0
-                                                                  ? "bg-white"
-                                                                  : "bg-teal-100"
-                                                              }
-                                                            >
-                                                              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                                                53724
-                                                              </td>
-                                                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                        <div className="">
+                                                          <div
+                                                            key={index}
+                                                            className={
+                                                              index % 2 === 0
+                                                                ? "bg-white flex-col"
+                                                                : "bg-teal-100 flex-col"
+                                                            }
+                                                          >
+                                                            <div className="flex">
+                                                              <div className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                                                data
+                                                              </div>
+                                                              <div className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                                                123123
+                                                              </div>
+                                                              <div className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                                 <button
                                                                   onClick={() =>
-                                                                    onEditModalHandler(data)
+                                                                    onEditModalHandler(
+                                                                      data
+                                                                    )
                                                                   }
                                                                   className="border-e px-3 bg-gray-100 py-2 text-sm/none text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700"
                                                                 >
                                                                   Edit
                                                                 </button>
-                                                              </td>
-                                                              <td
-                                                                className="px-6 py-4 whitespace-nowrap text-red-500
-                                                                text-2xl ml-8 "
+                                                              </div>
+                                                              <div
+                                                                className="px-6 py-4 whitespace-nowrap text-red-500 text-2xl ml-8"
                                                                 onClick={() =>
                                                                   onRemoveDuplicateHandler(
                                                                     index,
@@ -492,23 +489,58 @@ const ImageScanner = () => {
                                                                 }
                                                               >
                                                                 <MdDelete className="mx-auto" />
-                                                              </td>
-                                                              {/* Add more td for additional columns */}
-                                                            </tr>
-                                                          </tbody>
-                                                        </table>
+                                                              </div>
+                                                            </div>
+                                                            <div className="flex">
+                                                              <div className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                                                data
+                                                              </div>
+                                                              <div className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                                                123123
+                                                              </div>
+                                                              <div className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                                <button
+                                                                  onClick={() =>
+                                                                    onEditModalHandler(
+                                                                      data
+                                                                    )
+                                                                  }
+                                                                  className="border-e px-3 bg-gray-100 py-2 text-sm/none text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700"
+                                                                >
+                                                                  Edit
+                                                                </button>
+                                                              </div>
+                                                              <div
+                                                                className="px-6 py-4 whitespace-nowrap text-red-500 text-2xl ml-8"
+                                                                onClick={() =>
+                                                                  onRemoveDuplicateHandler(
+                                                                    index,
+                                                                    data.index,
+                                                                    data.row[
+                                                                      columnName
+                                                                    ]
+                                                                  )
+                                                                }
+                                                              >
+                                                                <MdDelete className="mx-auto" />
+                                                              </div>
+                                                            </div>
+
+                                                            {/* Add more td for additional columns */}
+                                                          </div>
+                                                        </div>
                                                       </div>
                                                     </div>
                                                   </div>
                                                 </div>
-                                              </Dialog.Panel>
-                                            </Transition.Child>
-                                          </div>
+                                              </div>
+                                            </Dialog.Panel>
+                                          </Transition.Child>
                                         </div>
-                                      </Dialog>
-                                    </Transition.Root>
-                                  )}
-                                </dd>
+                                      </div>
+                                    </Dialog>
+                                  </Transition.Root>
+                                )}
                               </div>
                             ))}
                           </dl>
