@@ -138,7 +138,6 @@ const ImageScanner = () => {
         return;
       }
     }
-
     const newObj = {
       ...selection,
       fieldType,
