@@ -23,7 +23,7 @@ const ImageScanner = () => {
   const cancelButtonRef = useRef(null);
   const token = JSON.parse(localStorage.getItem("userData"));
   let { fileId } = JSON.parse(localStorage.getItem("fileId")) || "";
-  let imageName = JSON.parse(localStorage.getItem("imageName")) || "";
+  let imageNames = JSON.parse(localStorage.getItem("imageName")) || "";
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -46,14 +46,79 @@ const ImageScanner = () => {
     fetchData();
   }, [fileId, token]);
 
+  // useEffect(() => {
+  //   const handleKeyDown = (event) => {
+  //     if (event.key === "ArrowLeft") {
+  //       if (editModal) {
+  //         setEditModal(false);
+  //       } else if (!showDuplicates) {
+  //         setShowDuplicates(true);
+  //       }
+  //     } else if (event.altKey && event.key === "s") {
+  //       // Ensure currentRowData is not null before updating
+  //       if (currentRowData) {
+  //         onUpdateCurrentDataHandler();
+  //       } else {
+  //         console.error("currentRowData is null when trying to update.");
+  //       }
+  //     }
+  //   };
+  //   window.addEventListener("keydown", handleKeyDown);
+  //   return () => {
+  //     window.removeEventListener("keydown", handleKeyDown);
+  //   };
+  // }, [currentRowData, editModal, showDuplicates]);
+
+  const onUpdateCurrentDataHandler = async () => {
+    try {
+      await axios.post(
+        `http://${REACT_APP_IP}:4000/update/duplicatedata`,
+        {
+          index: currentRowData?.index,
+          fileID: fileId,
+          rowData: currentRowData.row,
+          updatedColumn: modifiedKeys,
+        },
+        {
+          headers: {
+            token: token,
+          },
+        }
+      );
+      const indexToUpdate = duplicatesData.findIndex(
+        (item) => item.index === currentRowData?.index
+      );
+      if (indexToUpdate !== -1) {
+        const updatedDuplicateData = duplicatesData.map((item, index) => {
+          if (index === indexToUpdate) {
+            return {
+              ...item,
+              row: currentRowData.row,
+            };
+          }
+          return item;
+        });
+        setModifiedKeys(null);
+        setDuplicatesData(updatedDuplicateData);
+      }
+      toast.success("The row has been updated successfully.");
+      setEditModal(false);
+    } catch (error) {
+      toast.error("Unable to update the row data!");
+    }
+  };
+
   useEffect(() => {
     const handleKeyDown = (event) => {
-      if (event.key === "ArrowLeft") {
-        if (editModal) {
-          setEditModal(false);
-        } else if (!showDuplicates) {
-          setShowDuplicates(true);
-        }
+      if (event.key === "ArrowLeft" && currentImageIndex > 0) {
+        setCurrentImageIndex(currentImageIndex - 1);
+        setImageUrl(currentRowData.base64Images[currentImageIndex - 1]);
+      } else if (
+        event.key === "ArrowRight" &&
+        currentImageIndex < currentRowData?.base64Images.length - 1
+      ) {
+        setCurrentImageIndex(currentImageIndex + 1);
+        setImageUrl(currentRowData.base64Images[currentImageIndex + 1]);
       } else if (event.altKey && event.key === "s") {
         // Ensure currentRowData is not null before updating
         if (currentRowData) {
@@ -61,13 +126,20 @@ const ImageScanner = () => {
         } else {
           console.error("currentRowData is null when trying to update.");
         }
+      } else if (event.ctrlKey && event.key === "ArrowLeft") {
+        if (editModal) {
+          setEditModal(false);
+        } else if (!showDuplicates) {
+          setShowDuplicates(true);
+        }
       }
     };
+
     window.addEventListener("keydown", handleKeyDown);
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [currentRowData, editModal, showDuplicates]);
+  }, [currentImageIndex, currentRowData, onUpdateCurrentDataHandler]);
 
   const changeCurrentCsvDataHandler = (key, newValue) => {
     setCurrentRowData((prevData) => ({
@@ -93,7 +165,7 @@ const ImageScanner = () => {
         {
           colName: columnName,
           fileID: fileId,
-          imageColumnName: imageName,
+          imageColumnName: imageNames,
         },
         {
           headers: {
@@ -109,6 +181,7 @@ const ImageScanner = () => {
 
       setDuplicatesData(response.data.duplicates);
       const url = response.data?.duplicates[0].base64Images[currentImageIndex];
+      setCurrentRowData(response.data?.duplicates[0]);
       setImageUrl(url);
       setColumnName(columnName);
       setShowDuplicates(false);
@@ -176,45 +249,6 @@ const ImageScanner = () => {
     setShowDuplicateField(false);
   };
   console.log(showDuplicateField);
-
-  const onUpdateCurrentDataHandler = async () => {
-    try {
-      await axios.post(
-        `http://${REACT_APP_IP}:4000/update/duplicatedata`,
-        {
-          index: currentRowData?.index,
-          fileID: fileId,
-          rowData: currentRowData.row,
-          updatedColumn: modifiedKeys,
-        },
-        {
-          headers: {
-            token: token,
-          },
-        }
-      );
-      const indexToUpdate = duplicatesData.findIndex(
-        (item) => item.index === currentRowData?.index
-      );
-      if (indexToUpdate !== -1) {
-        const updatedDuplicateData = duplicatesData.map((item, index) => {
-          if (index === indexToUpdate) {
-            return {
-              ...item,
-              row: currentRowData.row,
-            };
-          }
-          return item;
-        });
-        setModifiedKeys(null);
-        setDuplicatesData(updatedDuplicateData);
-      }
-      toast.success("The row has been updated successfully.");
-      setEditModal(false);
-    } catch (error) {
-      toast.error("Unable to update the row data!");
-    }
-  };
 
   const onDuplicateCheckedHandler = () => {
     navigate(`/csvuploader/templatemap/${id}`);
@@ -573,6 +607,11 @@ const ImageScanner = () => {
           ) : (
             <div className=" pb-2 w-[70%] py-3">
               <div className="mx-auto max-w-screen-xl px-2 lg:pt-2 sm:px-6 lg:px-8">
+                <h2>
+                  {currentImageIndex + 1} out of{" "}
+                  {currentRowData?.base64Images.length}
+                </h2>
+
                 <div className="mt-2 flex justify-center pt-6 py-4">
                   <div className="">
                     {imageUrl && (

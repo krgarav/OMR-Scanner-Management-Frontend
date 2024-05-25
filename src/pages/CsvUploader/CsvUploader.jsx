@@ -140,7 +140,7 @@ const CsvUploader = () => {
         navigate(`/csvuploader/duplicatedetector/${selectedId}`);
         localStorage.setItem("fileId", JSON.stringify(fileId));
         localStorage.setItem("pageCount", JSON.stringify(data.pageCount));
-        localStorage.setItem("imageName", JSON.stringify("Front side Image"));
+        localStorage.setItem("imageName", JSON.stringify(imageNamesString));
       } catch (error) {
         console.error("Error uploading files: ", error);
         // toast.error("Something went wrong please refresh the page.");

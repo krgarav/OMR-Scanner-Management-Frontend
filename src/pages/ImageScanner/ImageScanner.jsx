@@ -7,6 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import { Dialog, Transition } from "@headlessui/react";
 import { RxCross1 } from "react-icons/rx";
+import { CiEdit } from "react-icons/ci";
 import { REACT_APP_IP } from "../../services/common";
 
 const ImageScanner = () => {
@@ -16,9 +17,13 @@ const ImageScanner = () => {
   const [image, setImage] = useState(null);
   const [inputField, setInputField] = useState("");
   const [fieldType, setFieldType] = useState("");
+  const [removeModal, setRemoveModal] = useState(false);
+  const [editId, setEditID] = useState("");
+  const [removeId, setRemoveId] = useState("");
+  const [editInput, setEditInput] = useState("");
+  const [editModal, setEditModal] = useState(false);
   const [open, setOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [] = useState([]);
   const cancelButtonRef = useRef(null);
   const [templateData, setTemplateData] = useState({
     name: "",
@@ -45,7 +50,6 @@ const ImageScanner = () => {
     const handlekeyDown = (e) => {
       if (e.key === "ArrowRight") {
         handleNext();
-        // console.log("object");
       } else if (e.key === "ArrowLeft") {
         handlePrev();
       }
@@ -146,7 +150,7 @@ const ImageScanner = () => {
         fieldType === "formField"
           ? inputField
           : questionRange.min + "--" + questionRange.max,
-    }
+    };
     setSelectedCoordinates((prev) => [...prev, newObj]);
     setInputField("");
     setFieldType("");
@@ -158,12 +162,13 @@ const ImageScanner = () => {
     toast.success("Coordinate successfully added.");
   };
 
-  const onRemoveSelectedHandler = (id) => {
-    if (window.confirm("Do you want to delete?")) {
-      const newArray = selectedCoordinates.filter((data) => data.id !== id);
-      setSelectedCoordinates(newArray);
-      toast.success("Successfully deleted coordinate.");
-    }
+  const onRemoveSelectedHandler = () => {
+    const newArray = selectedCoordinates.filter((data) => data.id !== removeId);
+    setSelectedCoordinates(newArray);
+    toast.success("Successfully deleted coordinate.");
+    setRemoveId("");
+    setRemoveModal(false);
+    setSelection(null);
   };
 
   const onSubmitHandler = async (e) => {
@@ -202,6 +207,26 @@ const ImageScanner = () => {
     }
   };
 
+  const onEditCoordinateHanlder = () => {
+    if (!editInput) {
+      toast.warning("Please enter the new name.");
+      return;
+    }
+
+    const updatedData = selectedCoordinates.map((coordinate) => {
+      if (editId === coordinate.id) {
+        return { ...coordinate, attribute: editInput };
+      }
+
+      return coordinate;
+    });
+    setSelectedCoordinates(updatedData);
+    setEditID("");
+    setEditInput("");
+    setEditModal(false);
+    toast.success("Successfully updated coordinate name.");
+  };
+
   return (
     <div className="flex scannerbg border-1 pt-16 ">
       {/* LEFT SECTION  */}
@@ -220,6 +245,9 @@ const ImageScanner = () => {
                         Name
                       </div>
                       <div className="text-center whitespace-nowrap py-2">
+                        Edit
+                      </div>
+                      <div className="text-center whitespace-nowrap py-2">
                         Remove
                       </div>
                     </div>
@@ -235,8 +263,20 @@ const ImageScanner = () => {
                               {data.attribute}
                             </div>
                             <div className="whitespace-nowrap px-4 py-2 text-center font-semibold text-md text-gray-900">
+                              <CiEdit
+                                onClick={() => {
+                                  setEditID(data.id);
+                                  setEditModal(true);
+                                }}
+                                className="mx-auto text-red-500 text-xl"
+                              />
+                            </div>
+                            <div className="whitespace-nowrap px-4 py-2 text-center font-semibold text-md text-gray-900">
                               <MdDelete
-                                onClick={() => onRemoveSelectedHandler(data.id)}
+                                onClick={() => {
+                                  setRemoveModal(true);
+                                  setRemoveId(data.id);
+                                }}
                                 className="mx-auto text-red-500 text-xl"
                               />
                             </div>
@@ -289,6 +329,174 @@ const ImageScanner = () => {
           </div>
         </div>
       </div>
+      {/* EDIT MODAL  */}
+      <div>
+        {editModal && (
+          <div className="fixed z-50 inset-0 overflow-y-auto">
+            <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+              {/* Background overlay */}
+              <div
+                className="fixed inset-0 transition-opacity"
+                aria-hidden="true"
+              >
+                <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
+              </div>
+
+              {/* Modal content */}
+              <span
+                className="hidden sm:inline-block sm:align-middle sm:h-screen"
+                aria-hidden="true"
+              >
+                &#8203;
+              </span>
+              <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                  <div className="sm:flex sm:items-start">
+                    <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-green-100 sm:mx-0 sm:h-10 sm:w-10">
+                      {/* Your icon */}
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        className="h-6 w-6 text-green-600"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                    </div>
+                    <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                      <h3
+                        className="text-lg font-medium text-gray-900"
+                        id="modal-title"
+                      >
+                        Update coordinate name
+                      </h3>
+                      <div className="mt-2">
+                        <label className="relative block rounded-md border border-gray-200 shadow-sm focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600">
+                          <input
+                            type="text"
+                            value={editInput}
+                            onChange={(e) => setEditInput(e.target.value)}
+                            id="Username"
+                            className="peer border-none py-2 bg-transparent placeholder-transparent focus:border-transparent focus:outline-none focus:ring-0"
+                            placeholder="Username"
+                          />
+                          <span className="pointer-events-none absolute start-2.5 top-0 -translate-y-1/2 bg-white p-0.5 text-xs text-gray-700 transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:top-0 peer-focus:text-xs">
+                            Enter name here.....
+                          </span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex float-right">
+                  <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button
+                      onClick={onEditCoordinateHanlder}
+                      type="button"
+                      className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-teal-600 text-base font-medium text-white hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+                    >
+                      Save
+                    </button>
+                  </div>
+                  <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button
+                      onClick={() => setEditModal(false)}
+                      type="button"
+                      className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-teal-600 text-base font-medium text-white hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* DELETE MODAL  */}
+
+      <div>
+        {removeModal && (
+          <div className="fixed z-50 inset-0 overflow-y-auto">
+            <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+              {/* Background overlay */}
+              <div
+                className="fixed inset-0 transition-opacity"
+                aria-hidden="true"
+              >
+                <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
+              </div>
+
+              {/* Modal content */}
+              <span
+                className="hidden sm:inline-block sm:align-middle sm:h-screen"
+                aria-hidden="true"
+              >
+                &#8203;
+              </span>
+              <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                  <div className="sm:flex sm:items-start">
+                    <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+                      {/* Your icon */}
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        className="h-6 w-6 text-red-600"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M6 18L18 6M6 6l12 12"
+                        ></path>
+                      </svg>
+                    </div>
+                    <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                      <h3
+                        className="text-lg font-medium text-gray-900"
+                        id="modal-title"
+                      >
+                        Remove Template
+                      </h3>
+                      <div className="mt-2">
+                        <p className="text-sm text-gray-500">
+                          Are you sure you want to remove this coordinate?
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex justify-end py-3 px-3">
+                  <button
+                    type="button"
+                    onClick={onRemoveSelectedHandler}
+                    className="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
+                  >
+                    Remove
+                  </button>
+                  <button
+                    onClick={() => setRemoveModal(false)}
+                    type="button"
+                    className="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
 
       {/* RIGHT SECTION  */}
       {!image ? (
@@ -308,6 +516,9 @@ const ImageScanner = () => {
       ) : (
         <div className=" pb-2 w-[75%] ">
           <div className="mx-auto max-w-screen-xl px-2 lg:pt-2 sm:px-6 lg:px-8">
+            <h1>
+              {currentImageIndex + 1} out of {imageURL.length}
+            </h1>
             <div className="mt-2 flex justify-center pt-6 py-4">
               <div className="">
                 {image && (

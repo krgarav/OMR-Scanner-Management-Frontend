@@ -229,8 +229,6 @@ const DataMatching = () => {
         {
           imageNameArray: allImagePaths,
           rowIndex: csvData[newIndex].rowIndex,
-          // rowIndex: 1,
-          // currentIndex: newIndex + Number(taskData.min) - 1,
           id: taskData.id,
           colName: allDataChecked
             ? "allDataIndex"
@@ -300,6 +298,8 @@ const DataMatching = () => {
   };
 
   const imageFocusHandler = (headerName) => {
+    console.log(headerName);
+
     if (!imageNotFound) {
       return;
     }
@@ -537,7 +537,6 @@ const DataMatching = () => {
                                   </div>
                                 </div>
                                 <div className="divide-y divide-gray-200 bg-white overflow-y-auto max-h-[300px]">
-                                  {console.log(allTasks)}
                                   {allTasks?.map((taskData) => (
                                     <>
                                       <div
