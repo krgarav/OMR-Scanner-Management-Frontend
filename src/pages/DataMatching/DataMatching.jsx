@@ -300,6 +300,8 @@ const DataMatching = () => {
   };
 
   const imageFocusHandler = (headerName) => {
+    console.log(headerName);
+
     if (!imageNotFound) {
       return;
     }
@@ -537,7 +539,6 @@ const DataMatching = () => {
                                   </div>
                                 </div>
                                 <div className="divide-y divide-gray-200 bg-white overflow-y-auto max-h-[300px]">
-                                  {console.log(allTasks)}
                                   {allTasks?.map((taskData) => (
                                     <>
                                       <div

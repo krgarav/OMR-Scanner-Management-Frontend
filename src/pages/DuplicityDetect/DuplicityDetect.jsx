@@ -14,6 +14,7 @@ const ImageScanner = () => {
   const [columnName, setColumnName] = useState("");
   const [editModal, setEditModal] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [currentRowData, setCurrentRowData] = useState(null);
   const [imageUrl, setImageUrl] = useState("");
   const [modifiedKeys, setModifiedKeys] = useState({});
@@ -42,13 +43,40 @@ const ImageScanner = () => {
     fetchData();
   }, [fileId, token]);
 
+  // useEffect(() => {
+  //   const handleKeyDown = (event) => {
+  //     if (event.key === "ArrowLeft") {
+  //       if (editModal) {
+  //         setEditModal(false);
+  //       } else if (!showDuplicates) {
+  //         setShowDuplicates(true);
+  //       }
+  //     } else if (event.altKey && event.key === "s") {
+  //       // Ensure currentRowData is not null before updating
+  //       if (currentRowData) {
+  //         onUpdateCurrentDataHandler();
+  //       } else {
+  //         console.error("currentRowData is null when trying to update.");
+  //       }
+  //     }
+  //   };
+  //   window.addEventListener("keydown", handleKeyDown);
+  //   return () => {
+  //     window.removeEventListener("keydown", handleKeyDown);
+  //   };
+  // }, [currentRowData, editModal, showDuplicates]);
+
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === "ArrowLeft") {
-        if (editModal) {
-          setEditModal(false);
-        } else if (!showDuplicates) {
-          setShowDuplicates(true);
+        if (currentImageIndex > 0) {
+          setCurrentImageIndex(currentImageIndex - 1);
+          setImageUrl(currentRowData.base64Images[currentImageIndex - 1]);
+        }
+      } else if (event.key === "ArrowRight") {
+        if (currentImageIndex < currentRowData?.base64Images.length - 1) {
+          setCurrentImageIndex(currentImageIndex + 1);
+          setImageUrl(currentRowData.base64Images[currentImageIndex + 1]);
         }
       } else if (event.altKey && event.key === "s") {
         // Ensure currentRowData is not null before updating
@@ -64,6 +92,8 @@ const ImageScanner = () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [currentRowData, editModal, showDuplicates]);
+
+  console.log(currentImageIndex);
 
   const changeCurrentCsvDataHandler = (key, newValue) => {
     setCurrentRowData((prevData) => ({
@@ -105,6 +135,7 @@ const ImageScanner = () => {
 
       setDuplicatesData(response.data.duplicates);
       const url = response.data?.duplicates[0].base64Images[currentImageIndex];
+      setCurrentRowData(response.data?.duplicates[0]);
       setImageUrl(url);
       setColumnName(columnName);
       setShowDuplicates(false);
@@ -451,6 +482,11 @@ const ImageScanner = () => {
           ) : (
             <div className=" pb-2 w-[80%] py-3">
               <div className="mx-auto max-w-screen-xl px-2 lg:pt-2 sm:px-6 lg:px-8">
+                <h2>
+                  {currentImageIndex + 1} out of{" "}
+                  {currentRowData?.base64Images.length}
+                </h2>
+
                 <div className="mt-2 flex justify-center pt-6 py-4">
                   <div className="">
                     {imageUrl && (

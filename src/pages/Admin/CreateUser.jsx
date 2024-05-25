@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -19,6 +19,15 @@ const CreateUser = () => {
       createTemplate: false,
     },
   });
+  const [isVisible, setIsVisible] = useState(true);
+
+  useEffect(() => {
+    if (userData.role === "Operator" || userData.role === "Moderator") {
+      setIsVisible(false);
+    } else {
+      setIsVisible(true);
+    }
+  }, [userData.role, isVisible]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -67,6 +76,21 @@ const CreateUser = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!isVisible) {
+      setUserData((prevData) => ({
+        ...prevData,
+        permissions: {
+          ...prevData.permissions,
+          csvuploader: false,
+          createTemplate: false,
+        },
+      }));
+    }
+
+    console.log(userData);
+    return;
+
     const token = JSON.parse(localStorage.getItem("userData"));
     if (
       !userData.role ||
@@ -253,39 +277,45 @@ const CreateUser = () => {
           <div>
             <label className="block text-lg font-medium">Permissions</label>
             <div className="flex flex-wrap justify-start gap-x-14 w-full mt-2">
-              <div className="flex items-center w-full sm:w-auto">
-                <input
-                  id="csvuploader"
-                  name="csvuploader"
-                  type="checkbox"
-                  className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
-                  checked={userData?.permissions?.csvuploader}
-                  onChange={handleChange}
-                />
-                <label
-                  htmlFor="csvuploader"
-                  className="ml-2 block text-md text-gray-900 font-semibold"
-                >
-                  CSV Uploader
-                </label>
-              </div>
+              <>
+                {isVisible && (
+                  <>
+                    <div className="flex items-center w-full sm:w-auto">
+                      <input
+                        id="csvuploader"
+                        name="csvuploader"
+                        type="checkbox"
+                        className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                        checked={userData.permissions.csvuploader}
+                        onChange={handleChange}
+                      />
+                      <label
+                        htmlFor="csvuploader"
+                        className="ml-2 block text-md text-gray-900 font-semibold"
+                      >
+                        CSV Uploader
+                      </label>
+                    </div>
 
-              <div className="flex items-center w-full sm:w-auto">
-                <input
-                  id="createTemplate"
-                  name="createTemplate"
-                  type="checkbox"
-                  className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
-                  checked={userData?.permissions?.createTemplate}
-                  onChange={handleChange}
-                />
-                <label
-                  htmlFor="createTemplate"
-                  className="ml-2 block text-md text-gray-900 font-semibold"
-                >
-                  Create Template
-                </label>
-              </div>
+                    <div className="flex items-center w-full sm:w-auto">
+                      <input
+                        id="createTemplate"
+                        name="createTemplate"
+                        type="checkbox"
+                        className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                        checked={userData.permissions.createTemplate}
+                        onChange={handleChange}
+                      />
+                      <label
+                        htmlFor="createTemplate"
+                        className="ml-2 block text-md text-gray-900 font-semibold"
+                      >
+                        Create Template
+                      </label>
+                    </div>
+                  </>
+                )}
+              </>
 
               <div className="flex items-center w-full sm:w-auto">
                 <input
