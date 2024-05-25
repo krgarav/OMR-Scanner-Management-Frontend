@@ -146,8 +146,7 @@ const ImageScanner = () => {
         fieldType === "formField"
           ? inputField
           : questionRange.min + "--" + questionRange.max,
-    };
-
+    }
     setSelectedCoordinates((prev) => [...prev, newObj]);
     setInputField("");
     setFieldType("");
