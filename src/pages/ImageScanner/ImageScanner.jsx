@@ -516,9 +516,7 @@ const ImageScanner = () => {
       ) : (
         <div className=" pb-2 w-[75%] ">
           <div className="mx-auto max-w-screen-xl px-2 lg:pt-2 sm:px-6 lg:px-8">
-            <h1>
-              {currentImageIndex + 1} out of {imageURL.length}
-            </h1>
+             <h1>{currentImageIndex + 1} out of {imageURL.length}</h1>
             <div className="mt-2 flex justify-center pt-6 py-4">
               <div className="">
                 {image && (
@@ -622,7 +620,7 @@ const ImageScanner = () => {
                                         <div className="mt-2">
                                           <button
                                             type="button"
-                                            className=" text-red-600 w-[30px] h-[30px]  text-xl"
+                                            className=" text-red-600 w-[30px] h-[30px]  text-xl flex justify-center items-center"
                                             onClick={onResetHandler}
                                           >
                                             <RxCross1 className="font-extrabold" />

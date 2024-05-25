@@ -34,6 +34,7 @@ const DataMatching = () => {
   const [allDataChecked, setAllDataChecked] = useState(false);
   const [imageNotFound, setImageNotFound] = useState(true);
   const [dataTypeChecker, setDataTypeChecker] = useState("");
+  const [zoomLevel, setZoomLevel] = useState(1);
   const [currentIndex, setCurrentIndex] = useState(1);
   const [compareTask, setCompareTask] = useState([]);
   const [csvData, setCsvData] = useState([]);
@@ -145,10 +146,11 @@ const DataMatching = () => {
 
   useEffect(() => {
     const handleKeyDown = (event) => {
-      if (event.key === "ArrowLeft") {
+      if (event.key === "ArrowLeft" || event.key === "PageDown") {
         if (currentImageIndex > 0) {
           setCurrentImageIndex(currentImageIndex - 1);
           setSelectedCoordinates(false);
+          setZoomLevel(1);
           if (imageRef.current) {
             imageRef.current.style.transform = "none";
             imageRef.current.style.transformOrigin = "initial";
@@ -157,10 +159,11 @@ const DataMatching = () => {
           onImageHandler("prev", currentIndex, csvData, currentTaskData);
           setCurrentImageIndex(0);
         }
-      } else if (event.key === "ArrowRight") {
+      } else if (event.key === "ArrowRight" || event.key === "PageUp") {
         if (currentImageIndex < imageUrls.length - 1) {
           setCurrentImageIndex(currentImageIndex + 1);
           setSelectedCoordinates(false);
+          setZoomLevel(1);
           if (imageRef.current) {
             imageRef.current.style.transform = "none";
             imageRef.current.style.transformOrigin = "initial";
@@ -270,6 +273,7 @@ const DataMatching = () => {
         imageRef.current.style.transformOrigin = "initial";
       }
       setModifiedKeys(null);
+      setZoomLevel(1);
       setImageUrls(response.data.arrayOfImages);
       setImageNotFound(true);
       setPopUp(false);
@@ -298,7 +302,21 @@ const DataMatching = () => {
   };
 
   const imageFocusHandler = (headerName) => {
-    console.log(headerName);
+    const csvDataKeys = Object.keys(csvData[0]);
+    let matchedValue = null;
+
+    for (const key of csvDataKeys) {
+      if (key === headerName) {
+        matchedValue = csvData[0][key];
+        break;
+      }
+    }
+    const matchedCoordinate = templateHeaders?.templetedata?.find(
+      (data) => data.attribute === matchedValue
+    );
+
+    //  if(matchedCoordinate) {
+    //  }
 
     if (!imageNotFound) {
       return;
@@ -486,6 +504,23 @@ const DataMatching = () => {
       toast.success("task complted successfully.");
     } catch (error) {
       toast.error(error.message);
+    }
+  };
+
+  const zoomInHandler = () => {
+    setZoomLevel((prevZoomLevel) => Math.min(prevZoomLevel * 1.1, 3));
+  };
+
+  const zoomOutHandler = () => {
+    setZoomLevel((prevZoomLevel) => Math.max(prevZoomLevel * 0.9, 0.5));
+  };
+
+  const onInialImageHandler = () => {
+    setZoomLevel(1);
+    setSelectedCoordinates(false);
+    if (imageRef.current) {
+      imageRef.current.style.transform = "none";
+      imageRef.current.style.transformOrigin = "initial";
     }
   };
 
@@ -952,6 +987,27 @@ const DataMatching = () => {
                           update
                         </Button> */}
 
+                      <div className="flex justify-center mb-4">
+                        <button
+                          onClick={zoomInHandler}
+                          className="px-4 py-2 bg-teal-600 text-white rounded-md mr-2 hover:bg-teal-700"
+                        >
+                          Zoom In
+                        </button>
+                        <button
+                          onClick={zoomOutHandler}
+                          className="px-4 py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700"
+                        >
+                          Zoom Out
+                        </button>
+                        <button
+                          onClick={onInialImageHandler}
+                          className="px-4 py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700"
+                        >
+                          Initial
+                        </button>
+                      </div>
+
                       <Button
                         onClick={() =>
                           onImageHandler(
@@ -1017,6 +1073,8 @@ const DataMatching = () => {
                         ref={imageRef}
                         style={{
                           width: "48rem",
+                          transform: `scale(${zoomLevel})`,
+                          transformOrigin: "center center",
                         }}
                         draggable={false}
                       />
@@ -1035,6 +1093,8 @@ const DataMatching = () => {
                                   top: `${data.coordinateY}px`,
                                   width: `${data.width}px`,
                                   height: `${data.height}px`,
+                                  transform: `scale(${zoomLevel})`,
+                                  transformOrigin: "center center",
                                 }}
                               ></div>
                             )
