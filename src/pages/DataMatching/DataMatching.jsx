@@ -229,8 +229,6 @@ const DataMatching = () => {
         {
           imageNameArray: allImagePaths,
           rowIndex: csvData[newIndex].rowIndex,
-          // rowIndex: 1,
-          // currentIndex: newIndex + Number(taskData.min) - 1,
           id: taskData.id,
           colName: allDataChecked
             ? "allDataIndex"

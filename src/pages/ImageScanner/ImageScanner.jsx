@@ -18,7 +18,6 @@ const ImageScanner = () => {
   const [fieldType, setFieldType] = useState("");
   const [open, setOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [] = useState([]);
   const cancelButtonRef = useRef(null);
   const [templateData, setTemplateData] = useState({
     name: "",
@@ -45,7 +44,6 @@ const ImageScanner = () => {
     const handlekeyDown = (e) => {
       if (e.key === "ArrowRight") {
         handleNext();
-        // console.log("object");
       } else if (e.key === "ArrowLeft") {
         handlePrev();
       }
@@ -146,7 +144,7 @@ const ImageScanner = () => {
         fieldType === "formField"
           ? inputField
           : questionRange.min + "--" + questionRange.max,
-    }
+    };
     setSelectedCoordinates((prev) => [...prev, newObj]);
     setInputField("");
     setFieldType("");
