@@ -78,28 +78,43 @@ const AdminAssined = () => {
         const tasks = await onGetAllTasksHandler();
         const templateData = await onGetTemplateHandler();
         const users = await onGetAllUsersHandler();
-        const uploadTask = tasks.filter((task) => {
-          return task.moduleType === "Data Entry";
-        });
+
+        const uploadTask = tasks.filter(
+          (task) => task.moduleType === "Data Entry"
+        );
 
         const updatedTasks = uploadTask.map((task) => {
           const matchedTemplate = templateData.find(
             (template) => template.id === parseInt(task.templeteId)
           );
 
-          if (matchedTemplate) {
-            return {
-              ...task,
-              templateName: matchedTemplate.name,
-            };
+          const matchedUser = users.users.find(
+            (user) => user.id === parseInt(task.userId)
+          );
+
+          // Create a new task object with existing task properties
+          const updatedTask = { ...task };
+
+          // Add userName if matchedUser is found
+          if (matchedUser) {
+            updatedTask.userName = matchedUser.userName;
           }
 
-          return task;
+          // Add templateName if matchedTemplate is found
+          if (matchedTemplate) {
+            updatedTask.templateName = matchedTemplate.name;
+          }
+
+          // Return the updated task
+          return updatedTask;
         });
 
         setMatchingTask(updatedTasks);
-      } catch (error) {}
+      } catch (error) {
+        console.error("Error fetching tasks data:", error);
+      }
     };
+
     onFetchTasksData();
   }, []);
 
