@@ -14,7 +14,6 @@ const ImageScanner = () => {
   const [columnName, setColumnName] = useState("");
   const [editModal, setEditModal] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [currentRowData, setCurrentRowData] = useState(null);
   const [imageUrl, setImageUrl] = useState("");
   const [modifiedKeys, setModifiedKeys] = useState({});
@@ -66,18 +65,56 @@ const ImageScanner = () => {
   //   };
   // }, [currentRowData, editModal, showDuplicates]);
 
+  const onUpdateCurrentDataHandler = async () => {
+    try {
+      await axios.post(
+        `http://${REACT_APP_IP}:4000/update/duplicatedata`,
+        {
+          index: currentRowData?.index,
+          fileID: fileId,
+          rowData: currentRowData.row,
+          updatedColumn: modifiedKeys,
+        },
+        {
+          headers: {
+            token: token,
+          },
+        }
+      );
+      const indexToUpdate = duplicatesData.findIndex(
+        (item) => item.index === currentRowData?.index
+      );
+      if (indexToUpdate !== -1) {
+        const updatedDuplicateData = duplicatesData.map((item, index) => {
+          if (index === indexToUpdate) {
+            return {
+              ...item,
+              row: currentRowData.row,
+            };
+          }
+          return item;
+        });
+        setModifiedKeys(null);
+        setDuplicatesData(updatedDuplicateData);
+      }
+      toast.success("The row has been updated successfully.");
+      setEditModal(false);
+    } catch (error) {
+      toast.error("Unable to update the row data!");
+    }
+  };
+
   useEffect(() => {
     const handleKeyDown = (event) => {
-      if (event.key === "ArrowLeft") {
-        if (currentImageIndex > 0) {
-          setCurrentImageIndex(currentImageIndex - 1);
-          setImageUrl(currentRowData.base64Images[currentImageIndex - 1]);
-        }
-      } else if (event.key === "ArrowRight") {
-        if (currentImageIndex < currentRowData?.base64Images.length - 1) {
-          setCurrentImageIndex(currentImageIndex + 1);
-          setImageUrl(currentRowData.base64Images[currentImageIndex + 1]);
-        }
+      if (event.key === "ArrowLeft" && currentImageIndex > 0) {
+        setCurrentImageIndex(currentImageIndex - 1);
+        setImageUrl(currentRowData.base64Images[currentImageIndex - 1]);
+      } else if (
+        event.key === "ArrowRight" &&
+        currentImageIndex < currentRowData?.base64Images.length - 1
+      ) {
+        setCurrentImageIndex(currentImageIndex + 1);
+        setImageUrl(currentRowData.base64Images[currentImageIndex + 1]);
       } else if (event.altKey && event.key === "s") {
         // Ensure currentRowData is not null before updating
         if (currentRowData) {
@@ -85,15 +122,20 @@ const ImageScanner = () => {
         } else {
           console.error("currentRowData is null when trying to update.");
         }
+      } else if (event.ctrlKey && event.key === "ArrowLeft") {
+        if (editModal) {
+          setEditModal(false);
+        } else if (!showDuplicates) {
+          setShowDuplicates(true);
+        }
       }
     };
+
     window.addEventListener("keydown", handleKeyDown);
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [currentRowData, editModal, showDuplicates]);
-
-  console.log(currentImageIndex);
+  }, [currentImageIndex, currentRowData, onUpdateCurrentDataHandler]);
 
   const changeCurrentCsvDataHandler = (key, newValue) => {
     setCurrentRowData((prevData) => ({
@@ -194,45 +236,6 @@ const ImageScanner = () => {
       setImageUrl(
         duplicatesData[indexToUpdate].base64Images[currentImageIndex]
       );
-    }
-  };
-
-  const onUpdateCurrentDataHandler = async () => {
-    try {
-      await axios.post(
-        `http://${REACT_APP_IP}:4000/update/duplicatedata`,
-        {
-          index: currentRowData?.index,
-          fileID: fileId,
-          rowData: currentRowData.row,
-          updatedColumn: modifiedKeys,
-        },
-        {
-          headers: {
-            token: token,
-          },
-        }
-      );
-      const indexToUpdate = duplicatesData.findIndex(
-        (item) => item.index === currentRowData?.index
-      );
-      if (indexToUpdate !== -1) {
-        const updatedDuplicateData = duplicatesData.map((item, index) => {
-          if (index === indexToUpdate) {
-            return {
-              ...item,
-              row: currentRowData.row,
-            };
-          }
-          return item;
-        });
-        setModifiedKeys(null);
-        setDuplicatesData(updatedDuplicateData);
-      }
-      toast.success("The row has been updated successfully.");
-      setEditModal(false);
-    } catch (error) {
-      toast.error("Unable to update the row data!");
     }
   };
 
