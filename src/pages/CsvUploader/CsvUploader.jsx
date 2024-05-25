@@ -140,7 +140,7 @@ const CsvUploader = () => {
         navigate(`/csvuploader/duplicatedetector/${selectedId}`);
         localStorage.setItem("fileId", JSON.stringify(fileId));
         localStorage.setItem("pageCount", JSON.stringify(data.pageCount));
-        localStorage.setItem("imageName", JSON.stringify(imageNamesString));
+        localStorage.setItem("imageName", JSON.stringify("Front side Image"));
       } catch (error) {
         console.error("Error uploading files: ", error);
         // toast.error("Something went wrong please refresh the page.");
@@ -151,14 +151,14 @@ const CsvUploader = () => {
   };
 
   return (
-    <div className="">
+    <div className="flex justify-center items-center h-[100vh] w-full">
       {dataCtx?.isLoading ? (
         <Loader />
       ) : (
-        <div className="csvuploader xl:h-[100vh]">
-          <div className="xl:flex justify-center items-center pt-[10%] gap-5 mb-5 mx-5">
+        <div className="csvuploader xl:h-[100vh] w-full flex flex-col justify-center items-center">
+          <div className="xl:flex justify-center items-center gap-5  mx-5">
             <div
-              className="mx-auto max-w-xl  h-[50%] bg-white px-8 py-4 mt-5 text-center shadow-lg"
+              className="mx-auto max-w-xl  min-h-[300px] bg-white px-8 py-4 mt-5 text-center shadow-lg"
               style={{ borderRadius: "20px" }}
             >
               <h1 className="pb-2 text-xl font-semibold text-center">
@@ -193,7 +193,7 @@ const CsvUploader = () => {
                   className="input rounded-full ps-5 py-1 border-2 rounded-4 border-transparent  focus:outline-none focus:border-blue-500 placeholder-gray-400"
                 />
               </div>
-              <div className="overflow-y-scroll h-[240px] px-2">
+              <div className="overflow-y-scroll h-[20vh] px-2 bg-white">
                 {filteredTemplates?.map((template) => (
                   <button
                     key={template.id}
@@ -228,7 +228,7 @@ const CsvUploader = () => {
                                     index === 0 ? "first" : "second"
                                   } image name`
                             }
-                            className="input rounded-full ps-3 mb-5 py-1 mr-6 border-1 border-gray-200 rounded-3 border-transparent shadow focus:outline-none focus:border-blue-500 placeholder-gray-400"
+                            className="input rounded-full px-3 mb-5 py-1  border-1 border-gray-200 rounded-3 border-transparent shadow focus:outline-none focus:border-blue-500 placeholder-gray-400"
                           />
                         </div>
                       ))}
@@ -307,7 +307,7 @@ const CsvUploader = () => {
               </p>
             </div>
           </div>
-          <div className="flex justify-center pb-10">
+          <div className="flex-col mt-5 justify-center">
             <button
               type="submit"
               onClick={onSaveFilesHandler}

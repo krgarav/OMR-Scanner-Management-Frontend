@@ -47,5 +47,5 @@ a {
   background-image: url("assets/images/duplicateImg2.jpg");
   background-position: 50% 0;
   background-size: cover;
-  height: auto;
+  height: 100vh;
 }

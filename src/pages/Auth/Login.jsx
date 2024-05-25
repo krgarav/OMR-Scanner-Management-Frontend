@@ -67,9 +67,9 @@ export default function Login() {
   };
 
   return (
-    <section className="flex justify-center pt-2">
-      <div className=" px-4 py-12 sm:px-6 sm:py-16 lg:px-24 lg:pt-8 my-48 bg-white rounded-2xl border-none shadow-lg shadow-slate-300">
-        <div className="xl:mx-auto xl:w-full xl:max-w-sm 2xl:max-w-md">
+    <section className="flex justify-center items-center w-full h-[100vh]">
+      <div className=" px-4 py-12 sm:px-6 sm:py-16 lg:px-24 lg:pt-8   bg-white rounded-2xl border-none shadow-lg shadow-slate-300">
+        <div className="xl:mx-auto xl:w-full xl:max-w-sm 2xl:max-w-md ">
           <div className="mb-7 flex justify-center">
             <img className="h-15 w-auto" src={logo} alt="Your Company" />
           </div>
