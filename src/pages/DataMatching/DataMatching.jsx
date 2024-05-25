@@ -496,8 +496,8 @@ const DataMatching = () => {
           {popUp && (
             <>
               {startModal ? (
-                <div className=" min-h-[100vh] flex justify-center templatemapping">
-                  <div className=" mt-40">
+                <div className="h-[100vh] flex justify-center items-center templatemapping">
+                  <div className="">
                     {/* MAIN SECTION  */}
                     <section className="mx-auto w-full max-w-7xl  px-12 py-10 bg-white rounded-xl">
                       <div className="flex flex-col space-y-4  md:flex-row md:items-center md:justify-between md:space-y-0">

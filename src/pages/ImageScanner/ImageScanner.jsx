@@ -240,29 +240,29 @@ const ImageScanner = () => {
               >
                 <div className="overflow-x-auto">
                   <div className="my-3 table-auto  border-collapse border border-gray-400 min-w-full divide-y-2 divide-gray-200 bg-white text-sm rounded-lg">
-                    <div className="ltr:text-left rtl:text-right flex justify-around text-gray-600">
-                      <div className="text-center whitespace-nowrap py-2">
+                    <div className="ltr:text-left rtl:text-right flex justify-around text-gray-600 w-full">
+                      <div className="text-center whitespace-nowrap py-2 w-1/3">
                         Name
                       </div>
-                      <div className="text-center whitespace-nowrap py-2">
+                      <div className="text-center whitespace-nowrap py-2 w-1/3">
                         Edit
                       </div>
-                      <div className="text-center whitespace-nowrap py-2">
+                      <div className="text-center whitespace-nowrap py-2 w-1/3">
                         Remove
                       </div>
                     </div>
 
-                    <div className="divide-y divide-gray-200">
+                    <div className="divide-y divide-gray-200 w-full">
                       {selectedCoordinates &&
                         selectedCoordinates?.map((data) => (
                           <div
                             key={data.id}
-                            className="odd:bg-gray-50 flex justify-around"
+                            className="odd:bg-gray-50 flex "
                           >
-                            <div className="whitespace-nowrap px-4 py-2 text-center font-semibold text-md text-gray-900 text-ellipsis w-[50%] overflow-x-hidden">
+                            <div className="whitespace-nowrap px-4 py-2 text-center font-semibold text-md text-gray-900 text-ellipsis w-1/3 overflow-x-hidden">
                               {data.attribute}
                             </div>
-                            <div className="whitespace-nowrap px-4 py-2 text-center font-semibold text-md text-gray-900">
+                            <div className="whitespace-nowrap px-4 py-2 text-center font-semibold text-md text-gray-900 w-1/3">
                               <CiEdit
                                 onClick={() => {
                                   setEditID(data.id);
@@ -271,7 +271,7 @@ const ImageScanner = () => {
                                 className="mx-auto text-red-500 text-xl"
                               />
                             </div>
-                            <div className="whitespace-nowrap px-4 py-2 text-center font-semibold text-md text-gray-900">
+                            <div className="whitespace-nowrap px-4 py-2 text-center font-semibold text-md text-gray-900 w-1/3">
                               <MdDelete
                                 onClick={() => {
                                   setRemoveModal(true);
@@ -516,10 +516,10 @@ const ImageScanner = () => {
       ) : (
         <div className=" pb-2 w-[75%] ">
           <div className="mx-auto max-w-screen-xl px-2 lg:pt-2 sm:px-6 lg:px-8">
-            <h1>
+            <h1 className="text-center mt-6 text-lg font-bold text-blue-700">
               {currentImageIndex + 1} out of {imageURL.length}
             </h1>
-            <div className="mt-2 flex justify-center pt-6 py-4">
+            <div className="mt-2 flex justify-center  ">
               <div className="">
                 {image && (
                   <div
