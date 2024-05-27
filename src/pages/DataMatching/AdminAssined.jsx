@@ -184,7 +184,7 @@ const AdminAssined = () => {
   };
 
   const onDownloadHandler = async (currentTaskData) => {
-    if (!currentTaskData.taskStatus) {
+    if (!currentTaskData.blankTaskStatus || !currentTaskData.multTaskStatus) {
       toast.warning("The task is pending, so downloading is not available.");
       return;
     }
