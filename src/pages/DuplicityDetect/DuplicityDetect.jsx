@@ -7,7 +7,6 @@ import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import { REACT_APP_IP } from "../../services/common";
 import { Dialog, Transition } from "@headlessui/react";
-import { RxCross1 } from "react-icons/rx";
 
 const ImageScanner = () => {
   const [csvHeaders, setCsvHeaders] = useState([]);
@@ -18,7 +17,7 @@ const ImageScanner = () => {
   const [editModal, setEditModal] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [currentRowData, setCurrentRowData] = useState(null);
-  const [testingState, setTestingState] = useState([]);
+  const [allCurrentData, setAllCurrentData] = useState([]);
   const [imageUrl, setImageUrl] = useState("");
   const [modifiedKeys, setModifiedKeys] = useState({});
   const token = JSON.parse(localStorage.getItem("userData"));
@@ -179,7 +178,21 @@ const ImageScanner = () => {
         return;
       }
 
-      setDuplicatesData(response.data.duplicates);
+      let groups = response.data.duplicates.reduce((acc, obj) => {
+        let key = obj.row[columnName];
+        if (!acc[key]) {
+          acc[key] = [];
+        }
+        acc[key].push(obj);
+        return acc;
+      }, {});
+
+      let result = Object.values(groups).map((value) => {
+        return { sameData: value };
+      });
+
+      setDuplicatesData(result);
+      // setDuplicatesData(response.data.duplicates);
       const url = response.data?.duplicates[0].base64Images[currentImageIndex];
       setCurrentRowData(response.data?.duplicates[0]);
       setImageUrl(url);
@@ -193,6 +206,10 @@ const ImageScanner = () => {
   };
 
   const onRemoveDuplicateHandler = async (index, rowIndex, colName) => {
+    console.log(index, rowIndex, colName);
+
+    return;
+
     const newData = [...duplicatesData];
 
     const filteredData = newData.filter(
@@ -243,14 +260,13 @@ const ImageScanner = () => {
     }
   };
   const onShowModalHandler = (data) => {
+    setAllCurrentData(data);
     setShowDuplicateField(true);
   };
 
   const onDuplicateCheckedHandler = () => {
     navigate(`/csvuploader/templatemap/${id}`);
   };
-
-  console.log(duplicatesData);
 
   return (
     <div className="flex duplicateImg  border-1 justify-center items-center pt-20">
@@ -364,20 +380,12 @@ const ImageScanner = () => {
                                 className="flex justify-around gap-1 py-3 text-center even:bg-gray-50 sm:grid-cols-4 "
                               >
                                 <dt className="font-medium text-md text-gray-700 whitespace-normal">
-                                  {data.row[columnName]}
+                                  {data?.sameData[0]?.row[columnName]}
                                 </dt>
                                 <dd className="text-gray-700 font-medium ">
-                                  {data.index}
+                                  {data.sameData.length}
                                 </dd>
-                                <dd className="text-gray-700 font-medium ">
-                                  {/* <div className="text-gray-700 ">
-                                    <div className="relative">
-                                      <div className="inline-flex items-center overflow-hidden rounded-md border bg-white">
-                                        
-                                      </div>
-                                    </div> 
-                                   </div> */}
-                                </dd>
+
                                 <div className="text-gray-700 ">
                                   <div className="relative">
                                     <div className="inline-flex items-center overflow-hidden rounded-md border bg-white">
@@ -447,87 +455,66 @@ const ImageScanner = () => {
                                                           </div>
                                                         </div>
 
-                                                        <div className="">
-                                                          <div
-                                                            key={index}
-                                                            className={
-                                                              index % 2 === 0
-                                                                ? "bg-white flex-col"
-                                                                : "bg-teal-100 flex-col"
-                                                            }
-                                                          >
-                                                            <div className="flex">
-                                                              <div className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                                                data
-                                                              </div>
-                                                              <div className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                                                123123
-                                                              </div>
-                                                              <div className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                                <button
-                                                                  onClick={() =>
-                                                                    onEditModalHandler(
-                                                                      data
-                                                                    )
+                                                        {allCurrentData &&
+                                                          allCurrentData.sameData.map(
+                                                            (data, index) => (
+                                                              <div className="">
+                                                                <div
+                                                                  key={index}
+                                                                  className={
+                                                                    index %
+                                                                      2 ===
+                                                                    0
+                                                                      ? "bg-white flex-col"
+                                                                      : "bg-teal-100 flex-col"
                                                                   }
-                                                                  className="border-e px-3 bg-gray-100 py-2 text-sm/none text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700"
                                                                 >
-                                                                  Edit
-                                                                </button>
+                                                                  <div className="flex">
+                                                                    <div className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                                                      {
+                                                                        data
+                                                                          .row[
+                                                                          columnName
+                                                                        ]
+                                                                      }
+                                                                    </div>
+                                                                    <div className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                                                      {
+                                                                        data.index
+                                                                      }
+                                                                    </div>
+                                                                    <div className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                                      <button
+                                                                        onClick={() =>
+                                                                          onEditModalHandler(
+                                                                            data
+                                                                          )
+                                                                        }
+                                                                        className="border-e px-3 bg-gray-100 py-2 text-sm/none text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700"
+                                                                      >
+                                                                        Edit
+                                                                      </button>
+                                                                    </div>
+                                                                    <div
+                                                                      className="px-6 py-4 whitespace-nowrap text-red-500 text-2xl ml-8"
+                                                                      onClick={() =>
+                                                                        onRemoveDuplicateHandler(
+                                                                          index,
+                                                                          data.index,
+                                                                          data
+                                                                            .row[
+                                                                            columnName
+                                                                          ]
+                                                                        )
+                                                                      }
+                                                                    >
+                                                                      <MdDelete className="mx-auto" />
+                                                                    </div>
+                                                                  </div>
+                                                                </div>
                                                               </div>
-                                                              <div
-                                                                className="px-6 py-4 whitespace-nowrap text-red-500 text-2xl ml-8"
-                                                                onClick={() =>
-                                                                  onRemoveDuplicateHandler(
-                                                                    index,
-                                                                    data.index,
-                                                                    data.row[
-                                                                      columnName
-                                                                    ]
-                                                                  )
-                                                                }
-                                                              >
-                                                                <MdDelete className="mx-auto" />
-                                                              </div>
-                                                            </div>
-                                                            <div className="flex">
-                                                              <div className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                                                data
-                                                              </div>
-                                                              <div className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                                                123123
-                                                              </div>
-                                                              <div className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                                <button
-                                                                  onClick={() =>
-                                                                    onEditModalHandler(
-                                                                      data
-                                                                    )
-                                                                  }
-                                                                  className="border-e px-3 bg-gray-100 py-2 text-sm/none text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700"
-                                                                >
-                                                                  Edit
-                                                                </button>
-                                                              </div>
-                                                              <div
-                                                                className="px-6 py-4 whitespace-nowrap text-red-500 text-2xl ml-8"
-                                                                onClick={() =>
-                                                                  onRemoveDuplicateHandler(
-                                                                    index,
-                                                                    data.index,
-                                                                    data.row[
-                                                                      columnName
-                                                                    ]
-                                                                  )
-                                                                }
-                                                              >
-                                                                <MdDelete className="mx-auto" />
-                                                              </div>
-                                                            </div>
-
-                                                            {/* Add more td for additional columns */}
-                                                          </div>
-                                                        </div>
+                                                            )
+                                                          )}
                                                       </div>
                                                     </div>
                                                   </div>
