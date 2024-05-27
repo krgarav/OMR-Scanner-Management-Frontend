@@ -333,7 +333,7 @@ const ImageScanner = () => {
       <div>
         {editModal && (
           <div className="fixed z-50 inset-0 overflow-y-auto">
-            <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0" onClick={() =>setEditModal(false)}>
               {/* Background overlay */}
               <div
                 className="fixed inset-0 transition-opacity"
@@ -425,7 +425,7 @@ const ImageScanner = () => {
       <div>
         {removeModal && (
           <div className="fixed z-50 inset-0 overflow-y-auto">
-            <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0" onClick={() => {setRemoveModal(false)}}>
               {/* Background overlay */}
               <div
                 className="fixed inset-0 transition-opacity"
@@ -501,25 +501,26 @@ const ImageScanner = () => {
 
       {/* RIGHT SECTION  */}
       {!image ? (
-        <div className="flex w--[75%] h-[100vh] justify-center items-center ">
-          <div className="">
-            <ImageNotFound />
-
-            <h1 className="mt-8 text-2xl font-bold tracking-tight text-gray-700 sm:text-4xl">
-              Please Select Image...
-            </h1>
-
-            <p className="mt-4 text-gray-600 text-center">
-              We can't find that page!!
-            </p>
-          </div>
+        <div className="flex w-[75%] h-[100vh] justify-center items-center">
+        <div>
+          <ImageNotFound />
+          <h1 className="mt-8 text-2xl font-bold tracking-tight text-gray-700 sm:text-4xl">
+            Please Select an Image...
+          </h1>
+          <p className="mt-4 text-gray-600 text-center">
+            We can't find that page!
+          </p>
         </div>
+      </div>
+      
       ) : (
-        <div className=" pb-2 w-[75%] ">
+        <div className="pb-2 w-[75%]">
           <div className="mx-auto max-w-screen-xl px-2 lg:pt-2 sm:px-6 lg:px-8">
-             <h1 className="text-center my-4 pt-1 text-xl font-bold text-blue-700">{currentImageIndex + 1} out of {imageURL.length}</h1>
-            <div className="mt-2 flex justify-center ">
-              <div className="">
+            <h1 className="text-center my-4 pt-1 text-xl font-bold text-blue-700">
+              {currentImageIndex + 1} out of {imageURL.length}
+            </h1>
+            <div className="mt-2 flex justify-center">
+              <div>
                 {image && (
                   <div
                     style={{
@@ -535,7 +536,6 @@ const ImageScanner = () => {
                       alt="Selected"
                       style={{
                         width: "48rem",
-                        // height: "50rem",
                         cursor: "crosshair",
                       }}
                       onMouseDown={handleMouseDown}
@@ -591,23 +591,7 @@ const ImageScanner = () => {
                             leaveFrom="opacity-100"
                             leaveTo="opacity-0"
                           >
-                      <Transition.Root show={open} as={Fragment}>
-                        <Dialog
-                          as="div"
-                          className="relative z-10"
-                          initialFocus={cancelButtonRef}
-                          onClose={setOpen}
-                        >
-                          <Transition.Child
-                            as={Fragment}
-                            enter="ease-out duration-300"
-                            enterFrom="opacity-0"
-                            enterTo="opacity-100"
-                            leave="ease-in duration-200"
-                            leaveFrom="opacity-100"
-                            leaveTo="opacity-0"
-                          >
-                            <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+                            <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" ></div>
                           </Transition.Child>
 
                           <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
@@ -637,7 +621,7 @@ const ImageScanner = () => {
                                         <div className="mt-2">
                                           <button
                                             type="button"
-                                            className=" text-red-600 w-[30px] h-[30px]  text-xl flex justify-center items-center"
+                                            className="text-red-600 w-[30px] h-[30px] text-xl flex justify-center items-center"
                                             onClick={onResetHandler}
                                           >
                                             <RxCross1 className="font-extrabold" />
@@ -690,7 +674,7 @@ const ImageScanner = () => {
                                       </label>
                                     </div>
                                   </div>
-                                  <div className=" px-4 pb-8 sm:flex sm:px-6 justify-between">
+                                  <div className="px-4 pb-8 sm:flex sm:px-6 justify-between">
                                     {fieldType === "formField" ||
                                     fieldType === "" ? (
                                       <input
@@ -720,7 +704,7 @@ const ImageScanner = () => {
                                                 min: e.target.value,
                                               })
                                             }
-                                            className="h-10 w-16 rounded  border-2  border-gray-200 text-center [-moz-appearance:_textfield] sm:text-sm [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none"
+                                            className="h-10 w-16 rounded border-2 border-gray-200 text-center [-moz-appearance:_textfield] sm:text-sm [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none"
                                           />
                                         </div>
                                         <div className="flex items-center gap-4">
@@ -735,105 +719,7 @@ const ImageScanner = () => {
                                                 max: e.target.value,
                                               })
                                             }
-                                            className="h-10 w-16 rounded  border-2  border-gray-200 text-center [-moz-appearance:_textfield] sm:text-sm [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none"
-                                          />
-                                        </div>
-                                      </div>
-                                    )}
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div className="flex gap-5 p-3 mt-3">
-                                      <label
-                                        htmlFor="formField"
-                                        className="flex items-center font-semibold"
-                                      >
-                                        <input
-                                          type="radio"
-                                          id="formField"
-                                          name="fieldType"
-                                          value="formField"
-                                          className="form-radio text-blue-500"
-                                          required
-                                          checked={fieldType === "formField"}
-                                          onChange={(e) =>
-                                            setFieldType(e.target.value)
-                                          }
-                                        />
-                                        <span className="ml-2 text-lg text-gray-700">
-                                          Form Field
-                                        </span>
-                                      </label>
-                                      <label
-                                        htmlFor="questionsField"
-                                        className="flex items-center font-semibold"
-                                      >
-                                        <input
-                                          type="radio"
-                                          id="questionsField"
-                                          name="fieldType"
-                                          value="questionsField"
-                                          className="form-radio text-blue-500"
-                                          required
-                                          checked={
-                                            fieldType === "questionsField"
-                                          }
-                                          onChange={(e) =>
-                                            setFieldType(e.target.value)
-                                          }
-                                        />
-                                        <span className="ml-2 text-lg text-gray-700">
-                                          Questions Field
-                                        </span>
-                                      </label>
-                                    </div>
-                                  </div>
-                                  <div className=" px-4 pb-8 sm:flex sm:px-6 justify-between">
-                                    {fieldType === "formField" ||
-                                    fieldType === "" ? (
-                                      <input
-                                        required
-                                        className="input w-[72%] border-2 font-semibold bg-white text-lg focus:border-1 rounded-xl px-3 py-2 shadow-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
-                                        type="text"
-                                        name="field"
-                                        placeholder="Field.."
-                                        value={inputField}
-                                        onChange={(e) =>
-                                          setInputField(e.target.value)
-                                        }
-                                      />
-                                    ) : (
-                                      <div className="flex gap-5">
-                                        <div className="flex items-center gap-4">
-                                          <span className="font-bold">
-                                            Start
-                                          </span>
-                                          <input
-                                            type="number"
-                                            id="Quantity"
-                                            value={questionRange.min}
-                                            onChange={(e) =>
-                                              setQuestionRange({
-                                                ...questionRange,
-                                                min: e.target.value,
-                                              })
-                                            }
-                                            className="h-10 w-16 rounded  border-2  border-gray-200 text-center [-moz-appearance:_textfield] sm:text-sm [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none"
-                                          />
-                                        </div>
-                                        <div className="flex items-center gap-4">
-                                          <span className="font-bold">End</span>
-                                          <input
-                                            type="number"
-                                            id="Quantity"
-                                            value={questionRange.max}
-                                            onChange={(e) =>
-                                              setQuestionRange({
-                                                ...questionRange,
-                                                max: e.target.value,
-                                              })
-                                            }
-                                            className="h-10 w-16 rounded  border-2  border-gray-200 text-center [-moz-appearance:_textfield] sm:text-sm [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none"
+                                            className="h-10 w-16 rounded border-2 border-gray-200 text-center [-moz-appearance:_textfield] sm:text-sm [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none"
                                           />
                                         </div>
                                       </div>
@@ -842,22 +728,7 @@ const ImageScanner = () => {
                                     <button
                                       type="button"
                                       data-bs-dismiss="modal"
-                                      className="bg-teal-600 hover:bg-indigo-500 text-white rounded-lg hover:shadow-lg hover:shadow-blue-200  text-md font-medium px-3"
-                                      onClick={onSelectedHandler}
-                                    >
-                                      Save Field
-                                    </button>
-                                  </div>
-                                </Dialog.Panel>
-                              </Transition.Child>
-                            </div>
-                          </div>
-                        </Dialog>
-                      </Transition.Root>
-                                    <button
-                                      type="button"
-                                      data-bs-dismiss="modal"
-                                      className="bg-teal-600 hover:bg-indigo-500 text-white rounded-lg hover:shadow-lg hover:shadow-blue-200  text-md font-medium px-3"
+                                      className="bg-teal-600 hover:bg-indigo-500 text-white rounded-lg hover:shadow-lg hover:shadow-blue-200 text-md font-medium px-3"
                                       onClick={onSelectedHandler}
                                     >
                                       Save Field
@@ -875,16 +746,7 @@ const ImageScanner = () => {
               </div>
             </div>
           </div>
-          <div>
-            {/* <button
-              onClick={handleNext}
-              className="ms-auto group  mt-2 flex items-center  rounded-lg bg-teal-600 hover:shadow-lg hover:shadow-blue-200  py-2 px-2 transition-colors hover:bg-teal-700 focus:outline-none focus:ring"
-            >
-              <span className="font-medium  flex text-white transition-colors group-hover:text-white  group-active:text-white mx-auto">
-                Next
-              </span>
-            </button> */}
-          </div>
+        
         </div>
       )}
     </div>
