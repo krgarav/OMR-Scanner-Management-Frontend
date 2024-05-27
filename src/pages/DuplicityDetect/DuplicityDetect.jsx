@@ -18,9 +18,9 @@ const ImageScanner = () => {
   const [editModal, setEditModal] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [currentRowData, setCurrentRowData] = useState(null);
+  const [testingState, setTestingState] = useState([]);
   const [imageUrl, setImageUrl] = useState("");
   const [modifiedKeys, setModifiedKeys] = useState({});
-  const cancelButtonRef = useRef(null);
   const token = JSON.parse(localStorage.getItem("userData"));
   let { fileId } = JSON.parse(localStorage.getItem("fileId")) || "";
   let imageNames = JSON.parse(localStorage.getItem("imageName")) || "";
@@ -110,11 +110,11 @@ const ImageScanner = () => {
 
   useEffect(() => {
     const handleKeyDown = (event) => {
-      if (event.key === "ArrowLeft" && currentImageIndex > 0) {
+      if (event.key === "PageUp" && currentImageIndex > 0) {
         setCurrentImageIndex(currentImageIndex - 1);
         setImageUrl(currentRowData.base64Images[currentImageIndex - 1]);
       } else if (
-        event.key === "ArrowRight" &&
+        event.key === "PageDown" &&
         currentImageIndex < currentRowData?.base64Images.length - 1
       ) {
         setCurrentImageIndex(currentImageIndex + 1);
@@ -126,7 +126,7 @@ const ImageScanner = () => {
         } else {
           console.error("currentRowData is null when trying to update.");
         }
-      } else if (event.ctrlKey && event.key === "ArrowLeft") {
+      } else if (event.key === "ArrowLeft") {
         if (editModal) {
           setEditModal(false);
         } else if (!showDuplicates) {
@@ -245,14 +245,13 @@ const ImageScanner = () => {
   const onShowModalHandler = (data) => {
     setShowDuplicateField(true);
   };
-  const onResetHandler = () => {
-    setShowDuplicateField(false);
-  };
-  console.log(showDuplicateField);
 
   const onDuplicateCheckedHandler = () => {
     navigate(`/csvuploader/templatemap/${id}`);
   };
+
+  console.log(duplicatesData);
+
   return (
     <div className="flex duplicateImg  border-1 justify-center items-center pt-20">
       {showDuplicates ? (
@@ -280,7 +279,7 @@ const ImageScanner = () => {
                         <div className="divide-y divide-gray-200 bg-white overflow-y-auto max-h-[300px] w-full">
                           {csvHeaders?.map((columnName, index) =>
                             columnName === "User Details" ||
-                            columnName === "Updated Details" ? null : ( // If column name is "User Details" or "Updated Details", skip rendering
+                            columnName === "Updated Details" ? null : (
                               <div
                                 key={index}
                                 className="flex justify-between items-center"

@@ -49,9 +49,9 @@ const ImageScanner = () => {
   useEffect(() => {
     const handlekeyDown = (e) => {
       if (e.key === "ArrowRight") {
-        handleNext();
+        onNextImageHandler();
       } else if (e.key === "ArrowLeft") {
-        handlePrev();
+        onPreviousImageHandler();
       }
     };
     window.addEventListener("keydown", handlekeyDown);
@@ -60,14 +60,14 @@ const ImageScanner = () => {
     };
   }, []);
 
-  const handleNext = () => {
+  const onNextImageHandler = () => {
     setCurrentImageIndex((prevIndex) =>
       prevIndex < imageURL.length - 1 ? prevIndex + 1 : prevIndex
     );
     setSelection(null);
   };
 
-  const handlePrev = () => {
+  const onPreviousImageHandler = () => {
     setCurrentImageIndex((prevIndex) =>
       prevIndex > 0 ? prevIndex - 1 : prevIndex
     );
@@ -268,7 +268,7 @@ const ImageScanner = () => {
                                   setEditID(data.id);
                                   setEditModal(true);
                                 }}
-                                className="mx-auto text-red-500 text-xl"
+                                className="mx-auto text-red-500 text-xl cursor-pointer"
                               />
                             </div>
                             <div className="whitespace-nowrap px-4 py-2 text-center font-semibold text-md text-gray-900 w-1/3">
@@ -277,7 +277,7 @@ const ImageScanner = () => {
                                   setRemoveModal(true);
                                   setRemoveId(data.id);
                                 }}
-                                className="mx-auto text-red-500 text-xl"
+                                className="mx-auto text-red-500 text-xl cursor-pointer"
                               />
                             </div>
                           </div>
@@ -447,12 +447,13 @@ const ImageScanner = () => {
                     <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
                       {/* Your icon */}
                       <svg
+                        onClick={() => setRemoveModal(false)}
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
                         viewBox="0 0 24 24"
                         strokeWidth="1.5"
                         stroke="currentColor"
-                        className="h-6 w-6 text-red-600"
+                        className="h-6 w-6 text-red-600 cursor-pointer"
                       >
                         <path
                           strokeLinecap="round"
@@ -463,7 +464,7 @@ const ImageScanner = () => {
                     </div>
                     <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                       <h3
-                        className="text-lg font-medium text-gray-900"
+                        className="text-lg font-medium text-gray-900 "
                         id="modal-title"
                       >
                         Remove Template
@@ -478,7 +479,7 @@ const ImageScanner = () => {
                 </div>
                 <div className="flex justify-end py-3 px-3">
                   <button
-                    type="button"
+                    type="button cursor-pointer"
                     onClick={onRemoveSelectedHandler}
                     className="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
                   >
@@ -487,7 +488,7 @@ const ImageScanner = () => {
                   <button
                     onClick={() => setRemoveModal(false)}
                     type="button"
-                    className="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+                    className="inline-flex justify-center cursor-pointer w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
                   >
                     Cancel
                   </button>
@@ -574,6 +575,22 @@ const ImageScanner = () => {
                           }}
                         ></div>
                       )}
+                      <Transition.Root show={open} as={Fragment}>
+                        <Dialog
+                          as="div"
+                          className="relative z-10"
+                          initialFocus={cancelButtonRef}
+                          onClose={setOpen}
+                        >
+                          <Transition.Child
+                            as={Fragment}
+                            enter="ease-out duration-300"
+                            enterFrom="opacity-0"
+                            enterTo="opacity-100"
+                            leave="ease-in duration-200"
+                            leaveFrom="opacity-100"
+                            leaveTo="opacity-0"
+                          >
                       <Transition.Root show={open} as={Fragment}>
                         <Dialog
                           as="div"
@@ -723,7 +740,120 @@ const ImageScanner = () => {
                                         </div>
                                       </div>
                                     )}
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div className="flex gap-5 p-3 mt-3">
+                                      <label
+                                        htmlFor="formField"
+                                        className="flex items-center font-semibold"
+                                      >
+                                        <input
+                                          type="radio"
+                                          id="formField"
+                                          name="fieldType"
+                                          value="formField"
+                                          className="form-radio text-blue-500"
+                                          required
+                                          checked={fieldType === "formField"}
+                                          onChange={(e) =>
+                                            setFieldType(e.target.value)
+                                          }
+                                        />
+                                        <span className="ml-2 text-lg text-gray-700">
+                                          Form Field
+                                        </span>
+                                      </label>
+                                      <label
+                                        htmlFor="questionsField"
+                                        className="flex items-center font-semibold"
+                                      >
+                                        <input
+                                          type="radio"
+                                          id="questionsField"
+                                          name="fieldType"
+                                          value="questionsField"
+                                          className="form-radio text-blue-500"
+                                          required
+                                          checked={
+                                            fieldType === "questionsField"
+                                          }
+                                          onChange={(e) =>
+                                            setFieldType(e.target.value)
+                                          }
+                                        />
+                                        <span className="ml-2 text-lg text-gray-700">
+                                          Questions Field
+                                        </span>
+                                      </label>
+                                    </div>
+                                  </div>
+                                  <div className=" px-4 pb-8 sm:flex sm:px-6 justify-between">
+                                    {fieldType === "formField" ||
+                                    fieldType === "" ? (
+                                      <input
+                                        required
+                                        className="input w-[72%] border-2 font-semibold bg-white text-lg focus:border-1 rounded-xl px-3 py-2 shadow-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+                                        type="text"
+                                        name="field"
+                                        placeholder="Field.."
+                                        value={inputField}
+                                        onChange={(e) =>
+                                          setInputField(e.target.value)
+                                        }
+                                      />
+                                    ) : (
+                                      <div className="flex gap-5">
+                                        <div className="flex items-center gap-4">
+                                          <span className="font-bold">
+                                            Start
+                                          </span>
+                                          <input
+                                            type="number"
+                                            id="Quantity"
+                                            value={questionRange.min}
+                                            onChange={(e) =>
+                                              setQuestionRange({
+                                                ...questionRange,
+                                                min: e.target.value,
+                                              })
+                                            }
+                                            className="h-10 w-16 rounded  border-2  border-gray-200 text-center [-moz-appearance:_textfield] sm:text-sm [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none"
+                                          />
+                                        </div>
+                                        <div className="flex items-center gap-4">
+                                          <span className="font-bold">End</span>
+                                          <input
+                                            type="number"
+                                            id="Quantity"
+                                            value={questionRange.max}
+                                            onChange={(e) =>
+                                              setQuestionRange({
+                                                ...questionRange,
+                                                max: e.target.value,
+                                              })
+                                            }
+                                            className="h-10 w-16 rounded  border-2  border-gray-200 text-center [-moz-appearance:_textfield] sm:text-sm [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none"
+                                          />
+                                        </div>
+                                      </div>
+                                    )}
 
+                                    <button
+                                      type="button"
+                                      data-bs-dismiss="modal"
+                                      className="bg-teal-600 hover:bg-indigo-500 text-white rounded-lg hover:shadow-lg hover:shadow-blue-200  text-md font-medium px-3"
+                                      onClick={onSelectedHandler}
+                                    >
+                                      Save Field
+                                    </button>
+                                  </div>
+                                </Dialog.Panel>
+                              </Transition.Child>
+                            </div>
+                          </div>
+                        </Dialog>
+                      </Transition.Root>
                                     <button
                                       type="button"
                                       data-bs-dismiss="modal"
