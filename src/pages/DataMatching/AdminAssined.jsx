@@ -257,6 +257,7 @@ const AdminAssined = () => {
     }
   };
 
+
   return (
     <div className="h-[100vh] flex justify-center items-center templatemapping pt-20">
       <div className="">
@@ -323,12 +324,12 @@ const AdminAssined = () => {
                               {taskData.max}
                             </div>
                           </div>
-                          <div className="whitespace-nowrap w-[150px] py-2">
-                            <div className="text-md text-center font-semibold border-2 py-1 flex">
+                          <div className="whitespace-nowrap w-[200px] py-2">
+                            <div className="text-md text-center font-semibold border-2 py-1 ">
                               {taskData.TemplateType}
                             </div>
                           </div>
-                          <div className="whitespace-nowrap w-[150px] py-2">
+                          <div className="whitespace-nowrap w-[200px] py-2">
                             <div className="text-md text-center ">
                               <span
                                 className={`inline-flex items-center justify-center rounded-full ${
@@ -379,7 +380,7 @@ const AdminAssined = () => {
                               </span>
                             </div>
                           </div>
-                          <div className="whitespace-nowrap text-center w-[150px] py-2">
+                          <div className="whitespace-nowrap text-center w-[200px] py-2">
                             <button
                               className={`rounded px-4 py-1 font-semibold ${
                                 taskData.blankTaskStatus &&
@@ -395,7 +396,7 @@ const AdminAssined = () => {
                               Start Again
                             </button>
                           </div>
-                          <div className="whitespace-nowrap text-center w-[150px] py-2">
+                          <div className="whitespace-nowrap text-center w-[200px] py-2">
                             <button
                               onClick={() =>
                                 onCompareTaskStartHandler(taskData)

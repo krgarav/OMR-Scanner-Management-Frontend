@@ -540,6 +540,8 @@ const DataMatching = () => {
 
   // console.log(currentTaskData.blankTaskStatus && currentTaskData.multTaskStatus)
 
+  console.log(compareTask)
+
   return (
     <>
       {(userRole === "Operator" || userRole === "Moderator") && (
