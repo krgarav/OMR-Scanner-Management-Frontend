@@ -330,10 +330,10 @@ const ImageScanner = () => {
           <div className="flex w-[25%] bg-red-100">
             <div className="text-center sm:block sm:p-0 w-full">
               {!editModal ? (
-                <div className="inline-block align-bottom h-[90vh]  bg-teal-100  rounded-lg text-left shadow-md overflow-hidden transform transition-all  sm:align-middle  sm:w-full">
+                <div className="inline-block align-bottom h-[91vh]  bg-teal-100  rounded-lg text-left shadow-md overflow-hidden transform transition-all  sm:align-middle  sm:w-full">
                   <div className="px-4">
                     <div className="sm:flex ">
-                      <div className="text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+                      <div className="text-center sm:mt-0  sm:text-left w-full">
                         <div className="flex justify-between mt-4 ">
                           <h1 className="text-xl font-bold text-gray-500 mb-6">
                             Duplicates : {duplicatesData.length}
@@ -582,7 +582,7 @@ const ImageScanner = () => {
 
           {/* RIGHT SECTION  */}
           {!imageUrl ? (
-            <div className="flex w-[70%] justify-center items-center ">
+            <div className="flex w-[75%] justify-center items-center ">
               <div className="">
                 <ImageNotFound />
 
@@ -596,9 +596,9 @@ const ImageScanner = () => {
               </div>
             </div>
           ) : (
-            <div className=" pb-2 w-[70%]">
+            <div className=" pb-2 w-[75%]">
               <div className="mx-auto max-w-screen-xl px-2 lg:pt-2 sm:px-6 lg:px-8">
-                <h2 className="text-center text-lg w-1/4 font-bold text-blue-700">
+                <h2 className="text-center text-lg font-bold text-blue-700 w-full ">
                   {currentImageIndex + 1} out of{" "}
                   {currentRowData?.base64Images.length}
                 </h2>
