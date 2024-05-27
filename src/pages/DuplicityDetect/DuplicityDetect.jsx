@@ -238,8 +238,8 @@ const ImageScanner = () => {
         }
       );
 
-      currentData.splice(index, 1);
-      currentData.forEach((data) => {
+      filteredData.splice(index, 1);
+      filteredData.forEach((data) => {
         if (data.index > rowIndex) {
           data.index -= 1;
         }
