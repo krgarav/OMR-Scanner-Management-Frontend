@@ -1,74 +1,165 @@
-<div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-  <Dialog.Title
-    as="h2"
-    className="text-xl mb-5 font-semibold leading-6 text-gray-900"
+<Transition.Root show={open} as={Fragment}>
+<Dialog
+  as="div"
+  className="relative z-10"
+  initialFocus={cancelButtonRef}
+  onClose={setOpen}
+>
+  <Transition.Child
+    as={Fragment}
+    enter="ease-out duration-300"
+    enterFrom="opacity-0"
+    enterTo="opacity-100"
+    leave="ease-in duration-200"
+    leaveFrom="opacity-100"
+    leaveTo="opacity-0"
   >
-    Roll
-  </Dialog.Title>
-  <div className="mt-2">
-    <div className="min-w-full divide-y divide-gray-200 ">
-      <div className="bg-gray-50 ">
-        <div className="flex">
-          <div
-            scope="col"
-            className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-          >
-            Roll
-          </div>
-          <div
-            scope="col"
-            className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-          >
-            Row Index
-          </div>
+    <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+  </Transition.Child>
 
-          <div
-            scope="col"
-            className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-          >
-            Edit
-          </div>
-          <div
-            scope="col"
-            className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-          >
-            Remove
-          </div>
-          {/* Add more th for additional columns */}
-        </div>
-      </div>
+  <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
+    <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+      <Transition.Child
+        as={Fragment}
+        enter="ease-out duration-300"
+        enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+        enterTo="opacity-100 translate-y-0 sm:scale-100"
+        leave="ease-in duration-200"
+        leaveFrom="opacity-100 translate-y-0 sm:scale-100"
+        leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+      >
+        <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+          <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+            <div className="sm:flex sm:items-start">
+              <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left flex w-full justify-between items-center">
+                <div>
+                  <Dialog.Title
+                    as="h1"
+                    className="text-xl font-semibold leading-6 text-gray-900"
+                  >
+                    Add Field Entity..{" "}
+                  </Dialog.Title>
+                </div>
 
-      <div className="">
-        <div
-          key={index}
-          className={index % 2 === 0 ? "bg-white flex" : "bg-teal-100 flex"}
-        >
-          <div className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-            data
+                <div className="mt-2">
+                  <button
+                    type="button"
+                    className="text-red-600 w-[30px] h-[30px] text-xl flex justify-center items-center"
+                    onClick={onResetHandler}
+                  >
+                    <RxCross1 className="font-extrabold" />
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div className="flex gap-5 p-3 mt-3">
+              <label
+                htmlFor="formField"
+                className="flex items-center font-semibold"
+              >
+                <input
+                  type="radio"
+                  id="formField"
+                  name="fieldType"
+                  value="formField"
+                  className="form-radio text-blue-500"
+                  required
+                  checked={fieldType === "formField"}
+                  onChange={(e) =>
+                    setFieldType(e.target.value)
+                  }
+                />
+                <span className="ml-2 text-lg text-gray-700">
+                  Form Field
+                </span>
+              </label>
+              <label
+                htmlFor="questionsField"
+                className="flex items-center font-semibold"
+              >
+                <input
+                  type="radio"
+                  id="questionsField"
+                  name="fieldType"
+                  value="questionsField"
+                  className="form-radio text-blue-500"
+                  required
+                  checked={
+                    fieldType === "questionsField"
+                  }
+                  onChange={(e) =>
+                    setFieldType(e.target.value)
+                  }
+                />
+                <span className="ml-2 text-lg text-gray-700">
+                  Questions Field
+                </span>
+              </label>
+            </div>
           </div>
-          <div className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-            123123
-          </div>
-          <div className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+          <div className="px-4 pb-8 sm:flex sm:px-6 justify-between">
+            {fieldType === "formField" ||
+            fieldType === "" ? (
+              <input
+                required
+                className="input w-[72%] border-2 font-semibold bg-white text-lg focus:border-1 rounded-xl px-3 py-2 shadow-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+                type="text"
+                name="field"
+                placeholder="Field.."
+                value={inputField}
+                onChange={(e) =>
+                  setInputField(e.target.value)
+                }
+              />
+            ) : (
+              <div className="flex gap-5">
+                <div className="flex items-center gap-4">
+                  <span className="font-bold">
+                    Start
+                  </span>
+                  <input
+                    type="number"
+                    id="Quantity"
+                    value={questionRange.min}
+                    onChange={(e) =>
+                      setQuestionRange({
+                        ...questionRange,
+                        min: e.target.value,
+                      })
+                    }
+                    className="h-10 w-16 rounded border-2 border-gray-200 text-center [-moz-appearance:_textfield] sm:text-sm [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none"
+                  />
+                </div>
+                <div className="flex items-center gap-4">
+                  <span className="font-bold">End</span>
+                  <input
+                    type="number"
+                    id="Quantity"
+                    value={questionRange.max}
+                    onChange={(e) =>
+                      setQuestionRange({
+                        ...questionRange,
+                        max: e.target.value,
+                      })
+                    }
+                    className="h-10 w-16 rounded border-2 border-gray-200 text-center [-moz-appearance:_textfield] sm:text-sm [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none"
+                  />
+                </div>
+              </div>
+            )}
+
             <button
-              onClick={() => onEditModalHandler(data)}
-              className="border-e px-3 bg-gray-100 py-2 text-sm/none text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700"
+              type="button"
+              data-bs-dismiss="modal"
+              className="bg-teal-600 hover:bg-indigo-500 text-white rounded-lg hover:shadow-lg hover:shadow-blue-200 text-md font-medium px-3"
+              onClick={onSelectedHandler}
             >
-              Edit
+              Save Field
             </button>
           </div>
-          <div
-            className="px-6 py-4 whitespace-nowrap text-red-500
-                                                                text-2xl ml-8 "
-            onClick={() =>
-              onRemoveDuplicateHandler(index, data.index, data.row[columnName])
-            }
-          >
-            <MdDelete className="mx-auto" />
-          </div>
-          {/* Add more td for additional columns */}
-        </div>
-      </div>
+        </Dialog.Panel>
+      </Transition.Child>
     </div>
   </div>
-</div>;
+</Dialog>
+</Transition.Root>

@@ -258,11 +258,11 @@ const AdminAssined = () => {
   };
 
   return (
-    <div className=" min-h-[100vh] templatemapping">
-      <div className=" pt-40">
+    <div className="h-[100vh] flex justify-center items-center templatemapping pt-20">
+      <div className="">
         {/* MAIN SECTION  */}
-        <section className="mx-auto w-full max-w-7xl px-8 py-10 bg-white rounded-xl">
-          <div className="flex flex-col space-y-4  md:flex-row md:items-center md:justify-between md:space-y-0">
+        <section className="mx-auto w-full max-w-7xl px-8 py-10 bg-white rounded-xl ">
+          <div>
             <div>
               <h2 className="text-3xl font-semibold">Assigned Tasks</h2>
             </div>
@@ -271,78 +271,74 @@ const AdminAssined = () => {
             <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
               <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
                 <div className="overflow-hidden border border-gray-200 md:rounded-lg">
-                  <div className="min-w-full divide-y divide-gray-200 ">
-                    <div className="bg-gray-50">
-                      <div className="grid grid-cols-8 ">
-                        <div className=" py-3.5  text-xl text-center font-semibold text-gray-700 ">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                      <tr >
+                        <th scope="col" className="py-3.5 text-xl text-center font-semibold text-gray-700">
                           <span>Template</span>
-                        </div>
-                        <div className=" py-3.5 text-center  text-xl font-semibold text-gray-700 ">
+                        </th>
+                        <th scope="col" className="py-3.5 text-center text-xl font-semibold text-gray-700">
                           Assignee
-                        </div>
-                        <div className=" py-3.5 text-center  text-xl font-semibold text-gray-700">
+                        </th>
+                        <th scope="col" className="py-3.5 text-center text-xl font-semibold text-gray-700">
                           Min
-                        </div>
-
-                        <div className=" py-3.5 text-center text-xl font-semibold text-gray-700">
+                        </th>
+                        <th scope="col" className="py-3.5 text-center text-xl font-semibold text-gray-700">
                           Max
-                        </div>
-                        <div className=" py-3.5 text-center text-xl font-semibold text-gray-700">
+                        </th>
+                        <th scope="col" className="py-3.5 text-center text-xl font-semibold text-gray-700">
                           Module Type
-                        </div>
-
-                        <div className=" py-3.5 text-center text-xl font-semibold text-gray-700">
+                        </th>
+                        <th scope="col" className="py-3.5 text-center text-xl font-semibold text-gray-700">
                           Status
-                        </div>
-
-                        <div className=" py-3.5 text-center text-xl font-semibold text-gray-700">
+                        </th>
+                        <th scope="col" className="py-3.5 text-center text-xl font-semibold text-gray-700">
                           Re-Assign
-                        </div>
-
-                        <div className="py-3.5 text-center text-xl font-semibold text-gray-700">
-                          Download File
-                        </div>
-                      </div>
-                    </div>
-                    <div className="divide-y divide-gray-200 bg-white">
+                        </th>
+                        <th scope="col" className="py-3.5 text-center text-xl font-semibold text-gray-700">
+                          Download
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200 bg-white overflow-y-auto h-[250px]">
                       {compareTask?.map((taskData) => (
-                        <div
+                        <tr
                           key={taskData.id}
                           className="grid grid-cols-8 py-2"
                         >
-                          <div className="whitespace-nowrap">
+                          <td className="whitespace-nowrap">
                             <div className="text-md text-center">
                               {taskData.name}
                             </div>
-                          </div>
-                          <div className="whitespace-nowrap">
+                          </td>
+                          <td className="whitespace-nowrap">
                             <div className="text-md text-center">
                               {taskData.userName}
                             </div>
-                          </div>
-                          <div className="whitespace-nowrap ">
+                          </td>
+                          <td className="whitespace-nowrap">
                             <div className="text-md text-center">
                               {taskData.min}
                             </div>
-                          </div>
-                          <div className="whitespace-nowrap ">
+                          </td>
+                          <td className="whitespace-nowrap">
                             <div className="text-md text-center">
                               {taskData.max}
                             </div>
-                          </div>
-                          <div className="whitespace-nowrap ">
-                            <div className=" text-md text-center font-semibold border-2 py-1">
+                          </td>
+                          <td className="whitespace-nowrap">
+                            <div className="text-md text-center font-semibold border-2 py-1">
                               {taskData.TemplateType}
                             </div>
-                          </div>
-                          <div className="whitespace-nowrap  ">
+                          </td>
+                          <td className="whitespace-nowrap">
                             <div className="text-md text-center">
                               <span
                                 className={`inline-flex items-center justify-center rounded-full ${
                                   !taskData.taskStatus
                                     ? "bg-amber-100 text-amber-700"
                                     : "bg-emerald-100 text-emerald-700"
-                                } px-2.5 py-0.5 `}
+                                } px-2.5 py-0.5`}
                               >
                                 {!taskData.taskStatus ? (
                                   <svg
@@ -375,7 +371,6 @@ const AdminAssined = () => {
                                     />
                                   </svg>
                                 )}
-
                                 <p className="whitespace-nowrap text-sm">
                                   {taskData.taskStatus
                                     ? "Completed"
@@ -383,78 +378,69 @@ const AdminAssined = () => {
                                 </p>
                               </span>
                             </div>
-                          </div>
-
-                          <div className="whitespace-nowrap text-center">
+                          </td>
+                          <td className="whitespace-nowrap text-center">
                             <button
-                              className={`rounded px-6 py-1 font-semibold ${
+                              className={`rounded px-4 py-1 font-semibold ${
                                 taskData.taskStatus
-                                  ? "bg-indigo-500 text-white  border border-indigo-500"
+                                  ? "bg-indigo-500 text-white border border-indigo-500"
                                   : "bg-gray-400 text-gray-600 cursor-not-allowed"
                               }`}
                               disabled={!taskData.taskStatus}
                             >
                               Start Again
                             </button>
-                          </div>
-                          <div className="whitespace-nowrap text-center">
-                            {/* <button
-                              // onClick={() =>
-                              //   onCompareTaskStartHandler(taskData)
-                              // }
-                              className="rounded border border-indigo-500 bg-indigo-500 px-10 py-1 font-semibold text-white mr-2"
-                            >
-                              Download
-                            </button> */}
+                          </td>
+                          <td className="whitespace-nowrap text-center">
                             <button
                               onClick={() =>
                                 onCompareTaskStartHandler(taskData)
                               }
-                              className="rounded border border-indigo-500 bg-indigo-500 px-6 py-1 font-semibold text-white"
+                              className="rounded border border-indigo-500 bg-indigo-500 px-4 py-1 font-semibold text-white"
                             >
                               Download
                             </button>
-                          </div>
-                        </div>
+                          </td>
+                        </tr>
                       ))}
                       {matchingTask?.map((taskData) => (
-                        <div
+                        <tr
                           key={taskData.id}
                           className="grid grid-cols-8 py-2"
                         >
-                          <div className="whitespace-nowrap ">
+                          <td className="whitespace-nowrap">
                             <div className="text-center text-md">
                               {taskData.templateName}
                             </div>
-                          </div>
-                          <div className="whitespace-nowrap ">
+                          </td>
+                          <td className="whitespace-nowrap">
                             <div className="text-center text-md">
                               {taskData.userName}
                             </div>
-                          </div>
-                          <div className="whitespace-nowrap ">
+                          </td>
+                          <td className="whitespace-nowrap">
                             <div className="text-md text-center">
                               {taskData.min}
                             </div>
-                          </div>
-                          <div className="whitespace-nowrap ">
+                          </td>
+                          <td className="whitespace-nowrap">
                             <div className="text-md text-center">
                               {taskData.max}
                             </div>
-                          </div>
-                          <div className="whitespace-nowrap">
+                          </td>
+                          <td className="whitespace-nowrap">
                             <div className="text-md text-center font-semibold border-2 py-1">
                               {taskData.moduleType}
                             </div>
-                          </div>
-                          <div className="whitespace-nowrap  ">
+                          </td>
+                          <td className="whitespace-nowrap">
                             <div className="text-md text-center">
                               <span
                                 className={`inline-flex items-center justify-center rounded-full ${
                                   !taskData.taskStatus
                                     ? "bg-amber-100 text-amber-700"
                                     : "bg-emerald-100 text-emerald-700"
-                                } px-2.5 py-0.5 `}
+                                } px-2.5 py-0.5`}
                               >
                                 {!taskData.taskStatus ? (
                                   <svg
@@ -487,7 +473,6 @@ const AdminAssined = () => {
                                     />
                                   </svg>
                                 )}
-
                                 <p className="whitespace-nowrap text-sm">
                                   {taskData.taskStatus
                                     ? "Completed"
@@ -495,33 +480,32 @@ const AdminAssined = () => {
                                 </p>
                               </span>
                             </div>
-                          </div>
-
-                          <div className="whitespace-nowrap text-center">
+                          </td>
+                          <td className="whitespace-nowrap text-center">
                             <button
                               onClick={() => onCompleteHandler(taskData)}
-                              className={`rounded px-6 py-1 font-semibold ${
+                              className={`rounded px-4 py-1 font-semibold ${
                                 taskData.taskStatus
-                                  ? "bg-indigo-500 text-white  border border-indigo-500"
+                                  ? "bg-indigo-500 text-white border border-indigo-500"
                                   : "bg-gray-400 text-gray-600 cursor-not-allowed"
                               }`}
                               disabled={!taskData.taskStatus}
                             >
                               Start Again
                             </button>
-                          </div>
-                          <div className="whitespace-nowrap text-center">
+                          </td>
+                          <td className="whitespace-nowrap text-center">
                             <button
                               onClick={() => onDownloadHandler(taskData)}
-                              className="rounded border border-indigo-500 bg-indigo-500 px-6 py-1 font-semibold text-white"
+                              className="rounded border border-indigo-500 bg-indigo-500 px-4 py-1 font-semibold text-white"
                             >
                               Download
                             </button>
-                          </div>
-                        </div>
+                          </td>
+                        </tr>
                       ))}
-                    </div>
-                  </div>
+                    </tbody>
+                  </table>
                 </div>
               </div>
             </div>

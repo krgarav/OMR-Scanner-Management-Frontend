@@ -329,10 +329,10 @@ const ImageScanner = () => {
           <div className="flex w-[25%] bg-red-100">
             <div className="text-center sm:block sm:p-0 w-full">
               {!editModal ? (
-                <div className="inline-block align-bottom h-[90vh]  bg-teal-100  rounded-lg text-left shadow-md overflow-hidden transform transition-all  sm:align-middle  sm:w-full">
+                <div className="inline-block align-bottom h-[91vh]  bg-teal-100  rounded-lg text-left shadow-md overflow-hidden transform transition-all  sm:align-middle  sm:w-full">
                   <div className="px-4">
                     <div className="sm:flex ">
-                      <div className="text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+                      <div className="text-center sm:mt-0  sm:text-left w-full">
                         <div className="flex justify-between mt-4 ">
                           <h1 className="text-xl font-bold text-gray-500 mb-6">
                             Duplicates : {duplicatesData.length}
@@ -343,15 +343,15 @@ const ImageScanner = () => {
                         </div>
                         <div className="text-gray-600 font-semibold my-2">
                           <dl className="-my-3 divide-y divide-gray-100 text-sm">
-                            <div className="flex justify-around gap-1 py-3 text-center even:bg-gray-50 sm:grid-cols-4 sm:gap-4">
-                              <dt className="font-medium text-md text-gray-700">
+                            <div className="flex justify-around gap-1 py-3 text-center even:bg-gray-50 sm:grid-cols-4 sm:gap-4 w-full">
+                              <dt className="font-medium text-md text-gray-700 w-1/3">
                                 {columnName}
                               </dt>
-                              <dd className="text-gray-700 font-medium ">
+                              <dd className="text-gray-700 font-medium  w-1/3">
                                 Duplicates
                               </dd>
-                              <dd className="text-gray-700 font-medium">
-                                show
+                              <dd className="text-gray-700 font-medium w-1/3">
+                                View
                               </dd>
                             </div>
                           </dl>
@@ -363,22 +363,14 @@ const ImageScanner = () => {
                                 key={index}
                                 className="flex justify-around gap-1 py-3 text-center even:bg-gray-50 sm:grid-cols-4 "
                               >
-                                <dt className="font-medium text-md text-gray-700 whitespace-normal">
+                                <dt className="font-medium text-md text-gray-700 whitespace-normal w-1/3">
                                   {data.row[columnName]}
                                 </dt>
-                                <dd className="text-gray-700 font-medium ">
+                                <dd className="text-gray-700 font-medium w-1/3">
                                   {data.index}
                                 </dd>
-                                <dd className="text-gray-700 font-medium ">
-                                  {/* <div className="text-gray-700 ">
-                                    <div className="relative">
-                                      <div className="inline-flex items-center overflow-hidden rounded-md border bg-white">
-                                        
-                                      </div>
-                                    </div> 
-                                   </div> */}
-                                </dd>
-                                <div className="text-gray-700 ">
+                                
+                                <div className="text-gray-700 w-1/3">
                                   <div className="relative">
                                     <div className="inline-flex items-center overflow-hidden rounded-md border bg-white">
                                       <button
@@ -431,16 +423,16 @@ const ImageScanner = () => {
                                                       <div className="min-w-full divide-y divide-gray-200">
                                                         <div className="bg-gray-50">
                                                           <div className="flex">
-                                                            <div className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                            <div className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/4">
                                                               Roll
                                                             </div>
-                                                            <div className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                              Row Index
+                                                            <div className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/4">
+                                                              Row 
                                                             </div>
-                                                            <div className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                            <div className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/4">
                                                               Edit
                                                             </div>
-                                                            <div className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                            <div className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/4">
                                                               Remove
                                                             </div>
                                                             {/* Add more th for additional columns */}
@@ -451,16 +443,16 @@ const ImageScanner = () => {
                                                           <div
                                                             key={index}
                                                             className={
-                                                              index % 2 === 0
+                                                              index % 2 === 0 
                                                                 ? "bg-white flex-col"
                                                                 : "bg-teal-100 flex-col"
                                                             }
                                                           >
                                                             <div className="flex">
-                                                              <div className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                                              <div className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 w-1/4">
                                                                 data
                                                               </div>
-                                                              <div className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                                              <div className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 w-1/4">
                                                                 123123
                                                               </div>
                                                               <div className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -476,7 +468,7 @@ const ImageScanner = () => {
                                                                 </button>
                                                               </div>
                                                               <div
-                                                                className="px-6 py-4 whitespace-nowrap text-red-500 text-2xl ml-8"
+                                                                className="px-6 py-4 whitespace-nowrap text-red-500 text-2xl  w-1/4"
                                                                 onClick={() =>
                                                                   onRemoveDuplicateHandler(
                                                                     index,
@@ -490,40 +482,7 @@ const ImageScanner = () => {
                                                                 <MdDelete className="mx-auto" />
                                                               </div>
                                                             </div>
-                                                            <div className="flex">
-                                                              <div className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                                                data
-                                                              </div>
-                                                              <div className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                                                123123
-                                                              </div>
-                                                              <div className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                                <button
-                                                                  onClick={() =>
-                                                                    onEditModalHandler(
-                                                                      data
-                                                                    )
-                                                                  }
-                                                                  className="border-e px-3 bg-gray-100 py-2 text-sm/none text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700"
-                                                                >
-                                                                  Edit
-                                                                </button>
-                                                              </div>
-                                                              <div
-                                                                className="px-6 py-4 whitespace-nowrap text-red-500 text-2xl ml-8"
-                                                                onClick={() =>
-                                                                  onRemoveDuplicateHandler(
-                                                                    index,
-                                                                    data.index,
-                                                                    data.row[
-                                                                      columnName
-                                                                    ]
-                                                                  )
-                                                                }
-                                                              >
-                                                                <MdDelete className="mx-auto" />
-                                                              </div>
-                                                            </div>
+                                                            
 
                                                             {/* Add more td for additional columns */}
                                                           </div>
@@ -622,7 +581,7 @@ const ImageScanner = () => {
 
           {/* RIGHT SECTION  */}
           {!imageUrl ? (
-            <div className="flex w-[70%] justify-center items-center ">
+            <div className="flex w-[75%] justify-center items-center ">
               <div className="">
                 <ImageNotFound />
 
@@ -636,14 +595,14 @@ const ImageScanner = () => {
               </div>
             </div>
           ) : (
-            <div className=" pb-2 w-[70%] py-3">
+            <div className=" pb-2 w-[75%]">
               <div className="mx-auto max-w-screen-xl px-2 lg:pt-2 sm:px-6 lg:px-8">
-                <h2>
+                <h2 className="text-center text-lg font-bold text-blue-700 w-full ">
                   {currentImageIndex + 1} out of{" "}
                   {currentRowData?.base64Images.length}
                 </h2>
 
-                <div className="mt-2 flex justify-center pt-6 py-4">
+                <div className="mt-2 flex justify-center ">
                   <div className="">
                     {imageUrl && (
                       <div
