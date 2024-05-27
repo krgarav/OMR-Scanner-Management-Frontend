@@ -61,14 +61,11 @@ const ImageScanner = () => {
           },
         }
       );
-      // Find the index of the group containing the currentRowData
       const indexToUpdate = duplicatesData.findIndex((group) =>
         group.sameData.some((item) => item.index === currentRowData.index)
       );
 
-      // If the group is found
       if (indexToUpdate !== -1) {
-        // Update the row data in the duplicatesData
         const updatedDuplicateData = duplicatesData.map((group, index) => {
           if (index === indexToUpdate) {
             return {
@@ -82,16 +79,26 @@ const ImageScanner = () => {
           return group;
         });
 
-        // Update the row data in the allCurrentData
         const updatedAllCurrentData = allCurrentData.map((item) =>
           item.index === currentRowData.index
             ? { ...item, row: currentRowData.row }
             : item
         );
 
-        // Set the updated data in state
-        setDuplicatesData(updatedDuplicateData);
-        setAllCurrentData(updatedAllCurrentData);
+        const filteredUpdatedDuplicateData = updatedDuplicateData
+          .map((group) => ({
+            sameData: group.sameData.filter(
+              (item) => item.row[columnName] !== currentRowData.row[columnName]
+            ),
+          }))
+          .filter((group) => group.sameData.length > 0);
+
+        const filteredAllCurrentData = updatedAllCurrentData.filter(
+          (item) => item.row[columnName] !== currentRowData.row[columnName]
+        );
+
+        setDuplicatesData(filteredUpdatedDuplicateData);
+        setAllCurrentData(filteredAllCurrentData);
         setModifiedKeys(null);
       }
       toast.success("The row has been updated successfully.");
@@ -103,11 +110,11 @@ const ImageScanner = () => {
 
   useEffect(() => {
     const handleKeyDown = (event) => {
-      if (event.key === "PageDown" && currentImageIndex > 0) {
+      if (event.key === "PageUp" && currentImageIndex > 0) {
         setCurrentImageIndex(currentImageIndex - 1);
         setImageUrl(currentRowData.base64Images[currentImageIndex - 1]);
       } else if (
-        event.key === "PageUp" &&
+        event.key === "PageDown" &&
         currentImageIndex < currentRowData?.base64Images.length - 1
       ) {
         setCurrentImageIndex(currentImageIndex + 1);
@@ -441,7 +448,7 @@ const ImageScanner = () => {
                                             <div className="bg-gray-50 ">
                                               <div className="flex">
                                                 <div className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                  Roll
+                                                  {columnName}
                                                 </div>
                                                 <div className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                   Row Index

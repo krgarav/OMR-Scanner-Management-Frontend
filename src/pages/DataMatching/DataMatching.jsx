@@ -146,7 +146,7 @@ const DataMatching = () => {
 
   useEffect(() => {
     const handleKeyDown = (event) => {
-      if (event.key === "ArrowLeft" || event.key === "PageDown") {
+      if (event.key === "ArrowLeft" || event.key === "PageUp") {
         if (currentImageIndex > 0) {
           setCurrentImageIndex(currentImageIndex - 1);
           setSelectedCoordinates(false);
@@ -159,7 +159,7 @@ const DataMatching = () => {
           onImageHandler("prev", currentIndex, csvData, currentTaskData);
           setCurrentImageIndex(0);
         }
-      } else if (event.key === "ArrowRight" || event.key === "PageUp") {
+      } else if (event.key === "ArrowRight" || event.key === "PageDown") {
         if (currentImageIndex < imageUrls.length - 1) {
           setCurrentImageIndex(currentImageIndex + 1);
           setSelectedCoordinates(false);
@@ -384,6 +384,13 @@ const DataMatching = () => {
   };
 
   const onTaskStartHandler = async () => {
+    if (currentTaskData.blankTaskStatus && currentTaskData.multTaskStatus) {
+      toast.warning("Task is already completed.");
+      setPopUp(true);
+      setStartModal(true);
+      return;
+    }
+
     if (blankChecked && blankCount < 1) {
       toast.warning("Please enter a value greater than zero for blank.");
       return;
@@ -489,17 +496,21 @@ const DataMatching = () => {
 
   const onCompleteHandler = async () => {
     try {
-      const response = await axios.post(
+      await axios.post(
         `http://${REACT_APP_IP}:4000/taskupdation/${parseInt(
           currentTaskData?.id
         )}`,
-        {},
+        {
+          blankTaskStatus: allDataChecked ? true : blankChecked,
+          multTaskStatus: allDataChecked ? true : multChecked,
+        },
         {
           headers: {
             token: token,
           },
         }
       );
+
       setPopUp(true);
       setStartModal(true);
       toast.success("task complted successfully.");
@@ -524,6 +535,10 @@ const DataMatching = () => {
       imageRef.current.style.transformOrigin = "initial";
     }
   };
+
+  console.log(currentTaskData);
+
+  // console.log(currentTaskData.blankTaskStatus && currentTaskData.multTaskStatus)
 
   return (
     <>
@@ -613,12 +628,14 @@ const DataMatching = () => {
                                           <div className="text-md text-center">
                                             <span
                                               className={`inline-flex items-center justify-center rounded-full ${
-                                                !taskData.taskStatus
+                                                !taskData.blankTaskStatus ||
+                                                !taskData.multTaskStatus
                                                   ? "bg-amber-100 text-amber-700"
                                                   : "bg-emerald-100 text-emerald-700"
                                               } px-2.5 py-0.5 `}
                                             >
-                                              {!taskData.taskStatus ? (
+                                              {!taskData.blankTaskStatus ||
+                                              !taskData.multTaskStatus ? (
                                                 <svg
                                                   xmlns="http://www.w3.org/2000/svg"
                                                   fill="none"
@@ -649,9 +666,9 @@ const DataMatching = () => {
                                                   />
                                                 </svg>
                                               )}
-
                                               <p className="whitespace-nowrap text-sm">
-                                                {taskData.taskStatus
+                                                {taskData.blankTaskStatus &&
+                                                taskData.multTaskStatus
                                                   ? "Completed"
                                                   : "Pending"}
                                               </p>
@@ -1036,6 +1053,7 @@ const DataMatching = () => {
                           onClick={onCompleteHandler}
                           variant="contained"
                           color="success"
+                          className="px-4 py-2 bg-teal-600 text-white rounded-md mx-2 hover:bg-teal-700"
                           endIcon={<CheckIcon />}
                         >
                           Task Completed
