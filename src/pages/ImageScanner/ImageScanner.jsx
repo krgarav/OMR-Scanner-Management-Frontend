@@ -241,13 +241,13 @@ const ImageScanner = () => {
                 <div className="overflow-x-auto">
                   <div className="my-3 table-auto  border-collapse border border-gray-400 min-w-full divide-y-2 divide-gray-200 bg-white text-sm rounded-lg">
                     <div className="ltr:text-left rtl:text-right flex justify-around text-gray-600">
-                      <div className="text-center whitespace-nowrap py-2">
+                      <div className="text-center whitespace-nowrap py-2 w-1/3">
                         Name
                       </div>
-                      <div className="text-center whitespace-nowrap py-2">
+                      <div className="text-center whitespace-nowrap py-2 w-1/3">
                         Edit
                       </div>
-                      <div className="text-center whitespace-nowrap py-2">
+                      <div className="text-center whitespace-nowrap py-2 w-1/3">
                         Remove
                       </div>
                     </div>
@@ -259,10 +259,10 @@ const ImageScanner = () => {
                             key={data.id}
                             className="odd:bg-gray-50 flex justify-around"
                           >
-                            <div className="whitespace-nowrap px-4 py-2 text-center font-semibold text-md text-gray-900 text-ellipsis w-[50%] overflow-x-hidden">
+                            <div className="whitespace-nowrap px-4 py-2 text-center font-semibold text-md text-gray-900 text-ellipsis overflow-x-hidden w-1/3">
                               {data.attribute}
                             </div>
-                            <div className="whitespace-nowrap px-4 py-2 text-center font-semibold text-md text-gray-900">
+                            <div className="whitespace-nowrap px-4 py-2 text-center font-semibold text-md text-gray-900 w-1/3">
                               <CiEdit
                                 onClick={() => {
                                   setEditID(data.id);
@@ -271,7 +271,7 @@ const ImageScanner = () => {
                                 className="mx-auto text-red-500 text-xl cursor-pointer"
                               />
                             </div>
-                            <div className="whitespace-nowrap px-4 py-2 text-center font-semibold text-md text-gray-900">
+                            <div className="whitespace-nowrap px-4 py-2 text-center font-semibold text-md text-gray-900 w-1/3">
                               <MdDelete
                                 onClick={() => {
                                   setRemoveModal(true);
@@ -333,7 +333,10 @@ const ImageScanner = () => {
       <div>
         {editModal && (
           <div className="fixed z-50 inset-0 overflow-y-auto">
-            <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div
+              className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
+              onClick={() => setEditModal(false)}
+            >
               {/* Background overlay */}
               <div
                 className="fixed inset-0 transition-opacity"
@@ -425,7 +428,12 @@ const ImageScanner = () => {
       <div>
         {removeModal && (
           <div className="fixed z-50 inset-0 overflow-y-auto">
-            <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div
+              className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
+              onClick={() => {
+                setRemoveModal(false);
+              }}
+            >
               {/* Background overlay */}
               <div
                 className="fixed inset-0 transition-opacity"
@@ -501,27 +509,25 @@ const ImageScanner = () => {
 
       {/* RIGHT SECTION  */}
       {!image ? (
-        <div className="flex w--[75%] h-[100vh] justify-center items-center ">
-          <div className="">
+        <div className="flex w-[75%] h-[100vh] justify-center items-center">
+          <div>
             <ImageNotFound />
-
             <h1 className="mt-8 text-2xl font-bold tracking-tight text-gray-700 sm:text-4xl">
-              Please Select Image...
+              Please Select an Image...
             </h1>
-
             <p className="mt-4 text-gray-600 text-center">
-              We can't find that page!!
+              We can't find that page!
             </p>
           </div>
         </div>
       ) : (
-        <div className=" pb-2 w-[75%] ">
+        <div className="pb-2 w-[75%]">
           <div className="mx-auto max-w-screen-xl px-2 lg:pt-2 sm:px-6 lg:px-8">
-            <h1>
+            <h1 className="text-center my-4 pt-1 text-xl font-bold text-blue-700">
               {currentImageIndex + 1} out of {imageURL.length}
             </h1>
-            <div className="mt-2 flex justify-center pt-6 py-4">
-              <div className="">
+            <div className="mt-2 flex justify-center">
+              <div>
                 {image && (
                   <div
                     style={{
@@ -537,7 +543,6 @@ const ImageScanner = () => {
                       alt="Selected"
                       style={{
                         width: "48rem",
-                        // height: "50rem",
                         cursor: "crosshair",
                       }}
                       onMouseDown={handleMouseDown}
@@ -593,7 +598,7 @@ const ImageScanner = () => {
                             leaveFrom="opacity-100"
                             leaveTo="opacity-0"
                           >
-                            <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+                            <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
                           </Transition.Child>
 
                           <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
@@ -623,7 +628,7 @@ const ImageScanner = () => {
                                         <div className="mt-2">
                                           <button
                                             type="button"
-                                            className=" text-red-600 w-[30px] h-[30px]  text-xl flex justify-center items-center"
+                                            className="text-red-600 w-[30px] h-[30px] text-xl flex justify-center items-center"
                                             onClick={onResetHandler}
                                           >
                                             <RxCross1 className="font-extrabold" />
@@ -676,7 +681,7 @@ const ImageScanner = () => {
                                       </label>
                                     </div>
                                   </div>
-                                  <div className=" px-4 pb-8 sm:flex sm:px-6 justify-between">
+                                  <div className="px-4 pb-8 sm:flex sm:px-6 justify-between">
                                     {fieldType === "formField" ||
                                     fieldType === "" ? (
                                       <input
@@ -706,7 +711,7 @@ const ImageScanner = () => {
                                                 min: e.target.value,
                                               })
                                             }
-                                            className="h-10 w-16 rounded  border-2  border-gray-200 text-center [-moz-appearance:_textfield] sm:text-sm [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none"
+                                            className="h-10 w-16 rounded border-2 border-gray-200 text-center [-moz-appearance:_textfield] sm:text-sm [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none"
                                           />
                                         </div>
                                         <div className="flex items-center gap-4">
@@ -721,7 +726,7 @@ const ImageScanner = () => {
                                                 max: e.target.value,
                                               })
                                             }
-                                            className="h-10 w-16 rounded  border-2  border-gray-200 text-center [-moz-appearance:_textfield] sm:text-sm [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none"
+                                            className="h-10 w-16 rounded border-2 border-gray-200 text-center [-moz-appearance:_textfield] sm:text-sm [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none"
                                           />
                                         </div>
                                       </div>
@@ -730,7 +735,7 @@ const ImageScanner = () => {
                                     <button
                                       type="button"
                                       data-bs-dismiss="modal"
-                                      className="bg-teal-600 hover:bg-indigo-500 text-white rounded-lg hover:shadow-lg hover:shadow-blue-200  text-md font-medium px-3"
+                                      className="bg-teal-600 hover:bg-indigo-500 text-white rounded-lg hover:shadow-lg hover:shadow-blue-200 text-md font-medium px-3"
                                       onClick={onSelectedHandler}
                                     >
                                       Save Field
@@ -747,16 +752,6 @@ const ImageScanner = () => {
                 )}
               </div>
             </div>
-          </div>
-          <div>
-            {/* <button
-              onClick={handleNext}
-              className="ms-auto group  mt-2 flex items-center  rounded-lg bg-teal-600 hover:shadow-lg hover:shadow-blue-200  py-2 px-2 transition-colors hover:bg-teal-700 focus:outline-none focus:ring"
-            >
-              <span className="font-medium  flex text-white transition-colors group-hover:text-white  group-active:text-white mx-auto">
-                Next
-              </span>
-            </button> */}
           </div>
         </div>
       )}

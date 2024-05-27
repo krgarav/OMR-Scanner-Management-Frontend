@@ -532,8 +532,8 @@ const DataMatching = () => {
           {popUp && (
             <>
               {startModal ? (
-                <div className=" min-h-[100vh] flex justify-center templatemapping">
-                  <div className=" mt-40">
+                <div className="h-[100vh] flex justify-center items-center templatemapping pt-20">
+                  <div className="">
                     {/* MAIN SECTION  */}
                     <section className="mx-auto w-full max-w-7xl  px-12 py-10 bg-white rounded-xl">
                       <div className="flex flex-col space-y-4  md:flex-row md:items-center md:justify-between md:space-y-0">
@@ -549,7 +549,10 @@ const DataMatching = () => {
                             <div className=" border border-gray-200 md:rounded-lg">
                               <div className="divide-y divide-gray-200 ">
                                 <div className="bg-gray-50">
-                                  <div className="grid grid-cols-6 gap-x-6">
+                                  <div className="grid grid-cols-7 gap-x-6">
+                                    <div className=" py-3.5 text-center text-xl font-semibold text-gray-700">
+                                      <span>S No.</span>
+                                    </div>
                                     <div className=" py-3.5 text-center text-xl font-semibold text-gray-700">
                                       <span>Templates</span>
                                     </div>
@@ -573,12 +576,17 @@ const DataMatching = () => {
                                   </div>
                                 </div>
                                 <div className="divide-y divide-gray-200 bg-white overflow-y-auto max-h-[300px]">
-                                  {allTasks?.map((taskData) => (
+                                  {allTasks?.map((taskData, index) => (
                                     <>
                                       <div
                                         key={taskData.id}
-                                        className="grid grid-cols-6 gap-x-6 py-2"
+                                        className="grid grid-cols-7 gap-x-6 py-2"
                                       >
+                                        <div className="whitespace-nowrap">
+                                          <div className="text-md text-center">
+                                            {index + 1}
+                                          </div>
+                                        </div>
                                         <div className="whitespace-nowrap">
                                           <div className="text-md text-center">
                                             {taskData.templateName}
@@ -663,11 +671,16 @@ const DataMatching = () => {
                                       </div>
                                     </>
                                   ))}
-                                  {compareTask?.map((taskData) => (
+                                  {compareTask?.map((taskData, index) => (
                                     <div
                                       key={taskData.id}
-                                      className="grid grid-cols-6 gap-x-6 py-2"
+                                      className="grid grid-cols-7 gap-x-6 py-2"
                                     >
+                                      <div className="whitespace-nowrap">
+                                        <div className="text-md text-center">
+                                          {index + 1}
+                                        </div>
+                                      </div>
                                       <div className="whitespace-nowrap">
                                         <div className="text-md text-center">
                                           {taskData.templateName}
@@ -973,14 +986,14 @@ const DataMatching = () => {
                 ) : (
                   <div className="flex-col">
                     <div className="flex float-right gap-4 mt-2 mr-4 ">
-                      <Button
-                        onClick={() => setPopUp(true)}
-                        variant="contained"
-                        color="info"
-                      >
-                        Back
-                      </Button>
-                      {/* <Button
+                      <div className="">
+                        <button
+                          onClick={() => setPopUp(true)}
+                          className=" px-4 py-2 bg-blue-600 text-white rounded-md mx-2 hover:bg-blue-700"
+                        >
+                          Back
+                        </button>
+                        {/* <Button
                           onClick={onCsvUpdateHandler}
                           variant="contained"
                           color="info"
@@ -988,68 +1001,48 @@ const DataMatching = () => {
                           update
                         </Button> */}
 
-                      <div className="flex justify-center mb-4">
                         <button
-                          onClick={zoomInHandler}
-                          className="px-4 py-2 bg-teal-600 text-white rounded-md mr-2 hover:bg-teal-700"
+                          className="px-4 py-2 bg-blue-600 text-white rounded-md mx-2 hover:bg-blue-700"
+                          onClick={() =>
+                            onImageHandler(
+                              "prev",
+                              currentIndex,
+                              csvData,
+                              currentTaskData
+                            )
+                          }
+                          endIcon={<ArrowBackIosIcon />}
                         >
-                          Zoom In
+                          Prev
                         </button>
+
                         <button
-                          onClick={zoomOutHandler}
-                          className="px-4 py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700"
+                          className="px-4 py-2 bg-blue-600 text-white rounded-md mx-2 hover:bg-blue-700"
+                          onClick={() =>
+                            onImageHandler(
+                              "next",
+                              currentIndex,
+                              csvData,
+                              currentTaskData
+                            )
+                          }
+                          endIcon={<ArrowForwardIosIcon />}
                         >
-                          Zoom Out
-                        </button>
-                        <button
-                          onClick={onInialImageHandler}
-                          className="px-4 py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700"
-                        >
-                          Initial
+                          Next
                         </button>
                       </div>
-
-                      <Button
-                        onClick={() =>
-                          onImageHandler(
-                            "prev",
-                            currentIndex,
-                            csvData,
-                            currentTaskData
-                          )
-                        }
-                        variant="contained"
-                        endIcon={<ArrowBackIosIcon />}
-                      >
-                        Prev
-                      </Button>
-
-                      <Button
-                        onClick={() =>
-                          onImageHandler(
-                            "next",
-                            currentIndex,
-                            csvData,
-                            currentTaskData
-                          )
-                        }
-                        variant="contained"
-                        endIcon={<ArrowForwardIosIcon />}
-                      >
-                        Next
-                      </Button>
                       {currentIndex === csvData.length - 1 && (
-                        <Button
+                        <button
                           onClick={onCompleteHandler}
                           variant="contained"
                           color="success"
                           endIcon={<CheckIcon />}
                         >
                           Task Completed
-                        </Button>
+                        </button>
                       )}
                     </div>
-                    <h3 className="text-center pt-12 text-lg font-semibold pb-1">
+                    <h3 className="ms-5 text-lg font-semibold py-3">
                       Data No : {currentIndex}
                       <span className="m-20">
                         {" "}
@@ -1057,6 +1050,27 @@ const DataMatching = () => {
                         {imageUrls.length}
                       </span>
                     </h3>
+                    <div className="flex justify-center my-2">
+                      <button
+                        onClick={zoomInHandler}
+                        className="px-4 py-2 bg-teal-600 text-white rounded-md mx-2 hover:bg-teal-700"
+                      >
+                        Zoom In
+                      </button>
+
+                      <button
+                        onClick={onInialImageHandler}
+                        className="px-4 py-2 bg-teal-600 text-white rounded-md mx-2 hover:bg-teal-700"
+                      >
+                        Initial
+                      </button>
+                      <button
+                        onClick={zoomOutHandler}
+                        className="px-4 py-2 bg-teal-600 text-white rounded-md mx-2 hover:bg-teal-700"
+                      >
+                        Zoom Out
+                      </button>
+                    </div>
                     <div
                       ref={imageContainerRef}
                       className="mx-auto bg-white"

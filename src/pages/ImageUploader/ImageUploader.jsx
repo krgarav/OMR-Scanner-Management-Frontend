@@ -155,7 +155,7 @@ const ImageUploader = () => {
     <div>
       <section className="bgImage flex justify-center items-center w-full">
         <div className="mx-auto max-w-screen-sm lg:flex lg:h-screen lg:items-center">
-          <div className=" border-2 border-dashed rounded-lg px-10 py-8">
+          <div className=" border-4 border-dashed rounded-lg px-16 py-8 shadow-lg">
             <div className="text-white z-10">
               <h1 className="text-white text-center text-4xl mb-8 font-bold">
                 OMR India Outsources
@@ -193,7 +193,7 @@ const ImageUploader = () => {
             <div className="mt-8 flex justify-center">
               <button
                 onClick={handleFinalSubmit}
-                className="bg-teal-600 font-medium text-white px-4 py-2 rounded-md text-center"
+                className="bg-teal-600 font-medium text-white px-4 py-3 rounded-md text-center"
               >
                 Submit All Images
               </button>
