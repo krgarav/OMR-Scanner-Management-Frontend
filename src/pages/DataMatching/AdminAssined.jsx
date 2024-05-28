@@ -287,16 +287,16 @@ const AdminAssined = () => {
                         <div className="py-3.5 text-center text-xl font-semibold text-gray-700 w-[80px]">
                           Max
                         </div>
-                        <div className="py-3.5 text-center text-xl font-semibold text-gray-700 w-[200px]">
+                        <div className="py-3.5 text-center text-xl font-semibold text-gray-700 w-[150px]">
                           Module Type
                         </div>
-                        <div className="py-3.5 text-center text-xl font-semibold text-gray-700 w-[230px]">
+                        <div className="py-3.5 text-center text-xl font-semibold text-gray-700 w-[150px]">
                           Status
                         </div>
                         <div className="py-3.5 text-center text-xl font-semibold text-gray-700 w-[150px]">
                           Re-Assign
                         </div>
-                        <div className="py-3.5 text-center text-xl font-semibold text-gray-700 w-[250px]">
+                        <div className="py-3.5 text-center text-xl font-semibold text-gray-700 w-[150px]">
                           Download
                         </div>
                       </div>
