@@ -619,14 +619,14 @@ const ImageScanner = () => {
               </div>
             </div>
           ) : (
-            <div className=" pb-2 w-[75%]">
-              <div className="mx-auto max-w-screen-xl px-2 lg:pt-2 sm:px-6 lg:px-8">
-                <h2 className="text-center text-lg font-bold text-blue-700 w-full ">
+            <div className=" w-[75%]">
+              <div className="mx-auto max-w-screen-xl px-2 lg:py-1 sm:px-6 lg:px-8">
+                <h2 className="text-center text-lg  font-bold text-blue-700 w-full ">
                   {currentImageIndex + 1} out of{" "}
                   {currentRowData?.base64Images.length}
                 </h2>
 
-                <div className="mt-2 flex justify-center ">
+                <div className=" flex justify-center ">
                   <div className="">
                     {imageUrl && (
                       <div
@@ -641,7 +641,7 @@ const ImageScanner = () => {
                           alt="Selected"
                           style={{
                             width: "48rem",
-                            height: "50rem",
+                            height: "49rem",
                           }}
                           draggable={false}
                           data-bs-toggle="modal"

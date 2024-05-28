@@ -136,8 +136,8 @@ const TemplateMapping = () => {
   };
 
   return (
-    <div className="py-12 min-h-[100vh] overflow-y overflow-x-auto flex justify-center templatemapping">
-      <div className="w-[700px] mt-20">
+    <div className=" min-h-[100vh] overflow-y overflow-x-auto flex justify-center items-center templatemapping pt-20 pb-12">
+      <div className="w-[700px]">
         <h1 className="text-white text-4xl text-center mb-10">Mapping</h1>
         <div>
           <div className="flex w-full justify-center mb-4">

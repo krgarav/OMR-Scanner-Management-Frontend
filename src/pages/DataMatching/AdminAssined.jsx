@@ -262,7 +262,7 @@ const AdminAssined = () => {
     <div className="h-[100vh] flex justify-center items-center templatemapping pt-20">
       <div className="">
         {/* MAIN SECTION  */}
-        <section className="mx-auto  lg:max-w-6xl px-8 py-10 bg-white rounded-xl w-[80%]">
+        <section className=" lg:mx-auto max-w-6xl px-8 py-10 bg-white rounded-xl w-[100vw]">
           <div>
             <div>
               <h2 className="text-3xl font-semibold">Assigned Tasks</h2>
@@ -281,10 +281,10 @@ const AdminAssined = () => {
                         <div className="py-3.5 text-center text-xl font-semibold text-gray-700 w-[150px]">
                           Assignee.
                         </div>
-                        <div className="py-3.5 text-center text-xl font-semibold text-gray-700 w-[100px]">
+                        <div className="py-3.5 text-center text-xl font-semibold text-gray-700 w-[80px]">
                           Min
                         </div>
-                        <div className="py-3.5 text-center text-xl font-semibold text-gray-700 w-[100px]">
+                        <div className="py-3.5 text-center text-xl font-semibold text-gray-700 w-[80px]">
                           Max
                         </div>
                         <div className="py-3.5 text-center text-xl font-semibold text-gray-700 w-[200px]">
@@ -303,8 +303,11 @@ const AdminAssined = () => {
                     </div>
                     <div className="divide-y divide-gray-200 bg-white overflow-y-auto h-[250px]">
                       {compareTask?.map((taskData) => (
-                        <div key={taskData.id} className="flex">
-                          <div className="whitespace-nowrap w-[150px] py-2">
+                        <div
+                          key={taskData.id}
+                          className="flex"
+                        >
+                          <div className="whitespace-nowrap  w-[150px] py-2">
                             <div className="text-md text-center ">
                               {taskData.name}
                             </div>
@@ -314,12 +317,12 @@ const AdminAssined = () => {
                               {taskData.userName}
                             </div>
                           </div>
-                          <div className="whitespace-nowrap w-[100px] py-2">
+                          <div className="whitespace-nowrap w-[80px] py-2">
                             <div className="text-md text-center">
                               {taskData.min}
                             </div>
                           </div>
-                          <div className="whitespace-nowrap w-[100px] py-2">
+                          <div className="whitespace-nowrap w-[80px] py-2">
                             <div className="text-md text-center">
                               {taskData.max}
                             </div>
@@ -420,22 +423,22 @@ const AdminAssined = () => {
                               {taskData.userName}
                             </div>
                           </div>
-                          <div className="whitespace-nowrap w-[100px] py-2">
+                          <div className="whitespace-nowrap w-[80px] py-2">
                             <div className="text-md text-center">
                               {taskData.min}
                             </div>
                           </div>
-                          <div className="whitespace-nowrap w-[100px] py-2">
+                          <div className="whitespace-nowrap w-[80px] py-2">
                             <div className="text-md text-center">
                               {taskData.max}
                             </div>
                           </div>
-                          <div className="whitespace-nowrap w-[200px] py-2">
+                          <div className="whitespace-nowrap w-[150px] py-2">
                             <div className="text-md text-center font-semibold border-2 py-1">
                               {taskData.moduleType}
                             </div>
                           </div>
-                          <div className="whitespace-nowrap w-[200px] py-2">
+                          <div className="whitespace-nowrap w-[150px] py-2">
                             <div className="text-md text-center">
                               <span
                                 className={`inline-flex items-center justify-center rounded-full ${
@@ -486,7 +489,7 @@ const AdminAssined = () => {
                               </span>
                             </div>
                           </div>
-                          <div className="whitespace-nowrap text-center w-[200px] py-2">
+                          <div className="whitespace-nowrap text-center w-[150px] py-2">
                             <button
                               onClick={() => onCompleteHandler(taskData)}
                               className={`rounded px-4 py-1 font-semibold ${
@@ -503,7 +506,7 @@ const AdminAssined = () => {
                               Start Again
                             </button>
                           </div>
-                          <div className="whitespace-nowrap text-center w-[200px] py-1">
+                          <div className="whitespace-nowrap text-center w-[150px] py-2">
                             <button
                               onClick={() => onDownloadHandler(taskData)}
                               className="rounded border border-indigo-500 bg-indigo-500 px-4 py-1 font-semibold text-white"
