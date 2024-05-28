@@ -535,7 +535,7 @@ const DataMatching = () => {
                 <div className="h-[100vh] flex justify-center items-center templatemapping pt-20">
                   <div className="">
                     {/* MAIN SECTION  */}
-                    <section className="mx-auto w-full max-w-7xl  px-12 py-10 bg-white rounded-xl">
+                    <section className="mx-auto max-w-4xl  px-12 py-10 bg-white rounded-xl w-[100vw]">
                       <div className="flex flex-col space-y-4  md:flex-row md:items-center md:justify-between md:space-y-0">
                         <div>
                           <h2 className="text-3xl font-semibold">
@@ -544,30 +544,30 @@ const DataMatching = () => {
                         </div>
                       </div>
                       <div className="mt-6 flex flex-col">
-                        <div className="-mx-4 -my-2  sm:-mx-6 lg:-mx-8">
+                        <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                           <div className="inline-block  py-2 align-middle md:px-6 lg:px-8">
                             <div className=" border border-gray-200 md:rounded-lg">
                               <div className="divide-y divide-gray-200 ">
-                                <div className="bg-gray-50">
-                                  <div className="grid grid-cols-6 gap-x-6">
-                                    <div className=" py-3.5 text-center text-xl font-semibold text-gray-700">
+                                <div className="bg-gray-50 w-full">
+                                  <div className="flex gap-x-8">
+                                    <div className=" py-3.5 px-4 text-center text-xl font-semibold text-gray-700 w-1/6">
                                       <span>Templates</span>
                                     </div>
 
-                                    <div className=" py-3.5 text-center  text-xl font-semibold text-gray-700">
+                                    <div className=" py-3.5 px-4 text-center  text-xl font-semibold text-gray-700 w-1/6">
                                       Min
                                     </div>
 
-                                    <div className=" py-3.5 text-center text-xl font-semibold text-gray-700">
+                                    <div className=" py-3.5 px-4 text-center text-xl font-semibold text-gray-700 w-1/6">
                                       Max
                                     </div>
-                                    <div className=" py-3.5 text-center text-xl font-semibold text-gray-700">
+                                    <div className=" py-3.5 px-4 text-center text-xl font-semibold text-gray-700 w-1/6">
                                       Module Type
                                     </div>
-                                    <div className=" py-3.5 text-center text-xl font-semibold text-gray-700">
+                                    <div className=" py-3.5 px-4 text-center text-xl font-semibold text-gray-700 w-1/6">
                                       Status
                                     </div>
-                                    <div className=" px-6 py-3.5 text-center text-xl font-semibold text-gray-700">
+                                    <div className=" px-4 py-3.5 text-center text-xl font-semibold text-gray-700 w-1/6">
                                       Start Task
                                     </div>
                                   </div>
@@ -577,31 +577,31 @@ const DataMatching = () => {
                                     <>
                                       <div
                                         key={taskData.id}
-                                        className="grid grid-cols-6 gap-x-6 py-2"
+                                        className="flex  py-2 w-full"
                                       >
-                                        <div className="whitespace-nowrap">
+                                        <div className="whitespace-nowrap w-1/6 px-4">
                                           <div className="text-md text-center">
                                             {taskData.templateName}
                                           </div>
                                         </div>
-                                        <div className="whitespace-nowrap">
+                                        <div className="whitespace-nowrap w-1/6 px-4">
                                           <div className="text-md text-center">
                                             {taskData.min}
                                           </div>
                                         </div>
-                                        <div className="whitespace-nowrap">
+                                        <div className="whitespace-nowrap w-1/6 px-4">
                                           <div className="text-md text-center">
                                             {taskData.max}
                                           </div>
                                         </div>
 
-                                        <div className="whitespace-nowrap">
+                                        <div className="whitespace-nowrap w-1/6 px-4">
                                           <div className="text-md text-center font-semibold py-1 border-2">
                                             {taskData.moduleType}
                                           </div>
                                         </div>
 
-                                        <div className="whitespace-nowrap">
+                                        <div className="whitespace-nowrap w-1/6 px-4">
                                           <div className="text-md text-center">
                                             <span
                                               className={`inline-flex items-center justify-center rounded-full ${
@@ -650,12 +650,12 @@ const DataMatching = () => {
                                             </span>
                                           </div>
                                         </div>
-                                        <div className="whitespace-nowrap text-center">
+                                        <div className="whitespace-nowrap text-center w-1/6 px-4">
                                           <button
                                             onClick={() =>
                                               onDataTypeSelectHandler(taskData)
                                             }
-                                            className="rounded border border-indigo-500 bg-indigo-500 px-10 py-1 font-semibold text-white"
+                                            className="rounded border border-indigo-500 bg-indigo-500 px-6 py-1 font-semibold text-white"
                                           >
                                             Start
                                           </button>
@@ -668,29 +668,29 @@ const DataMatching = () => {
                                       key={taskData.id}
                                       className="grid grid-cols-6 gap-x-6 py-2"
                                     >
-                                      <div className="whitespace-nowrap">
+                                      <div className="whitespace-nowrap w-1/6 w-1/6">
                                         <div className="text-md text-center">
                                           {taskData.templateName}
                                         </div>
                                       </div>
-                                      <div className="whitespace-nowrap">
+                                      <div className="whitespace-nowrap w-1/6 w-1/6">
                                         <div className="text-md text-center">
                                           {taskData.min}
                                         </div>
                                       </div>
-                                      <div className="whitespace-nowrap">
+                                      <div className="whitespace-nowrap w-1/6 w-1/6">
                                         <div className="text-md text-center">
                                           {taskData.max}
                                         </div>
                                       </div>
 
-                                      <div className="whitespace-nowrap">
+                                      <div className="whitespace-nowrap w-1/6 w-1/6">
                                         <div className="text-md text-center font-semibold py-1 border-2">
                                           {taskData.moduleType}
                                         </div>
                                       </div>
 
-                                      <div className="whitespace-nowrap">
+                                      <div className="whitespace-nowrap w-1/6 w-1/6">
                                         <div className="text-md text-center">
                                           <span
                                             className={`inline-flex items-center justify-center rounded-full ${
@@ -739,7 +739,7 @@ const DataMatching = () => {
                                           </span>
                                         </div>
                                       </div>
-                                      <div className="whitespace-nowrap text-center">
+                                      <div className="whitespace-nowrap text-center w-1/6">
                                         <button
                                           onClick={() =>
                                             onCompareTaskStartHandler(taskData)
