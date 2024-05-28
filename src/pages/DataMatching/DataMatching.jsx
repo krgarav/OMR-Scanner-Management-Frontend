@@ -146,7 +146,7 @@ const DataMatching = () => {
 
   useEffect(() => {
     const handleKeyDown = (event) => {
-      if (event.key === "ArrowLeft" || event.key === "PageDown") {
+      if (event.key === "ArrowLeft" || event.key === "PageUp") {
         if (currentImageIndex > 0) {
           setCurrentImageIndex(currentImageIndex - 1);
           setSelectedCoordinates(false);
@@ -159,7 +159,7 @@ const DataMatching = () => {
           onImageHandler("prev", currentIndex, csvData, currentTaskData);
           setCurrentImageIndex(0);
         }
-      } else if (event.key === "ArrowRight" || event.key === "PageUp") {
+      } else if (event.key === "ArrowRight" || event.key === "PageDown") {
         if (currentImageIndex < imageUrls.length - 1) {
           setCurrentImageIndex(currentImageIndex + 1);
           setSelectedCoordinates(false);
@@ -384,6 +384,13 @@ const DataMatching = () => {
   };
 
   const onTaskStartHandler = async () => {
+    if (currentTaskData.blankTaskStatus && currentTaskData.multTaskStatus) {
+      toast.warning("Task is already completed.");
+      setPopUp(true);
+      setStartModal(true);
+      return;
+    }
+
     if (blankChecked && blankCount < 1) {
       toast.warning("Please enter a value greater than zero for blank.");
       return;
@@ -489,17 +496,21 @@ const DataMatching = () => {
 
   const onCompleteHandler = async () => {
     try {
-      const response = await axios.post(
+      await axios.post(
         `http://${REACT_APP_IP}:4000/taskupdation/${parseInt(
           currentTaskData?.id
         )}`,
-        {},
+        {
+          blankTaskStatus: allDataChecked ? true : blankChecked,
+          multTaskStatus: allDataChecked ? true : multChecked,
+        },
         {
           headers: {
             token: token,
           },
         }
       );
+
       setPopUp(true);
       setStartModal(true);
       toast.success("task complted successfully.");
@@ -524,6 +535,12 @@ const DataMatching = () => {
       imageRef.current.style.transformOrigin = "initial";
     }
   };
+
+  console.log(currentTaskData);
+
+  // console.log(currentTaskData.blankTaskStatus && currentTaskData.multTaskStatus)
+
+  console.log(compareTask)
 
   return (
     <>
@@ -573,7 +590,7 @@ const DataMatching = () => {
                                   </div>
                                 </div>
                                 <div className="divide-y divide-gray-200 bg-white overflow-y-auto max-h-[300px]">
-                                  {allTasks?.map((taskData) => (
+                                  {allTasks?.map((taskData, index) => (
                                     <>
                                       <div
                                         key={taskData.id}
@@ -605,12 +622,14 @@ const DataMatching = () => {
                                           <div className="text-md text-center">
                                             <span
                                               className={`inline-flex items-center justify-center rounded-full ${
-                                                !taskData.taskStatus
+                                                !taskData.blankTaskStatus ||
+                                                !taskData.multTaskStatus
                                                   ? "bg-amber-100 text-amber-700"
                                                   : "bg-emerald-100 text-emerald-700"
                                               } px-2.5 py-0.5 `}
                                             >
-                                              {!taskData.taskStatus ? (
+                                              {!taskData.blankTaskStatus ||
+                                              !taskData.multTaskStatus ? (
                                                 <svg
                                                   xmlns="http://www.w3.org/2000/svg"
                                                   fill="none"
@@ -641,9 +660,9 @@ const DataMatching = () => {
                                                   />
                                                 </svg>
                                               )}
-
                                               <p className="whitespace-nowrap text-sm">
-                                                {taskData.taskStatus
+                                                {taskData.blankTaskStatus &&
+                                                taskData.multTaskStatus
                                                   ? "Completed"
                                                   : "Pending"}
                                               </p>
@@ -663,10 +682,10 @@ const DataMatching = () => {
                                       </div>
                                     </>
                                   ))}
-                                  {compareTask?.map((taskData) => (
+                                  {compareTask?.map((taskData, index) => (
                                     <div
                                       key={taskData.id}
-                                      className="grid grid-cols-6 gap-x-6 py-2"
+                                      className="grid grid-cols-7 gap-x-6 py-2"
                                     >
                                       <div className="whitespace-nowrap w-1/6 w-1/6">
                                         <div className="text-md text-center">
@@ -973,16 +992,14 @@ const DataMatching = () => {
                 ) : (
                   <div className="flex-col">
                     <div className="flex float-right gap-4 mt-2 mr-4 ">
-                    
-                     <div className="">
-                     <button
-                        onClick={() => setPopUp(true)}
-                        
-                        className=" px-4 py-2 bg-blue-600 text-white rounded-md mx-2 hover:bg-blue-700"
-                      >
-                        Back
-                      </button>
-                      {/* <Button
+                      <div className="">
+                        <button
+                          onClick={() => setPopUp(true)}
+                          className=" px-4 py-2 bg-blue-600 text-white rounded-md mx-2 hover:bg-blue-700"
+                        >
+                          Back
+                        </button>
+                        {/* <Button
                           onClick={onCsvUpdateHandler}
                           variant="contained"
                           color="info"
@@ -990,46 +1007,42 @@ const DataMatching = () => {
                           update
                         </Button> */}
 
-                      
+                        <button
+                          className="px-4 py-2 bg-blue-600 text-white rounded-md mx-2 hover:bg-blue-700"
+                          onClick={() =>
+                            onImageHandler(
+                              "prev",
+                              currentIndex,
+                              csvData,
+                              currentTaskData
+                            )
+                          }
+                          endIcon={<ArrowBackIosIcon />}
+                        >
+                          Prev
+                        </button>
 
-                      <button
-                        className="px-4 py-2 bg-blue-600 text-white rounded-md mx-2 hover:bg-blue-700"
-
-                        onClick={() =>
-                          onImageHandler(
-                            "prev",
-                            currentIndex,
-                            csvData,
-                            currentTaskData
-                          )
-                        }
-                        
-                        endIcon={<ArrowBackIosIcon />}
-                      >
-                        Prev
-                      </button>
-
-                      <button
-                        className="px-4 py-2 bg-blue-600 text-white rounded-md mx-2 hover:bg-blue-700"
-                        onClick={() =>
-                          onImageHandler(
-                            "next",
-                            currentIndex,
-                            csvData,
-                            currentTaskData
-                          )
-                        }
-                        
-                        endIcon={<ArrowForwardIosIcon />}
-                      >
-                        Next
-                      </button>
-                     </div>
+                        <button
+                          className="px-4 py-2 bg-blue-600 text-white rounded-md mx-2 hover:bg-blue-700"
+                          onClick={() =>
+                            onImageHandler(
+                              "next",
+                              currentIndex,
+                              csvData,
+                              currentTaskData
+                            )
+                          }
+                          endIcon={<ArrowForwardIosIcon />}
+                        >
+                          Next
+                        </button>
+                      </div>
                       {currentIndex === csvData.length - 1 && (
                         <button
                           onClick={onCompleteHandler}
                           variant="contained"
                           color="success"
+                          className="px-4 py-2 bg-teal-600 text-white rounded-md mx-2 hover:bg-teal-700"
                           endIcon={<CheckIcon />}
                         >
                           Task Completed
@@ -1045,26 +1058,26 @@ const DataMatching = () => {
                       </span>
                     </h3>
                     <div className="flex justify-center my-2">
-                        <button
-                          onClick={zoomInHandler}
-                          className="px-4 py-2 bg-teal-600 text-white rounded-md mx-2 hover:bg-teal-700"
-                        >
-                          Zoom In
-                        </button>
-                        
-                        <button
-                          onClick={onInialImageHandler}
-                          className="px-4 py-2 bg-teal-600 text-white rounded-md mx-2 hover:bg-teal-700"
-                        >
-                          Initial
-                        </button>
-                        <button
-                          onClick={zoomOutHandler}
-                          className="px-4 py-2 bg-teal-600 text-white rounded-md mx-2 hover:bg-teal-700"
-                        >
-                          Zoom Out
-                        </button>
-                      </div>
+                      <button
+                        onClick={zoomInHandler}
+                        className="px-4 py-2 bg-teal-600 text-white rounded-md mx-2 hover:bg-teal-700"
+                      >
+                        Zoom In
+                      </button>
+
+                      <button
+                        onClick={onInialImageHandler}
+                        className="px-4 py-2 bg-teal-600 text-white rounded-md mx-2 hover:bg-teal-700"
+                      >
+                        Initial
+                      </button>
+                      <button
+                        onClick={zoomOutHandler}
+                        className="px-4 py-2 bg-teal-600 text-white rounded-md mx-2 hover:bg-teal-700"
+                      >
+                        Zoom Out
+                      </button>
+                    </div>
                     <div
                       ref={imageContainerRef}
                       className="mx-auto bg-white"

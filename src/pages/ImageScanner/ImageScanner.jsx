@@ -333,7 +333,7 @@ const ImageScanner = () => {
       <div>
         {editModal && (
           <div className="fixed z-50 inset-0 overflow-y-auto">
-            <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0" onClick={() =>setEditModal(false)}>
+            <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
               {/* Background overlay */}
               <div
                 className="fixed inset-0 transition-opacity"
@@ -425,7 +425,7 @@ const ImageScanner = () => {
       <div>
         {removeModal && (
           <div className="fixed z-50 inset-0 overflow-y-auto">
-            <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0" onClick={() => {setRemoveModal(false)}}>
+            <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
               {/* Background overlay */}
               <div
                 className="fixed inset-0 transition-opacity"
@@ -502,17 +502,16 @@ const ImageScanner = () => {
       {/* RIGHT SECTION  */}
       {!image ? (
         <div className="flex w-[75%] h-[100vh] justify-center items-center">
-        <div>
-          <ImageNotFound />
-          <h1 className="mt-8 text-2xl font-bold tracking-tight text-gray-700 sm:text-4xl">
-            Please Select an Image...
-          </h1>
-          <p className="mt-4 text-gray-600 text-center">
-            We can't find that page!
-          </p>
+          <div>
+            <ImageNotFound />
+            <h1 className="mt-8 text-2xl font-bold tracking-tight text-gray-700 sm:text-4xl">
+              Please Select an Image...
+            </h1>
+            <p className="mt-4 text-gray-600 text-center">
+              We can't find that page!
+            </p>
+          </div>
         </div>
-      </div>
-      
       ) : (
         <div className="pb-2 w-[75%]">
           <div className="mx-auto max-w-screen-xl px-2 lg:pt-2 sm:px-6 lg:px-8">
@@ -591,7 +590,7 @@ const ImageScanner = () => {
                             leaveFrom="opacity-100"
                             leaveTo="opacity-0"
                           >
-                            <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" ></div>
+                            <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
                           </Transition.Child>
 
                           <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
@@ -746,7 +745,6 @@ const ImageScanner = () => {
               </div>
             </div>
           </div>
-        
         </div>
       )}
     </div>

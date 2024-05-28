@@ -184,7 +184,7 @@ const AdminAssined = () => {
   };
 
   const onDownloadHandler = async (currentTaskData) => {
-    if (!currentTaskData.taskStatus) {
+    if (!currentTaskData.blankTaskStatus || !currentTaskData.multTaskStatus) {
       toast.warning("The task is pending, so downloading is not available.");
       return;
     }
@@ -236,7 +236,7 @@ const AdminAssined = () => {
     try {
       await axios.post(
         `http://${REACT_APP_IP}:4000/taskupdation/${parseInt(currentTask.id)}`,
-        {},
+        { blankTaskStatus: false, multTaskStatus: false },
         {
           headers: {
             token: token,
@@ -245,7 +245,7 @@ const AdminAssined = () => {
       );
       const updatedTasks = matchingTask.map((task) => {
         if (task.id === currentTask.id) {
-          return { ...task, taskStatus: false };
+          return { ...task, blankTaskStatus: false, multTaskStatus: false };
         }
         return task;
       });
@@ -256,6 +256,7 @@ const AdminAssined = () => {
       toast.error(error.message);
     }
   };
+
 
   return (
     <div className="h-[100vh] flex justify-center items-center templatemapping pt-20">
@@ -273,12 +274,12 @@ const AdminAssined = () => {
                 <div className="overflow-hidden border border-gray-200 md:rounded-lg">
                   <div className="min-w-full divide-y divide-gray-200">
                     <div className="bg-gray-50">
-                      <div className="flex">
+                      <div className="flex ">
                         <div className="py-3.5 text-xl text-center font-semibold text-gray-700 w-[150px]">
                           Template
                         </div>
                         <div className="py-3.5 text-center text-xl font-semibold text-gray-700 w-[150px]">
-                          Assignee
+                          Assignee.
                         </div>
                         <div className="py-3.5 text-center text-xl font-semibold text-gray-700 w-[80px]">
                           Min
@@ -286,16 +287,16 @@ const AdminAssined = () => {
                         <div className="py-3.5 text-center text-xl font-semibold text-gray-700 w-[80px]">
                           Max
                         </div>
-                        <div className="py-3.5 text-center text-xl font-semibold text-gray-700 w-[150px]">
+                        <div className="py-3.5 text-center text-xl font-semibold text-gray-700 w-[200px]">
                           Module Type
                         </div>
-                        <div className="py-3.5 text-center text-xl font-semibold text-gray-700 w-[150px]">
+                        <div className="py-3.5 text-center text-xl font-semibold text-gray-700 w-[230px]">
                           Status
                         </div>
                         <div className="py-3.5 text-center text-xl font-semibold text-gray-700 w-[150px]">
                           Re-Assign
                         </div>
-                        <div className="py-3.5 text-center text-xl font-semibold text-gray-700 w-[150px]">
+                        <div className="py-3.5 text-center text-xl font-semibold text-gray-700 w-[250px]">
                           Download
                         </div>
                       </div>
@@ -326,21 +327,23 @@ const AdminAssined = () => {
                               {taskData.max}
                             </div>
                           </div>
-                          <div className="whitespace-nowrap w-[150px] py-2">
-                            <div className="text-md text-center font-semibold border-2 py-1">
+                          <div className="whitespace-nowrap w-[200px] py-2">
+                            <div className="text-md text-center font-semibold border-2 py-1 ">
                               {taskData.TemplateType}
                             </div>
                           </div>
-                          <div className="whitespace-nowrap w-[150px] py-2">
-                            <div className="text-md text-center">
+                          <div className="whitespace-nowrap w-[200px] py-2">
+                            <div className="text-md text-center ">
                               <span
                                 className={`inline-flex items-center justify-center rounded-full ${
-                                  !taskData.taskStatus
+                                  !taskData.blankTaskStatus ||
+                                  !taskData.multTaskStatus
                                     ? "bg-amber-100 text-amber-700"
                                     : "bg-emerald-100 text-emerald-700"
                                 } px-2.5 py-0.5`}
                               >
-                                {!taskData.taskStatus ? (
+                                {!taskData.blankTaskStatus ||
+                                !taskData.multTaskStatus ? (
                                   <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     fill="none"
@@ -372,26 +375,31 @@ const AdminAssined = () => {
                                   </svg>
                                 )}
                                 <p className="whitespace-nowrap text-sm">
-                                  {taskData.taskStatus
+                                  {taskData.blankTaskStatus &&
+                                  taskData.multTaskStatus
                                     ? "Completed"
                                     : "Pending"}
                                 </p>
                               </span>
                             </div>
                           </div>
-                          <div className="whitespace-nowrap text-center w-[150px] py-2">
+                          <div className="whitespace-nowrap text-center w-[200px] py-2">
                             <button
                               className={`rounded px-4 py-1 font-semibold ${
-                                taskData.taskStatus
+                                taskData.blankTaskStatus &&
+                                taskData.multTaskStatus
                                   ? "bg-indigo-500 text-white border border-indigo-500"
                                   : "bg-gray-400 text-gray-600 cursor-not-allowed"
                               }`}
-                              disabled={!taskData.taskStatus}
+                              disabled={
+                                !taskData.blankTaskStatus ||
+                                !taskData.multTaskStatus
+                              }
                             >
                               Start Again
                             </button>
                           </div>
-                          <div className="whitespace-nowrap text-center w-[150px] py-2">
+                          <div className="whitespace-nowrap text-center w-[200px] py-2">
                             <button
                               onClick={() =>
                                 onCompareTaskStartHandler(taskData)
@@ -404,10 +412,7 @@ const AdminAssined = () => {
                         </div>
                       ))}
                       {matchingTask?.map((taskData) => (
-                        <div
-                          key={taskData.id}
-                          className="flex "
-                        >
+                        <div key={taskData.id} className="flex ">
                           <div className="whitespace-nowrap w-[150px] py-2">
                             <div className="text-center text-md ">
                               {taskData.templateName}
@@ -437,12 +442,14 @@ const AdminAssined = () => {
                             <div className="text-md text-center">
                               <span
                                 className={`inline-flex items-center justify-center rounded-full ${
-                                  !taskData.taskStatus
+                                  !taskData.blankTaskStatus ||
+                                  !taskData.multTaskStatus
                                     ? "bg-amber-100 text-amber-700"
                                     : "bg-emerald-100 text-emerald-700"
                                 } px-2.5 py-0.5`}
                               >
-                                {!taskData.taskStatus ? (
+                                {!taskData.blankTaskStatus ||
+                                !taskData.multTaskStatus ? (
                                   <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     fill="none"
@@ -474,7 +481,8 @@ const AdminAssined = () => {
                                   </svg>
                                 )}
                                 <p className="whitespace-nowrap text-sm">
-                                  {taskData.taskStatus
+                                  {taskData.blankTaskStatus &&
+                                  taskData.multTaskStatus
                                     ? "Completed"
                                     : "Pending"}
                                 </p>
@@ -485,11 +493,15 @@ const AdminAssined = () => {
                             <button
                               onClick={() => onCompleteHandler(taskData)}
                               className={`rounded px-4 py-1 font-semibold ${
-                                taskData.taskStatus
+                                taskData.blankTaskStatus &&
+                                taskData.multTaskStatus
                                   ? "bg-indigo-500 text-white border border-indigo-500"
                                   : "bg-gray-400 text-gray-600 cursor-not-allowed"
                               }`}
-                              disabled={!taskData.taskStatus}
+                              disabled={
+                                !taskData.blankTaskStatus ||
+                                !taskData.multTaskStatus
+                              }
                             >
                               Start Again
                             </button>
