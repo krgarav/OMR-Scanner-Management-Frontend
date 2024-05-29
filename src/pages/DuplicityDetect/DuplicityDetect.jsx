@@ -18,6 +18,8 @@ const ImageScanner = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [currentRowData, setCurrentRowData] = useState(null);
   const [allCurrentData, setAllCurrentData] = useState([]);
+  const [sameDataIndex, setSameDataIndex] = useState(null);
+  const [originalColumnValue, setOriginalColumnValue] = useState(null);
   const [imageUrl, setImageUrl] = useState("");
   const [modifiedKeys, setModifiedKeys] = useState({});
   const token = JSON.parse(localStorage.getItem("userData"));
@@ -61,11 +63,15 @@ const ImageScanner = () => {
           },
         }
       );
+
+      // Find the index of the group containing the currentRowData
       const indexToUpdate = duplicatesData.findIndex((group) =>
         group.sameData.some((item) => item.index === currentRowData.index)
       );
 
+      // If the group is found
       if (indexToUpdate !== -1) {
+        // Update the row data in the duplicatesData
         const updatedDuplicateData = duplicatesData.map((group, index) => {
           if (index === indexToUpdate) {
             return {
@@ -79,30 +85,55 @@ const ImageScanner = () => {
           return group;
         });
 
+        // Update the row data in the allCurrentData
         const updatedAllCurrentData = allCurrentData.map((item) =>
           item.index === currentRowData.index
             ? { ...item, row: currentRowData.row }
             : item
         );
 
-        const filteredUpdatedDuplicateData = updatedDuplicateData
-          .map((group) => ({
-            sameData: group.sameData.filter(
-              (item) => item.row[columnName] !== currentRowData.row[columnName]
-            ),
-          }))
-          .filter((group) => group.sameData.length > 0);
+        // Check if originalColumnValue is null
+        if (originalColumnValue !== null) {
+          const filteredUpdatedDuplicateData = updatedDuplicateData.map(
+            (group, index) => {
+              if (index === sameDataIndex) {
+                // Filter out the data where item.row[columnName] !== originalColumnValue
+                const filteredSameData = group.sameData.filter((item) => {
+                  console.log(
+                    item.row[columnName] + " ==========" + originalColumnValue
+                  );
+                  return item.row[columnName] === originalColumnValue;
+                });
 
-        const filteredAllCurrentData = updatedAllCurrentData.filter(
-          (item) => item.row[columnName] !== currentRowData.row[columnName]
-        );
+                // Return the updated group with filtered sameData
+                return {
+                  sameData: filteredSameData,
+                };
+              }
+              // Keep other groups unchanged
+              return group;
+            }
+          );
 
-        setDuplicatesData(filteredUpdatedDuplicateData);
-        setAllCurrentData(filteredAllCurrentData);
+          console.log(filteredUpdatedDuplicateData);
+
+          const filteredAllCurrentData = updatedAllCurrentData.filter(
+            (item) => item.row[columnName] === originalColumnValue
+          );
+
+          // Set the updated data in state
+          setDuplicatesData(filteredUpdatedDuplicateData);
+          setAllCurrentData(filteredAllCurrentData);
+        } else {
+          // Set the updated data in state without filtering
+          setDuplicatesData(updatedDuplicateData);
+          setAllCurrentData(updatedAllCurrentData);
+        }
         setModifiedKeys(null);
+        setOriginalColumnValue(null);
+        toast.success("The row has been updated successfully.");
+        setEditModal(false);
       }
-      toast.success("The row has been updated successfully.");
-      setEditModal(false);
     } catch (error) {
       toast.error("Unable to update the row data!");
     }
@@ -142,6 +173,9 @@ const ImageScanner = () => {
   }, [currentImageIndex, currentRowData, onUpdateCurrentDataHandler]);
 
   const changeCurrentCsvDataHandler = (key, newValue) => {
+    if (key === columnName && originalColumnValue === null) {
+      setOriginalColumnValue(currentRowData.row[key]);
+    }
     setCurrentRowData((prevData) => ({
       ...prevData,
       row: {
@@ -257,7 +291,8 @@ const ImageScanner = () => {
     setEditModal(true);
     setImageUrl(allCurrentData[index].base64Images[currentImageIndex]);
   };
-  const onShowModalHandler = (data) => {
+  const onShowModalHandler = (data, index) => {
+    setSameDataIndex(index);
     setAllCurrentData(data.sameData);
     setShowDuplicateField(true);
   };
