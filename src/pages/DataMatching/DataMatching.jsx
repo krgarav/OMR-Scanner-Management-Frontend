@@ -481,7 +481,7 @@ const DataMatching = () => {
   };
 
   const onDataTypeSelectHandler = (taskData) => {
-    if (taskData.taskStatus) {
+    if (taskData.blankTaskStatus && taskData.multTaskStatus) {
       toast.warning("Task is aready completed.");
       return;
     }
@@ -540,7 +540,7 @@ const DataMatching = () => {
 
   // console.log(currentTaskData.blankTaskStatus && currentTaskData.multTaskStatus)
 
-  console.log(compareTask)
+  console.log(compareTask);
 
   return (
     <>
